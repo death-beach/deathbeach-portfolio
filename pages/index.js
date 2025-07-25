@@ -37,7 +37,7 @@ export default function Portfolio() {
       <Hero />
 
       {/* Portfolio Grid with darker charcoal background */}
-      <div style={{ backgroundColor: "#0f0f0f", padding: "48px 16px" }}>
+      <div style={{ backgroundColor: "#0f0f0f", padding: "36px 16px" }}>
         <div style={{ maxWidth: "1152px", margin: "0 auto" }}>
           <div
             style={{

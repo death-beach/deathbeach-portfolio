@@ -43,13 +43,13 @@ export default function About() {
 
             <div style={{ maxWidth: "650px", margin: "0 auto", color: "#6b7280", lineHeight: "1.6" }}>
               <p style={{ fontSize: "18px", marginBottom: "24px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                Death Beach Studio specializes in Web 3 integrations, product management, and music production, creating
+                Josh Mallit specializes in Web 3 integrations, product management, and music production, creating
                 innovative digital experiences at the intersection of technology and creativity.
               </p>
 
-              <p style={{ marginBottom: "24px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                With expertise spanning blockchain technology, product strategy, and audio production, we bring a unique
-                perspective to every project, always focusing on pushing boundaries and exploring new possibilities.
+              <p style={{ marginBottom: "48px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
+                With expertise spanning blockchain technology, product strategy, and audio production, Josh brings a unique
+                perspective to every project, always focusing on scaling, pushing boundaries, and exploring new possibilities.
               </p>
 
               <div style={{ marginBottom: "24px" }}>
@@ -81,21 +81,13 @@ export default function About() {
                       • Blockchain Technology
                     </li>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                      • Digital Strategy
+                      • Cryptocurrency
                     </li>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                      • Creative Direction
+                      • AI
                     </li>
                   </ul>
                 </div>
-              </div>
-
-              <div style={{ textAlign: "center", paddingTop: "24px" }}>
-                <Link href="/contact">
-                  <Button size="lg" style={{ fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                    Get In Touch
-                  </Button>
-                </Link>
               </div>
             </div>
           </div>
