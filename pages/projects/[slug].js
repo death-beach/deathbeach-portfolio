@@ -110,9 +110,30 @@ export default function ProjectPage() {
             gap: "32px",
             marginBottom: "48px",
           }}
-        >
-          <iframe data-testid="embed-iframe" style={{borderRadius:"12px", height: "352px"}} src="https://open.spotify.com/embed/playlist/0m6i2hbWuTIaPiM5a59d9G?utm_source=generator" width="100%" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-          <iframe width="100%" height="352" scrolling="no" frameBorder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1449922525%3Fsecret_token%3Ds-rX9IWtQtFxj&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true" loading="lazy"></iframe>
+          >
+          <div style={{ position: "relative", height: "352px", backgroundColor: "#1a1a1a", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <iframe
+              data-testid="embed-iframe"
+              style={{ borderRadius: "12px", height: "352px" }}
+              src="https://open.spotify.com/embed/playlist/0m6i2hbWuTIaPiM5a59d9G?utm_source=generator"
+              width="100%"
+              frameBorder="0"
+              allowFullScreen=""
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
+          </div>
+          <div style={{ position: "relative", height: "352px", backgroundColor: "#1a1a1a", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <iframe
+              width="100%"
+              height="352"
+              scrolling="no"
+              frameBorder="no"
+              allow="autoplay"
+              src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1449922525%3Fsecret_token%3Ds-rX9IWtQtFxj&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+              loading="lazy"
+            ></iframe>
+          </div>
         </div>
         <p style={{ fontSize: "16px", lineHeight: "1.6", marginBottom: "48px", textAlign: "justify", whiteSpace: "pre-line" }}>
           {detailedDescription}
