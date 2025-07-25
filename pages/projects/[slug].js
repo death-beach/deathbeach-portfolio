@@ -211,6 +211,7 @@ export default function ProjectPage() {
             autoPlay={slug === "pools"}
             muted={slug === "pools"}
             preload="metadata"
+            poster={`/images/${slug}-poster.png`}
             style={{ maxWidth: "600px", width: "100%", borderRadius: "8px", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}
           />
         </div>
