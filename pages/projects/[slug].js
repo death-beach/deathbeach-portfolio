@@ -17,12 +17,14 @@ export default function ProjectPage() {
   let detailedDescription = ""
   let images = []
   let additionalContent = null
+  let projectTitle = ""
 
   if (slug === "charon") {
     title = "Charon"
-    shortDescription = "Integrates with POS systems to process payments instantly with lower fees, no chargebacks, and no crypto complexity."
+    projectTitle = "Founder and Builder"
+    shortDescription = "Cut fees. Get paid instantly."
     videoSrc = "/videos/PayDemo.mp4"
-    detailedDescription = "Built using Solana Pay, Charon allows merchants to start accepting stablecoins like USDC with no new hardware or extra steps. Simply install Charon on your register and the app pulls relevant merchant information automatically that will be tied to a wallet created and accessed with an email address. Charon fits into normal payment flows, requires minimal training for employees, handles split payments and refunds. Customers enjoy a typical payment flow where they can tip and then simply scan a QR code to pay with their favorite wallet.\n\nCharon is built using Solana Pay, Privy, Jupiter swaps, Node.js and Typscript backend, and Kotlin front end."
+    detailedDescription = "Integrates with POS systems to process payments instantly with lower fees, no chargebacks, and no crypto complexity.\n\nBuilt using Solana Pay, Charon allows merchants to start accepting stablecoins like USDC with no new hardware or extra steps. Simply install Charon on your register and the app pulls relevant merchant information automatically that will be tied to a wallet created and accessed with an email address. Charon fits into normal payment flows, requires minimal training for employees, handles split payments and refunds. Customers enjoy a typical payment flow where they can tip and then simply scan a QR code to pay with their favorite wallet.\n\nCharon is built using Solana Pay, Privy, Jupiter swaps, Node.js and Typscript backend, and Kotlin front end."
     images = [
       "/images/charon-pay.png",
       "/images/charon-tip.png",
@@ -31,7 +33,8 @@ export default function ProjectPage() {
     ]
   } else if (slug === "charon-wallet") {
     title = "Charon Wallet"
-    shortDescription = "Self custody wallet for merchants. Email login, fee-less swaps between stablecoins, saved offramp address, and 2FA security."
+    projectTitle = "Founder and Builder"
+    shortDescription = "Self-custody. Fee-less swaps. 2FA."
     videoSrc = "/videos/wallettour.mp4"
     detailedDescription = "Funds land in a secure wallet merchants control. Giving a ledger view of ins and outs. When ready to cash out, send to a presaved offramp address. Send to your bank or swap first if needed, all straightforward. Wallet information is also easy to find on POS in app. The wallet, is a separate web app. Log in with an email (add 2FA for extra security), see balances, send funds to any address, or even swap between supported digital currencies. Receive by sharing your address. No blockchain jargon, just practical tools for managing funds.\n\nCharon Wallet is built with Privy, React frontend, and Node.js and Typescript backend."
     images = [
@@ -40,6 +43,7 @@ export default function ProjectPage() {
     ]
   } else if (slug === "pools") {
     title = "P00LS"
+    projectTitle = "Community Strategist → Senior Manager, Business Development"
     shortDescription = "Your community. Your token."
     videoSrc = "/videos/p00ls-sizzle.mp4"
     detailedDescription = "P00LS is a semi-decentralized web3 rewards protocol.\n\nThe best way to understand P00LS is to see it as a way for anyone with an audience in web3 (Creators) to automatically and simply create their own loyalty points as a fungible token and distribute them to their community (Holders).\n\nCreators can create NFTs that Holders will buy, mint, and hold. Create POAPs every time they organize events. Be active on a number of web3 protocols and apps such as Zora, Sound, Audius, or Lens. All these “engagements” form what we call a Creator’s economy. This economy is represented by a Token within the P00LS protocol.\n\nThe P00LS protocol dynamically matches a Creator’s economy with a community of holders through the continuous and automatic distribution of a non-transferable, fungible, and Creator-specific ERC20 token."
@@ -107,7 +111,7 @@ export default function ProjectPage() {
         </h1>
 
         {slug === "charon" && (
-        <div style={{ textAlign: "center", marginBottom: "16px" }}>
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
             <a
               href="https://www.charongateway.com/"
               target="_blank"
@@ -118,8 +122,25 @@ export default function ProjectPage() {
             </a>
           </div>
         )}
+
+        {slug === "pools" && (
+        <div style={{ textAlign: "center", marginBottom: "16px" }}>
+            <a
+              href="https://www.p00ls.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#d1d5db", fontSize: "16px", fontFamily: "'Hanken Grotesk', sans-serif" }}
+            >
+              https://www.p00ls.io
+            </a>
+          </div>
+        )}    
+
+        <p style={{ fontSize: "22px", fontWeight: "normal", marginBottom: "16px", textAlign: "center", color: "#d1d5db" }}>
+          {projectTitle}
+        </p>
         
-        <h3 style={{ fontSize: "20px", fontWeight: "normal", marginBottom: "32px", textAlign: "center", color: "#d1d5db" }}>
+        <h3 style={{ fontSize: "32px", fontWeight: "normal", marginBottom: "32px", textAlign: "center", color: "#d1d5db" }}>
           {shortDescription}
         </h3>
 
