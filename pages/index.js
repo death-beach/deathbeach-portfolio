@@ -1,3 +1,4 @@
+// pages/index.js
 import Image from "next/image"
 import Link from "next/link"
 import Hero from "@/components/Hero"
@@ -8,25 +9,25 @@ const portfolioItems = [
     id: 1,
     title: "Charon",
     slug: "charon",
-    image: "/imgages/charon.png",
+    image: "/images/charon.png",
   },
   {
     id: 2,
     title: "Charon Wallet",
     slug: "charon-wallet",
-    image: "/imgages/charon-wallet.png",
+    image: "/images/charon-wallet.png",
   },
   {
     id: 3,
     title: "Music Production",
     slug: "music-production",
-    image: "/imgages/death-beach.png",
+    image: "/images/death-beach.png",
   },
   {
     id: 4,
     title: "POOLS",
     slug: "pools",
-    image: "/imgages/p00ls.png",
+    image: "/images/p00ls.png",
   },
 ]
 
@@ -37,7 +38,7 @@ export default function Portfolio() {
       <Hero />
 
       {/* Portfolio Grid with darker charcoal background */}
-      <div style={{ backgroundColor: "#0f0f0f", padding: "36px 16px" }}>
+      <div style={{ backgroundColor: "#0f0f0f", padding: "48px 16px" }}>
         <div style={{ maxWidth: "1152px", margin: "0 auto" }}>
           <div
             style={{
@@ -46,7 +47,7 @@ export default function Portfolio() {
               gap: "32px",
             }}
           >
-            {portfolioItems.map((item) => {
+            {portfolioItems.map((item, index) => {
               const [isHovered, setIsHovered] = useState(false);
               return (
                 <Link key={item.id} href={`/projects/${item.slug}`} style={{ textDecoration: "none" }}>
@@ -68,6 +69,8 @@ export default function Portfolio() {
                           transition: "filter 0.3s ease",
                           filter: isHovered ? "invert(1)" : "none"
                         }}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        priority={index < 3} // Add priority to first few for LCP
                       />
                     </div>
                     <div style={{ padding: "0 16px 16px 16px" }}>

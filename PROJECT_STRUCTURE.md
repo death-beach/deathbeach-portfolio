@@ -15,7 +15,7 @@ deathbeach-portfolio/
 ├── public/
 │   ├── favicon.ico
 │   ├── logo_site.png
-│   ├── imgages/           # (note: still has the typo)
+│   ├── images/           
 │   │   ├── charon-wallet.png
 │   │   ├── charon.png
 │   │   ├── death-beach.png
