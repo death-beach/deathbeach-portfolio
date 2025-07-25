@@ -20,7 +20,7 @@ const portfolioItems = [
   {
     id: 3,
     title: "Music Production",
-    slug: "music-production",
+    slug: "production",
     image: "/images/death-beach.png",
   },
   {

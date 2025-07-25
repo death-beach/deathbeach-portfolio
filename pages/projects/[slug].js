@@ -18,6 +18,7 @@ export default function ProjectPage() {
   let images = []
   let additionalContent = null
   let projectTitle = ""
+  let customContent = null
 
   if (slug === "charon") {
     title = "Charon"
@@ -95,6 +96,64 @@ export default function ProjectPage() {
         </p>
       </>
     )
+  } else if (slug === "production") {
+    title = "Death Beach"
+    projectTitle = "Producer, Mixer, Engineer"
+    shortDescription = "Studio and location recording experiences."
+    detailedDescription = "Death Beach is a music producer focused on building immersive, emotionally resonant albums across genres like pop, rock, trip hop, indie, trance, and techno. Known for blending raw, unfiltered performances with meticulous sound design, Death Beach creates sonic environments that artists can truly lose themselves in.\n\nWith experience ranging from top-tier studios like Studio West and Rarefied in San Diego to makeshift setups in Airbnbs, hotel rooms, and remote homes, Death Beach prioritizes flexibility and inspiration over formality. Every session is designed to help artists tap into their truest voice, beyond studio constraints or clocked hours.\n\nProjects have included a five song EP recorded in Joshua Tree with Marc Oliver, a multi-location album journey recording with Choirs in Bakersfield and multiple studios in San Diego, assisting Ulrich Wilde recording Psychotic Waltz, and producing with the Dope Jackets.\n\nOriginally starting as a studio intern at Capricorn Studios learning from Bryan Stratman, Death Beach has since evolved into a producer dedicated to full length work; writing, tracking, and building records from the ground up. With a philosophy that values character over perfection, Death Beach believes the best records come from capturing real moments, whether they’re recorded on a $4,000 mic in a multi-million dollar studio or a phone.\n\nAvailable for select collaborations focused on long form album production and deep creative partnership."
+    customContent = (
+      <>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: "32px",
+            marginBottom: "48px",
+          }}
+        >
+          <iframe data-testid="embed-iframe" style={{borderRadius:"12px", height: "352px"}} src="https://open.spotify.com/embed/playlist/0m6i2hbWuTIaPiM5a59d9G?utm_source=generator" width="100%" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          <iframe width="100%" height="352" scrolling="no" frameBorder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1449922525%3Fsecret_token%3Ds-rX9IWtQtFxj&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
+        </div>
+        <p style={{ fontSize: "16px", lineHeight: "1.6", marginBottom: "48px", textAlign: "justify", whiteSpace: "pre-line" }}>
+          {detailedDescription}
+        </p>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: "32px",
+            marginBottom: "48px",
+          }}
+        >
+          <iframe width="100%" height="315" src="https://www.youtube.com/embed/eT9fDO06C7M?si=nI8SuApPo63si22k" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+          <iframe width="100%" height="315" src="https://www.youtube.com/embed/cpVPE_BQXEI?si=Ftu16tMicW63_GYW" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "32px",
+            marginBottom: "48px",
+          }}
+        >
+          {[
+            "/images/1.png",
+            "/images/2.png",
+            "/images/3.png"
+          ].map((img, index) => (
+            <div key={index} style={{ position: "relative", aspectRatio: "1.33", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}>
+              <Image
+                src={img}
+                alt={`Music Production image ${index + 1}`}
+                fill
+                style={{ objectFit: "contain" }}
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+            </div>
+          ))}
+        </div>
+      </>
+    )
   }
 
   if (!title) {
@@ -156,9 +215,11 @@ export default function ProjectPage() {
         </div>
       )}
 
-        <p style={{ fontSize: "16px", lineHeight: "1.6", marginBottom: "48px", textAlign: "justify", whiteSpace: "pre-line" }}>
-          {detailedDescription}
-        </p>
+        {slug !== "production" && (
+          <p style={{ fontSize: "16px", lineHeight: "1.6", marginBottom: "48px", textAlign: "justify", whiteSpace: "pre-line" }}>
+            {detailedDescription}
+          </p>
+        )}
 
         {images.length > 0 && slug === "pools" && (
           <div style={{ marginBottom: "48px", textAlign: "center" }}>
@@ -174,7 +235,7 @@ export default function ProjectPage() {
           </div>
         )}
 
-        {images.length > 0 && slug !== "pools" && (
+        {images.length > 0 && slug !== "pools" && slug !== "production" && (
           <div
             style={{
               display: "grid",
@@ -198,6 +259,7 @@ export default function ProjectPage() {
         )}
 
         {additionalContent}
+        {customContent}
       </div>
     </div>
   )

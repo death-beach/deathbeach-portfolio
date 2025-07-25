@@ -11,7 +11,7 @@ export default function Hero() {
   return (
     <div
       style={{
-        backgroundColor: "#0f0f0f",
+        backgroundColor: "#1a1a1a",
         color: "#ffffff",
         textAlign: "center",
         marginBottom: "0",
