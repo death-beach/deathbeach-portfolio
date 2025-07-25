@@ -28,6 +28,15 @@ export default function ProjectPage() {
       "/images/charon-qr.png",
       "/images/charon-done.png"
     ]
+  } else if (slug === "charon-wallet") {
+    title = "Charon Wallet"
+    shortDescription = "Self custody wallet for merchants. Email login, fee-less swaps between stablecoins, saved offramp address, and 2FA security."
+    videoSrc = "/videos/wallettour.mp4"
+    detailedDescription = "Funds land in a secure wallet merchants control. Giving a ledger view of ins and outs. When ready to cash out, send to a presaved offramp address. Send to your bank or swap first if needed, all straightforward. Wallet information is also easy to find on POS in app. The wallet, is a separate web app. Log in with an email (add 2FA for extra security), see balances, send funds to any address, or even swap between supported digital currencies. Receive by sharing your address. No blockchain jargon, just practical tools for managing funds."
+    images = [
+      "/images/charon-wallet.png",
+      "/images/wallet-options.png"
+    ]
   }
 
   if (!title) {
@@ -70,13 +79,13 @@ export default function ProjectPage() {
             }}
           >
             {images.map((img, index) => (
-              <div key={index} style={{ position: "relative", aspectRatio: "1.6", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}>
+              <div key={index} style={{ position: "relative", aspectRatio: slug === "charon-wallet" ? "1.84" : "1.6", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}>
                 <Image
                   src={img}
                   alt={`${title} image ${index + 1}`}
                   fill
                   style={{ objectFit: "contain" }}
-                  sizes="(max-width: 768px) 100vw, 576px"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
             ))}

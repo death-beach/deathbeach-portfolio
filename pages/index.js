@@ -15,7 +15,7 @@ const portfolioItems = [
     id: 2,
     title: "Charon Wallet",
     slug: "charon-wallet",
-    image: "/images/charon-wallet.png",
+    image: "/images/charon-wallet-project.png",
   },
   {
     id: 3,
