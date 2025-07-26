@@ -41,15 +41,28 @@ export default function Portfolio() {
       <div style={{ backgroundColor: "#0f0f0f", padding: "48px 16px" }}>
         <div style={{ maxWidth: "1152px", margin: "0 auto" }}>
           <style jsx>{`
-            @media (max-width: 767px) {
-              .portfolio-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-              }
-              .project-image {
-                aspect-ratio: 1 / 1 !important;
-              }
+          @media (max-width: 767px) {
+            .portfolio-grid {
+              grid-template-columns: repeat(2, 1fr) !important;
             }
-          `}</style>
+            .project-image {
+              aspect-ratio: 1 / 1 !important;
+              box-shadow: 0 0 20px rgba(255, 255, 255, 0.4) !important; /* Stronger glow on mobile */
+            }
+          }
+          @media (min-width: 768px) {
+            .portfolio-grid {
+              grid-template-columns: repeat(3, 1fr) !important;
+            }
+          }
+          .project-item {
+            aspect-ratio: 1 / 1 !important;
+            min-width: 0 !important;
+          }
+          .project-image {
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2) !important; /* Default glow for desktop */
+          }
+        `}</style>
           <div
             className="portfolio-grid"
             style={{
