@@ -47,7 +47,7 @@ export default function Portfolio() {
             }
             .project-image {
               aspect-ratio: 1 / 1 !important;
-              box-shadow: 0 0 60px rgba(255, 255, 255, 0.8) !important; /* Stronger glow on mobile */
+              box-shadow: 0 0 40px rgba(255, 255, 255, 0.6) !important; /* Stronger glow on mobile */
             }
           }
           @media (min-width: 768px) {
@@ -60,7 +60,7 @@ export default function Portfolio() {
             min-width: 0 !important;
           }
           .project-image {
-            box-shadow: 0 0 60px rgba(255, 255, 255, 0.8) !important; /* Default glow for desktop */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2) !important; /* Default glow for desktop */
           }
         `}</style>
           <div
