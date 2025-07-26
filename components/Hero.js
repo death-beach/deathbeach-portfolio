@@ -1,4 +1,4 @@
-"use client" // Dummy change to trigger deploy
+"use client"
 
 import Image from "next/image"
 import Link from "next/link"
@@ -19,6 +19,25 @@ export default function Hero() {
         fontFamily: "'Hanken Grotesk', sans-serif",
       }}
     >
+      <style jsx global>{`
+        @media (max-width: 767px) {
+          .nav-container {
+            gap: 16px !important;
+          }
+          .nav-link {
+            font-size: 24px !important;
+          }
+        }
+        @media (min-width: 768px) {
+          .nav-container {
+            gap: 48px !important;
+          }
+          .nav-link {
+            font-size: 48px !important;
+          }
+        }
+      `}</style>
+
       {/* Logo */}
       <div style={{ marginBottom: "-4px" }}>
         <div style={{ display: "inline-block" }}>
@@ -35,17 +54,17 @@ export default function Hero() {
       {/* Navigation */}
       <nav style={{ marginBottom: "24px" }}>
         <div
+          className="nav-container"
           style={{
             display: "flex",
             justifyContent: "center",
-            gap: "48px",
-            fontSize: "48px",
             listStyle: "none",
             margin: "0",
             padding: "0",
           }}
         >
           <Link
+            className="nav-link"
             href="/"
             style={{
               color: currentPath === "/" ? "#ffffff" : "#9ca3af",
@@ -57,6 +76,7 @@ export default function Hero() {
             Portfolio
           </Link>
           <Link
+            className="nav-link"
             href="/about"
             style={{
               color: currentPath === "/about" ? "#ffffff" : "#9ca3af",
@@ -68,6 +88,7 @@ export default function Hero() {
             About
           </Link>
           <Link
+            className="nav-link"
             href="/contact"
             style={{
               color: currentPath === "/contact" ? "#ffffff" : "#9ca3af",
