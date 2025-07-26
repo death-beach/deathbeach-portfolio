@@ -60,7 +60,7 @@ export default function Portfolio() {
             min-width: 0 !important;
           }
           .project-image {
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2) !important; /* Default glow for desktop */
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.8) !important; /* Default glow for desktop */
           }
         `}</style>
           <div
