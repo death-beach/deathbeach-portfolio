@@ -25,7 +25,7 @@ export default function Hero() {
             gap: 16px !important;
           }
           .nav-link {
-            font-size: 24px !important;
+            font-size: 32px !important; 
           }
         }
         @media (min-width: 768px) {
