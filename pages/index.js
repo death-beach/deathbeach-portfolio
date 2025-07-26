@@ -41,33 +41,28 @@ export default function Portfolio() {
       <div style={{ backgroundColor: "#0f0f0f", padding: "48px 16px" }}>
         <div style={{ maxWidth: "1152px", margin: "0 auto" }}>
           <style jsx>{`
-          @media (max-width: 767px) {
-            .portfolio-grid {
-              grid-template-columns: repeat(2, 1fr) !important;
+            @media (max-width: 767px) {
+              .portfolio-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+              }
+              .project-image {
+                aspect-ratio: 1 / 1 !important;
+                box-shadow: 0 0 40px rgba(255, 255, 255, 0.6) !important; /* Stronger glow on mobile */
+              }
             }
-            .project-image {
-              aspect-ratio: 1 / 1 !important;
-              box-shadow: 0 0 40px rgba(255, 255, 255, 0.6) !important; /* Stronger glow on mobile */
+            @media (min-width: 768px) {
+              .portfolio-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+              }
+              .project-image {
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.2) !important; /* Default glow for desktop */
+              }
             }
-          }
-          @media (min-width: 768px) {
-            .portfolio-grid {
-              grid-template-columns: repeat(3, 1fr) !important;
-            }
-          }
-          .project-item {
-            aspect-ratio: 1 / 1 !important;
-            min-width: 0 !important;
-          }
-          .project-image {
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2) !important; /* Default glow for desktop */
-          }
-        `}</style>
+          `}</style>
           <div
             className="portfolio-grid"
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
               gap: "32px",
             }}
           >
@@ -83,7 +78,7 @@ export default function Portfolio() {
                       transition: "box-shadow 0.3s ease",                
                     }}
                   >
-                    <div className="project-image" style={{ aspectRatio: "1", position: "relative", marginBottom: "16px", borderRadius: "4px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}>
+                    <div className="project-image" style={{ aspectRatio: "1", position: "relative", marginBottom: "16px", borderRadius: "4px", overflow: "hidden" }}>
                       <Image
                         src={item.image || "/placeholder.svg"}
                         alt={item.title}
