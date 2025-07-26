@@ -40,7 +40,18 @@ export default function Portfolio() {
       {/* Portfolio Grid with darker charcoal background */}
       <div style={{ backgroundColor: "#0f0f0f", padding: "48px 16px" }}>
         <div style={{ maxWidth: "1152px", margin: "0 auto" }}>
+          <style jsx>{`
+            @media (max-width: 767px) {
+              .portfolio-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+              }
+              .project-image {
+                aspect-ratio: 1 / 1 !important;
+              }
+            }
+          `}</style>
           <div
+            className="portfolio-grid"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
@@ -59,7 +70,7 @@ export default function Portfolio() {
                       transition: "box-shadow 0.3s ease",                
                     }}
                   >
-                    <div style={{ aspectRatio: "1", position: "relative", marginBottom: "16px", borderRadius: "4px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}>
+                    <div className="project-image" style={{ aspectRatio: "1", position: "relative", marginBottom: "16px", borderRadius: "4px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}>
                       <Image
                         src={item.image || "/placeholder.svg"}
                         alt={item.title}
@@ -69,7 +80,7 @@ export default function Portfolio() {
                           transition: "filter 0.3s ease",
                           filter: isHovered ? "invert(1)" : "none"
                         }}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 50vw, 33vw"
                         priority={index < 3} // Add priority to first few for LCP
                       />
                     </div>
