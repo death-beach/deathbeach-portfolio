@@ -112,7 +112,7 @@ export default function Hero() {
           fontFamily: "'Hanken Grotesk', sans-serif",
         }}
       >
-        Web 3 Integrations, Product Manager, Music Production
+        Web3 Integrations, Product Manager, Music Production
       </h1>
 
       {/* Social Icons */}
