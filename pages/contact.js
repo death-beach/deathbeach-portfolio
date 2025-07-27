@@ -199,9 +199,11 @@ export default function Contact() {
                 type="submit" 
                 disabled={isSubmitting}
                 style={{ 
-                  width: "100%", 
+                  width: "auto",
                   fontFamily: "'Hanken Grotesk', sans-serif",
-                  opacity: isSubmitting ? 0.7 : 1
+                  opacity: isSubmitting ? 0.7 : 1,
+                  alignSelf: "center", 
+                  padding: "8px 24px" 
                 }}
               >
                 {isSubmitting ? 'Sending...' : 'Send'}
