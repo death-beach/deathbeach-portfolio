@@ -138,14 +138,13 @@ export default function ProjectPage() {
           </div>
           <div style={{ position: "relative", height: "352px", backgroundColor: "#1a1a1a", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <iframe
-              width="100%"
-              height="352"
-              scrolling="no"
-              frameBorder="no"
-              allow="autoplay"
-              src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2057401593%3Fsecret_token%3Ds-7fj6ZH637y1&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
-              loading="lazy"
-            ></iframe>
+            width="100%"
+            height="352"
+            scrolling="no"
+            frameBorder="no"
+            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2057401593%3Fsecret_token%3Ds-7fj6ZH637y1&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+            loading="lazy"
+          ></iframe>
           </div>
         </div>
         <p style={{ fontSize: "16px", lineHeight: "1.6", marginBottom: "48px", textAlign: "justify", whiteSpace: "pre-line" }}>
