@@ -1,5 +1,5 @@
 import Image from "next/image"
-import Link from "next/link"
+import Link from "next/link" //new save
 import Hero from "@/components/Hero"
 import { Button } from "@/components/ui/button"
 
