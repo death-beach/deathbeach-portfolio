@@ -1,12 +1,11 @@
 import { useRouter } from "next/router"
 import Image from "next/image"
 import Hero from "@/components/Hero"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 export default function ProjectPage() {
   const router = useRouter()
   const [expandedImage, setExpandedImage] = useState(null)
-  const [imageLoadStates, setImageLoadStates] = useState({})
 
   if (!router.isReady) {
     return <div style={{ minHeight: "100vh", fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: "#0f0f0f", color: "#ffffff", display: "flex", justifyContent: "center", alignItems: "center" }}>Loading...</div>
@@ -31,52 +30,6 @@ export default function ProjectPage() {
   let projectTitle = ""
   let customContent = null
 
-  // Get all images for current project
-  const getAllProjectImages = () => {
-    let allImages = [...images];
-    if (slug === "pools") {
-      allImages.push(...["/images/p00ls-social-graph.png", "/images/p00ls-dashboard.png", "/images/p00ls-ish.png", "/images/p00ls-rewards.png"]);
-    }
-    if (slug === "production") {
-      allImages.push(...["/images/1.png", "/images/2.png", "/images/3.png"]);
-    }
-    return allImages;
-  };
-
-  // Aggressive preloading strategy
-  useEffect(() => {
-    const allImages = getAllProjectImages();
-    
-    // Create high-priority preload links
-    allImages.forEach(src => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = src;
-      link.fetchPriority = 'high';
-      document.head.appendChild(link);
-    });
-
-    // Also preload using Image objects for immediate cache
-    allImages.forEach(src => {
-      const img = new window.Image();
-      img.src = src;
-      img.onload = () => {
-        setImageLoadStates(prev => ({ ...prev, [src]: true }));
-      };
-    });
-
-    return () => {
-      // Cleanup preload links
-      const preloadLinks = document.querySelectorAll('link[rel="preload"][as="image"]');
-      preloadLinks.forEach(link => {
-        if (allImages.includes(link.href)) {
-          document.head.removeChild(link);
-        }
-      });
-    };
-  }, [slug]);
-
   if (slug === "charon") {
     title = "Charon"
     projectTitle = "Founder and Builder"
@@ -84,10 +37,10 @@ export default function ProjectPage() {
     videoSrc = "/videos/PayDemo.mp4"
     detailedDescription = "Integrates with POS systems to process payments instantly with lower fees, no chargebacks, and no crypto complexity.\n\nBuilt using Solana Pay, Charon allows merchants to start accepting stablecoins like USDC with no new hardware or extra steps. Simply install Charon on your register and the app pulls relevant merchant information automatically that will be tied to a wallet created and accessed with an email address. Charon fits into normal payment flows, requires minimal training for employees, handles split payments and refunds. Customers enjoy a typical payment flow where they can tip and then simply scan a QR code to pay with their favorite wallet.\n\nCharon is built using Solana Pay, Privy, Jupiter swaps, Node.js and Typscript backend, and Kotlin front end."
     images = [
-      "/images/charon-pay.png",
-      "/images/charon-tip.png",
-      "/images/charon-qr.png",
-      "/images/charon-done.png"
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/charon-pay.png",
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/charon-tip.png",
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/charon-qr.png",
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/charon-done.png"
     ]
   } else if (slug === "charon-wallet") {
     title = "Charon Wallet"
@@ -96,8 +49,8 @@ export default function ProjectPage() {
     videoSrc = "/videos/wallettour.mp4"
     detailedDescription = "Funds land in a secure wallet merchants control. Giving a ledger view of ins and outs. When ready to cash out, send to a presaved offramp address. Send to your bank or swap first if needed, all straightforward. Wallet information is also easy to find on POS in app. The wallet, is a separate web app. Log in with an email (add 2FA for extra security), see balances, send funds to any address, or even swap between supported digital currencies. Receive by sharing your address. No blockchain jargon, just practical tools for managing funds.\n\nCharon Wallet is built with Privy, React frontend, and Node.js and Typescript backend."
     images = [
-      "/images/charon-wallet.jpg",
-      "/images/wallet-options.jpg"
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/charon-wallet.jpg",
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/wallet-options.jpg"
     ]
   } else if (slug === "pools") {
     title = "P00LS"
@@ -106,7 +59,7 @@ export default function ProjectPage() {
     videoSrc = "/videos/p00ls-sizzle.mp4"
     detailedDescription = "P00LS is a semi-decentralized web3 rewards protocol.\n\nThe best way to understand P00LS is to see it as a way for anyone with an audience in web3 (Creators) to automatically and simply create their own loyalty points as a fungible token and distribute them to their community (Holders).\n\nCreators can create NFTs that Holders will buy, mint, and hold. Create POAPs every time they organize events. Be active on a number of web3 protocols and apps such as Zora, Sound, Audius, or Lens. All these engagements form what we call a Creator's economy. This economy is represented by a Token within the P00LS protocol.\n\nThe P00LS protocol dynamically matches a Creator's economy with a community of holders through the continuous and automatic distribution of a non-transferable, fungible, and Creator-specific ERC20 token."
     images = [
-      "/images/p00ls-image.png"
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/p00ls-image.png"
     ]
     additionalContent = (
       <>
@@ -122,10 +75,10 @@ export default function ProjectPage() {
           }}
         >
           {[
-            "/images/p00ls-social-graph.png",
-            "/images/p00ls-dashboard.png",
-            "/images/p00ls-ish.png",
-            "/images/p00ls-rewards.png"
+            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/p00ls-social-graph.png",
+            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/p00ls-dashboard.png",
+            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/p00ls-ish.png",
+            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/p00ls-rewards.png"
           ].map((img, index) => (
             <div key={index} style={{ position: "relative", aspectRatio: "1.777", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)", cursor: "pointer" }} onClick={() => handleImageClick(img)}>
               <Image
@@ -217,9 +170,9 @@ export default function ProjectPage() {
           }}
         >
           {[
-            "/images/1.png",
-            "/images/2.png",
-            "/images/3.png"
+            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/1.png",
+            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/2.png",
+            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/3.png"
           ].map((img, index) => (
             <div key={index} style={{ position: "relative", aspectRatio: "1.33", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)", cursor: "pointer" }} onClick={() => handleImageClick(img)}>
               <Image
@@ -376,8 +329,6 @@ export default function ProjectPage() {
               sizes="95vw"
               priority
               quality={95}
-              placeholder="blur"
-              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
             />
           </div>
         </div>
