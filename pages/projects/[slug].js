@@ -49,8 +49,8 @@ export default function ProjectPage() {
     videoSrc = "/videos/wallettour.mp4"
     detailedDescription = "Funds land in a secure wallet merchants control. Giving a ledger view of ins and outs. When ready to cash out, send to a presaved offramp address. Send to your bank or swap first if needed, all straightforward. Wallet information is also easy to find on POS in app. The wallet, is a separate web app. Log in with an email (add 2FA for extra security), see balances, send funds to any address, or even swap between supported digital currencies. Receive by sharing your address. No blockchain jargon, just practical tools for managing funds.\n\nCharon Wallet is built with Privy, React frontend, and Node.js and Typescript backend."
     images = [
-      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/charon-wallet.jpg",
-      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/wallet-options.jpg"
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/charon-wallet.png",
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/wallet-options.png"
     ]
   } else if (slug === "pools") {
     title = "P00LS"
@@ -329,6 +329,7 @@ export default function ProjectPage() {
               sizes="95vw"
               priority
               quality={95}
+              loading="eager"
             />
           </div>
         </div>
