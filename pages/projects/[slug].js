@@ -1,15 +1,25 @@
 import { useRouter } from "next/router"
 import Image from "next/image"
 import Hero from "@/components/Hero"
+import { useState } from "react"
 
 export default function ProjectPage() {
   const router = useRouter()
+  const [expandedImage, setExpandedImage] = useState(null)
 
   if (!router.isReady) {
     return <div style={{ minHeight: "100vh", fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: "#0f0f0f", color: "#ffffff", display: "flex", justifyContent: "center", alignItems: "center" }}>Loading...</div>
   }
 
   const { slug } = router.query
+
+  const handleImageClick = (imageSrc) => {
+    setExpandedImage(imageSrc)
+  }
+
+  const closeModal = () => {
+    setExpandedImage(null)
+  }
 
   let title = ""
   let shortDescription = ""
@@ -47,14 +57,14 @@ export default function ProjectPage() {
     projectTitle = "Community Strategist → Senior Manager, Business Development"
     shortDescription = "Your community. Your token."
     videoSrc = "/videos/p00ls-sizzle.mp4"
-    detailedDescription = "P00LS is a semi-decentralized web3 rewards protocol.\n\nThe best way to understand P00LS is to see it as a way for anyone with an audience in web3 (Creators) to automatically and simply create their own loyalty points as a fungible token and distribute them to their community (Holders).\n\nCreators can create NFTs that Holders will buy, mint, and hold. Create POAPs every time they organize events. Be active on a number of web3 protocols and apps such as Zora, Sound, Audius, or Lens. All these “engagements” form what we call a Creator’s economy. This economy is represented by a Token within the P00LS protocol.\n\nThe P00LS protocol dynamically matches a Creator’s economy with a community of holders through the continuous and automatic distribution of a non-transferable, fungible, and Creator-specific ERC20 token."
+    detailedDescription = "P00LS is a semi-decentralized web3 rewards protocol.\n\nThe best way to understand P00LS is to see it as a way for anyone with an audience in web3 (Creators) to automatically and simply create their own loyalty points as a fungible token and distribute them to their community (Holders).\n\nCreators can create NFTs that Holders will buy, mint, and hold. Create POAPs every time they organize events. Be active on a number of web3 protocols and apps such as Zora, Sound, Audius, or Lens. All these engagements form what we call a Creator's economy. This economy is represented by a Token within the P00LS protocol.\n\nThe P00LS protocol dynamically matches a Creator's economy with a community of holders through the continuous and automatic distribution of a non-transferable, fungible, and Creator-specific ERC20 token."
     images = [
       "/images/p00ls-image.png"
     ]
     additionalContent = (
       <>
         <p style={{ fontSize: "16px", lineHeight: "1.6", marginBottom: "48px", textAlign: "justify" }}>
-          A P00LS Creator Token is a tool at the disposal of anyone with an audience who wants to map, understand, and reward their whole web3 audience - in the past, present, and future. Composable, it can be integrated and included on any platform, webpage, or app that supports web3 (e.g., token gating). It is an evolving tool that continuously evolves with a Creator’s economy and their audience.
+          A P00LS Creator Token is a tool at the disposal of anyone with an audience who wants to map, understand, and reward their whole web3 audience - in the past, present, and future. Composable, it can be integrated and included on any platform, webpage, or app that supports web3 (e.g., token gating). It is an evolving tool that continuously evolves with a Creator's economy and their audience.
         </p>
         <div
           style={{
@@ -70,7 +80,7 @@ export default function ProjectPage() {
             "/images/p00ls-ish.png",
             "/images/p00ls-rewards.png"
           ].map((img, index) => (
-            <div key={index} style={{ position: "relative", aspectRatio: "1.777", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}>
+            <div key={index} style={{ position: "relative", aspectRatio: "1.777", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)", cursor: "pointer" }} onClick={() => handleImageClick(img)}>
               <Image
                 src={img}
                 alt={`P00LS image ${index + 1}`}
@@ -100,7 +110,7 @@ export default function ProjectPage() {
     title = "Death Beach"
     projectTitle = "Producer, Mixer, Engineer"
     shortDescription = "Studio and location recording experiences."
-    detailedDescription = "Death Beach is a music producer focused on building immersive, emotionally resonant albums across genres like pop, rock, trip hop, indie, trance, and techno. Known for blending raw, unfiltered performances with meticulous sound design, Death Beach creates sonic environments that artists can truly lose themselves in.\n\nWith experience ranging from top-tier studios like Studio West and Rarefied in San Diego to makeshift setups in Airbnbs, hotel rooms, and remote homes, Death Beach prioritizes flexibility and inspiration over formality. Every session is designed to help artists tap into their truest voice, beyond studio constraints or clocked hours.\n\nProjects have included a five song EP recorded in Joshua Tree with Marc Oliver, a multi-location album journey recording with Choirs in Bakersfield and multiple studios in San Diego, assisting Ulrich Wilde recording Psychotic Waltz, and producing with the Dope Jackets.\n\nOriginally starting as a studio intern at Capricorn Studios learning from Bryan Stratman, Death Beach has since evolved into a producer dedicated to full length work; writing, tracking, and building records from the ground up. With a philosophy that values character over perfection, Death Beach believes the best records come from capturing real moments, whether they’re recorded on a $4,000 mic in a multi-million dollar studio or a phone.\n\nAvailable for select collaborations focused on long form album production and deep creative partnership."
+    detailedDescription = "Death Beach is a music producer focused on building immersive, emotionally resonant albums across genres like pop, rock, trip hop, indie, trance, and techno. Known for blending raw, unfiltered performances with meticulous sound design, Death Beach creates sonic environments that artists can truly lose themselves in.\n\nWith experience ranging from top-tier studios like Studio West and Rarefied in San Diego to makeshift setups in Airbnbs, hotel rooms, and remote homes, Death Beach prioritizes flexibility and inspiration over formality. Every session is designed to help artists tap into their truest voice, beyond studio constraints or clocked hours.\n\nProjects have included a five song EP recorded in Joshua Tree with Marc Oliver, a multi-location album journey recording with Choirs in Bakersfield and multiple studios in San Diego, assisting Ulrich Wilde recording Psychotic Waltz, and producing with the Dope Jackets.\n\nOriginally starting as a studio intern at Capricorn Studios learning from Bryan Stratman, Death Beach has since evolved into a producer dedicated to full length work; writing, tracking, and building records from the ground up. With a philosophy that values character over perfection, Death Beach believes the best records come from capturing real moments, whether they're recorded on a $4,000 mic in a multi-million dollar studio or a phone.\n\nAvailable for select collaborations focused on long form album production and deep creative partnership."
     customContent = (
       <>
         <div
@@ -162,7 +172,7 @@ export default function ProjectPage() {
             "/images/2.png",
             "/images/3.png"
           ].map((img, index) => (
-            <div key={index} style={{ position: "relative", aspectRatio: "1.33", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}>
+            <div key={index} style={{ position: "relative", aspectRatio: "1.33", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)", cursor: "pointer" }} onClick={() => handleImageClick(img)}>
               <Image
                 src={img}
                 alt={`Music Production image ${index + 1}`}
@@ -246,7 +256,7 @@ export default function ProjectPage() {
 
         {images.length > 0 && slug === "pools" && (
           <div style={{ marginBottom: "48px", textAlign: "center" }}>
-            <div style={{ position: "relative", aspectRatio: "2.07", maxWidth: "800px", margin: "0 auto", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}>
+            <div style={{ position: "relative", aspectRatio: "2.07", maxWidth: "800px", margin: "0 auto", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)", cursor: "pointer" }} onClick={() => handleImageClick(images[0])}>
               <Image
                 src={images[0]}
                 alt="P00LS image"
@@ -268,7 +278,7 @@ export default function ProjectPage() {
             }}
           >
             {images.map((img, index) => (
-              <div key={index} style={{ position: "relative", aspectRatio: slug === "charon-wallet" ? "1.84" : "1.6", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}>
+              <div key={index} style={{ position: "relative", aspectRatio: slug === "charon-wallet" ? "1.84" : "1.6", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)", cursor: "pointer" }} onClick={() => handleImageClick(img)}>
                 <Image
                   src={img}
                   alt={`${title} image ${index + 1}`}
@@ -284,6 +294,36 @@ export default function ProjectPage() {
         {additionalContent}
         {customContent}
       </div>
+
+      {/* Image Modal */}
+      {expandedImage && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.9)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+            cursor: "pointer"
+          }}
+          onClick={closeModal}
+        >
+          <div style={{ position: "relative", maxWidth: "90%", maxHeight: "90%" }}>
+            <Image
+              src={expandedImage}
+              alt="Expanded image"
+              width={1200}
+              height={800}
+              style={{ objectFit: "contain", maxWidth: "100%", maxHeight: "100%" }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
