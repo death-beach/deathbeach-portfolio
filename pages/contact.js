@@ -1,13 +1,55 @@
+import { useState } from 'react'
+import emailjs from '@emailjs/browser'
 import Hero from "@/components/Hero"
 import { Button } from "@/components/ui/button"
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [status, setStatus] = useState('')
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setStatus('')
+    
+    try {
+      await emailjs.send(
+        'service_3xfc6be',
+        'template_b3toc88',
+        {
+          name: formData.name,
+          email: formData.email,
+          message: formData.message
+        },
+        '0EwhoSXIL8FmvrNEF'
+      )
+      
+      setStatus('Message sent successfully! 🎉')
+      setFormData({ name: '', email: '', message: '' })
+    } catch (error) {
+      console.error('EmailJS error:', error)
+      setStatus('Failed to send message. Please try again. ❌')
+    }
+    
+    setIsSubmitting(false)
+  }
+
   return (
     <div style={{ minHeight: "100vh", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-      {/* Hero Section */}
       <Hero />
 
-      {/* Contact Form with haunted charcoal background */}
       <div style={{ backgroundColor: "#0f0f0f", padding: "48px 16px" }}>
         <div style={{ maxWidth: "500px", margin: "0 auto" }}>
           <div
@@ -35,7 +77,7 @@ export default function Contact() {
               </p>
             </div>
 
-            <form style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
               <div>
                 <label
                   htmlFor="name"
@@ -53,6 +95,10 @@ export default function Contact() {
                 <input
                   type="text"
                   id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
                   style={{
                     width: "100%",
                     padding: "8px 12px",
@@ -82,6 +128,10 @@ export default function Contact() {
                 <input
                   type="email"
                   id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
                   style={{
                     width: "100%",
                     padding: "8px 12px",
@@ -110,6 +160,10 @@ export default function Contact() {
                 </label>
                 <textarea
                   id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
                   rows={5}
                   style={{
                     width: "100%",
@@ -124,8 +178,29 @@ export default function Contact() {
                 ></textarea>
               </div>
 
-              <Button type="submit" style={{ width: "18%", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                Send
+              {status && (
+                <div style={{ 
+                  textAlign: "center", 
+                  padding: "12px",
+                  borderRadius: "6px",
+                  backgroundColor: status.includes('successfully') ? '#dcfce7' : '#fef2f2',
+                  color: status.includes('successfully') ? '#166534' : '#dc2626',
+                  fontFamily: "'Hanken Grotesk', sans-serif"
+                }}>
+                  {status}
+                </div>
+              )}
+
+              <Button 
+                type="submit" 
+                disabled={isSubmitting}
+                style={{ 
+                  width: "100%", 
+                  fontFamily: "'Hanken Grotesk', sans-serif",
+                  opacity: isSubmitting ? 0.7 : 1
+                }}
+              >
+                {isSubmitting ? 'Sending...' : 'Send'}
               </Button>
             </form>
           </div>
