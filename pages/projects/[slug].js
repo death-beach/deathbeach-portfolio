@@ -1,4 +1,4 @@
-import { useRouter } from "next/router" //git is cocksuer
+import { useRouter } from "next/router"
 import Image from "next/image"
 import Hero from "@/components/Hero"
 import { useState, useEffect } from "react"
@@ -6,6 +6,7 @@ import { useState, useEffect } from "react"
 export default function ProjectPage() {
   const router = useRouter()
   const [expandedImage, setExpandedImage] = useState(null)
+  const [imageLoadStates, setImageLoadStates] = useState({})
 
   if (!router.isReady) {
     return <div style={{ minHeight: "100vh", fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: "#0f0f0f", color: "#ffffff", display: "flex", justifyContent: "center", alignItems: "center" }}>Loading...</div>
@@ -30,24 +31,51 @@ export default function ProjectPage() {
   let projectTitle = ""
   let customContent = null
 
-  // Preload all images immediately when page loads
-  useEffect(() => {
-    const allImages = [...images];
+  // Get all images for current project
+  const getAllProjectImages = () => {
+    let allImages = [...images];
     if (slug === "pools") {
-      allImages.push(...["/images/p00ls-social-graph.jpg", "/images/p00ls-dashboard.jpg", "/images/p00ls-ish.jpg", "/images/p00ls-rewards.jpg"]);
+      allImages.push(...["/images/p00ls-social-graph.png", "/images/p00ls-dashboard.png", "/images/p00ls-ish.png", "/images/p00ls-rewards.png"]);
     }
     if (slug === "production") {
-      allImages.push(...["/images/1.jpg", "/images/2.jpg", "/images/3.jpg"]);
+      allImages.push(...["/images/1.png", "/images/2.png", "/images/3.png"]);
     }
+    return allImages;
+  };
+
+  // Aggressive preloading strategy
+  useEffect(() => {
+    const allImages = getAllProjectImages();
     
+    // Create high-priority preload links
     allImages.forEach(src => {
       const link = document.createElement('link');
       link.rel = 'preload';
       link.as = 'image';
       link.href = src;
+      link.fetchPriority = 'high';
       document.head.appendChild(link);
     });
-  }, [slug, images]);
+
+    // Also preload using Image objects for immediate cache
+    allImages.forEach(src => {
+      const img = new window.Image();
+      img.src = src;
+      img.onload = () => {
+        setImageLoadStates(prev => ({ ...prev, [src]: true }));
+      };
+    });
+
+    return () => {
+      // Cleanup preload links
+      const preloadLinks = document.querySelectorAll('link[rel="preload"][as="image"]');
+      preloadLinks.forEach(link => {
+        if (allImages.includes(link.href)) {
+          document.head.removeChild(link);
+        }
+      });
+    };
+  }, [slug]);
 
   if (slug === "charon") {
     title = "Charon"
@@ -106,6 +134,8 @@ export default function ProjectPage() {
                 fill
                 style={{ objectFit: "contain" }}
                 sizes="(max-width: 768px) 100vw, 50vw"
+                priority={index < 2}
+                quality={90}
               />
             </div>
           ))}
@@ -198,6 +228,8 @@ export default function ProjectPage() {
                 fill
                 style={{ objectFit: "contain" }}
                 sizes="(max-width: 768px) 100vw, 33vw"
+                priority={index === 0}
+                quality={90}
               />
             </div>
           ))}
@@ -282,6 +314,8 @@ export default function ProjectPage() {
                 fill
                 style={{ objectFit: "contain" }}
                 sizes="(max-width: 768px) 100vw, 800px"
+                priority
+                quality={90}
               />
             </div>
           </div>
@@ -304,6 +338,8 @@ export default function ProjectPage() {
                   fill
                   style={{ objectFit: "contain" }}
                   sizes="(max-width: 768px) 100vw, 50vw"
+                  priority={index < 2}
+                  quality={90}
                 />
               </div>
             ))}
@@ -315,33 +351,37 @@ export default function ProjectPage() {
       </div>
 
       {expandedImage && (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.9)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          zIndex: 1000,
-          cursor: "pointer"
-        }}
-        onClick={closeModal}
-      >
-        <img
-          src={expandedImage}
-          alt="Expanded image"
+        <div
           style={{
-            maxWidth: "95%",
-            maxHeight: "95%",
-            objectFit: "contain"
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.9)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+            cursor: "pointer"
           }}
-        />
-      </div>
-    )}
+          onClick={closeModal}
+        >
+          <div style={{ position: "relative", maxWidth: "95%", maxHeight: "95%", width: "100%", height: "100%" }}>
+            <Image
+              src={expandedImage}
+              alt="Expanded image"
+              fill
+              style={{ objectFit: "contain" }}
+              sizes="95vw"
+              priority
+              quality={95}
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
