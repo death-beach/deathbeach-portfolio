@@ -25,22 +25,26 @@ export default function Contact() {
     setStatus('')
     
     try {
-      await emailjs.send(
+      emailjs.init('0EwhoSXIL8FmvrNEF')
+      
+      const result = await emailjs.send(
         'service_3xfc6be',
         'template_b3toc88',
         {
           name: formData.name,
           email: formData.email,
-          message: formData.message
+          message: formData.message,
+          to_email: 'deathbeachstudio@gmail.com'
         },
         '0EwhoSXIL8FmvrNEF'
       )
       
+      console.log('EmailJS result:', result) // For debugging
       setStatus('Message sent successfully! 🎉')
       setFormData({ name: '', email: '', message: '' })
     } catch (error) {
       console.error('EmailJS error:', error)
-      setStatus('Failed to send message. Please try again. ❌')
+      setStatus(`Failed to send: ${error.text || error.message || 'Unknown error'}`)
     }
     
     setIsSubmitting(false)
