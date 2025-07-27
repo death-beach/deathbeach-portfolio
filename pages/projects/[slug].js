@@ -1,4 +1,4 @@
-import { useRouter } from "next/router"
+import { useRouter } from "next/router" //git is cocksuer
 import Image from "next/image"
 import Hero from "@/components/Hero"
 import { useState } from "react"
