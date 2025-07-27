@@ -70,15 +70,19 @@ export default function About() {
                       • Web 3 Integration
                     </li>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                      • Product Management
+                      • PM
                     </li>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
                       • Music Production
                     </li>
                   </ul>
-                  <ul style={{ listStyle: "none", padding: "0" }}>
+                  <ul style={{ 
+                    listStyle: "none", 
+                    padding: "0",
+                    paddingLeft: window.innerWidth <= 768 ? "16px" : "0"
+                  }}>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                      • Blockchain Technology
+                      • Blockchain
                     </li>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
                       • Cryptocurrency
