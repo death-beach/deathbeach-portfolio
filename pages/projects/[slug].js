@@ -89,6 +89,7 @@ export default function ProjectPage() {
                 sizes="(max-width: 768px) 100vw, 50vw"
                 priority={index < 2}
                 quality={90}
+                loading="eager"
               />
             </div>
           ))}
@@ -118,7 +119,7 @@ export default function ProjectPage() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
+            gridTemplateColumns: window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
             gap: "32px",
             marginBottom: "48px",
           }}
@@ -153,7 +154,7 @@ export default function ProjectPage() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
+            gridTemplateColumns: window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
             gap: "32px",
             marginBottom: "48px",
           }}
@@ -183,6 +184,7 @@ export default function ProjectPage() {
                 sizes="(max-width: 768px) 100vw, 33vw"
                 priority={index === 0}
                 quality={90}
+                loading="eager"
               />
             </div>
           ))}
@@ -245,6 +247,7 @@ export default function ProjectPage() {
             controls
             autoPlay={slug === "pools"}
             muted={slug === "pools"}
+            playsInline={slug === "pools"}
             preload="metadata"
             poster={`/images/${slug}-poster.png`}
             style={{ maxWidth: "600px", width: "100%", borderRadius: "8px", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}
@@ -269,6 +272,7 @@ export default function ProjectPage() {
                 sizes="(max-width: 768px) 100vw, 800px"
                 priority
                 quality={90}
+                loading="eager"
               />
             </div>
           </div>
@@ -293,6 +297,7 @@ export default function ProjectPage() {
                   sizes="(max-width: 768px) 100vw, 50vw"
                   priority={index < 2}
                   quality={90}
+                  loading="eager"
                 />
               </div>
             ))}
