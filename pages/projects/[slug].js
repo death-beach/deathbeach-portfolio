@@ -143,7 +143,7 @@ export default function ProjectPage() {
               scrolling="no"
               frameBorder="no"
               allow="autoplay"
-              src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1449922525%3Fsecret_token%3Ds-rX9IWtQtFxj&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+              src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2057401593%3Fsecret_token%3Ds-7fj6ZH637y1&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
               loading="lazy"
             ></iframe>
           </div>
