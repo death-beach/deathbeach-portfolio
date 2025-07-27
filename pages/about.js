@@ -65,7 +65,7 @@ export default function About() {
                   Skills & Expertise
                 </h3>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                  <ul style={{ listStyle: "none", padding: "0" }}>
+                <ul style={{ listStyle: "none", padding: "0" }}>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
                       • Web 3 Integration
                     </li>
@@ -79,7 +79,7 @@ export default function About() {
                   <ul style={{ 
                     listStyle: "none", 
                     padding: "0",
-                    paddingLeft: window.innerWidth <= 768 ? "16px" : "0"
+                    paddingLeft: "16px"
                   }}>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
                       • Blockchain
