@@ -1,7 +1,7 @@
 import { useRouter } from "next/router" //git is cocksuer
 import Image from "next/image"
 import Hero from "@/components/Hero"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function ProjectPage() {
   const router = useRouter()
@@ -30,6 +30,25 @@ export default function ProjectPage() {
   let projectTitle = ""
   let customContent = null
 
+  // Preload all images immediately when page loads
+  useEffect(() => {
+    const allImages = [...images];
+    if (slug === "pools") {
+      allImages.push(...["/images/p00ls-social-graph.jpg", "/images/p00ls-dashboard.jpg", "/images/p00ls-ish.jpg", "/images/p00ls-rewards.jpg"]);
+    }
+    if (slug === "production") {
+      allImages.push(...["/images/1.jpg", "/images/2.jpg", "/images/3.jpg"]);
+    }
+    
+    allImages.forEach(src => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = src;
+      document.head.appendChild(link);
+    });
+  }, [slug, images]);
+
   if (slug === "charon") {
     title = "Charon"
     projectTitle = "Founder and Builder"
@@ -49,8 +68,8 @@ export default function ProjectPage() {
     videoSrc = "/videos/wallettour.mp4"
     detailedDescription = "Funds land in a secure wallet merchants control. Giving a ledger view of ins and outs. When ready to cash out, send to a presaved offramp address. Send to your bank or swap first if needed, all straightforward. Wallet information is also easy to find on POS in app. The wallet, is a separate web app. Log in with an email (add 2FA for extra security), see balances, send funds to any address, or even swap between supported digital currencies. Receive by sharing your address. No blockchain jargon, just practical tools for managing funds.\n\nCharon Wallet is built with Privy, React frontend, and Node.js and Typescript backend."
     images = [
-      "/images/charon-wallet.png",
-      "/images/wallet-options.png"
+      "/images/charon-wallet.jpg",
+      "/images/wallet-options.jpg"
     ]
   } else if (slug === "pools") {
     title = "P00LS"
@@ -295,35 +314,34 @@ export default function ProjectPage() {
         {customContent}
       </div>
 
-      {/* Image Modal */}
       {expandedImage && (
-        <div
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.9)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1000,
+          cursor: "pointer"
+        }}
+        onClick={closeModal}
+      >
+        <img
+          src={expandedImage}
+          alt="Expanded image"
           style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.9)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-            cursor: "pointer"
+            maxWidth: "95%",
+            maxHeight: "95%",
+            objectFit: "contain"
           }}
-          onClick={closeModal}
-        >
-          <div style={{ position: "relative", maxWidth: "90%", maxHeight: "90%" }}>
-            <Image
-              src={expandedImage}
-              alt="Expanded image"
-              width={1200}
-              height={800}
-              style={{ objectFit: "contain", maxWidth: "100%", maxHeight: "100%" }}
-            />
-          </div>
-        </div>
-      )}
+        />
+      </div>
+    )}
     </div>
   )
 }
