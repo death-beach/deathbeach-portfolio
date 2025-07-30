@@ -201,7 +201,7 @@ export default function ProjectPage() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
+            gridTemplateColumns: window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
             gap: "32px",
             marginBottom: "48px",
           }}
@@ -431,18 +431,19 @@ export default function ProjectPage() {
         >
           <div style={{ position: "relative", maxWidth: "95%", maxHeight: "95%", width: "100%", height: "100%" }}>
           {expandedImage.endsWith('.pdf') ? (
-          <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <iframe 
-              src={`${expandedImage}#view=FitH`}
-              width="100%" 
-              height="100%" 
-              style={{ 
-                borderRadius: "8px", 
-                border: "none",
-                minHeight: "90vh"
-              }}
-            />
-          </div>
+              window.innerWidth <= 768 ? (
+                window.open(expandedImage, '_blank')
+              ) : (
+                <iframe 
+                  src={expandedImage}
+                  width="100%" 
+                  height="100%" 
+                  style={{ 
+                    borderRadius: "8px", 
+                    border: "none"
+                  }}
+                />
+              )
             ) : (
               <Image
                 src={expandedImage}
