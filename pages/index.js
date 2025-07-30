@@ -29,6 +29,12 @@ const portfolioItems = [
     slug: "pools",
     image: "/images/p00ls.png",
   },
+  {
+    id: 5,
+    title: "Content",
+    slug: "content",
+    image: "/images/content.png",
+  },
 ]
 
 export default function Portfolio() {
