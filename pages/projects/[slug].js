@@ -382,7 +382,7 @@ export default function ProjectPage() {
           </div>
         )}
 
-        {images.length > 0 && slug !== "pools" && slug !== "production" && slug !== "content" && (
+        {images.length > 0 && slug !== "pools" && slug !== "production" && (
           <div
             style={{
               display: "grid",
