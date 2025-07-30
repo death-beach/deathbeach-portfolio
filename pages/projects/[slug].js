@@ -288,14 +288,14 @@ export default function ProjectPage() {
         <div style={{ marginBottom: "48px", textAlign: "center" }}>
           {slug === "content" ? (
             <iframe
-              width="560"
+              width="100%"
               height="315"
               src={videoSrc.replace("youtu.be/", "www.youtube.com/embed/").split("?")[0]}
               title="Content YouTube Video"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-              style={{ borderRadius: "8px", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}
+              style={{ maxWidth: "560px", borderRadius: "8px", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}
             />
           ) : (
             <video
@@ -430,13 +430,12 @@ export default function ProjectPage() {
           onClick={closeModal}
         >
           <div style={{ position: "relative", maxWidth: "95%", maxHeight: "95%", width: "100%", height: "100%" }}>
-            {expandedImage.endsWith('.pdf') ? (
-              <embed 
+          {expandedImage.endsWith('.pdf') ? (
+              <iframe 
                 src={expandedImage} 
-                type="application/pdf" 
                 width="100%" 
                 height="100%" 
-                style={{ borderRadius: "8px" }}
+                style={{ borderRadius: "8px", border: "none" }}
               />
             ) : (
               <Image
