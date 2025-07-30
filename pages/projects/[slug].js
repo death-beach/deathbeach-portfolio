@@ -212,7 +212,7 @@ export default function ProjectPage() {
             "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/ws-how-listen.png",
             "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/ws-future-music-ind.png"
           ].map((img, index) => (
-            <div key={index} style={{ position: "relative", aspectRatio: "16 / 9", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }} onClick={() => handleImageClick(img)}>
+            <div key={index} style={{ position: "relative", aspectRatio: "16 / 9", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)", cursor: "pointer" }} onClick={() => handleImageClick(img)}>
               <Image
                 src={img}
                 alt={`Content image ${index + 1}`}
@@ -224,14 +224,14 @@ export default function ProjectPage() {
           ))}
         </div>
         <div style={{ marginBottom: "48px", textAlign: "center" }}>
-        <Image
-          src="https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/part-time-artist-thumb.png"
-          alt="The Part-Time Artist PDF"
-          width={612}
-          height={791}
-          style={{ maxWidth: "100%", height: "auto", cursor: "pointer" }}
-          onClick={() => handleImageClick("https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/ThePartTimeArtist.pdf")}
-        />
+          <Image
+            src="https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/part-time-artist-thumb.png"
+            alt="The Part-Time Artist PDF"
+            width={612}
+            height={791}
+            style={{ maxWidth: "100%", height: "auto", cursor: "pointer" }}
+            onClick={() => handleImageClick("https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/ThePartTimeArtist.pdf")}
+          />
         </div>
       </>
     )
