@@ -224,13 +224,14 @@ export default function ProjectPage() {
           ))}
         </div>
         <div style={{ marginBottom: "48px", textAlign: "center" }}>
-          <Image
-            src="https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/ThePartTimeArtist.pdf"
-            alt="The Part-Time Artist PDF"
-            width={612}
-            height={791}
-            style={{ maxWidth: "100%", height: "auto" }}
-          />
+        <Image
+          src="https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/part-time-artist-thumb.png"
+          alt="The Part-Time Artist PDF"
+          width={612}
+          height={791}
+          style={{ maxWidth: "100%", height: "auto", cursor: "pointer" }}
+          onClick={() => handleImageClick("https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/ThePartTimeArtist.pdf")}
+        />
         </div>
       </>
     )
@@ -340,7 +341,16 @@ export default function ProjectPage() {
                 onClick={() => handleImageClick(img)}
               >
                 {img.endsWith('.pdf') ? (
-                  <embed src={img} type="application/pdf" width="100%" height="100%" />
+                  <Image
+                    src={img.includes('mix-zones') ? 
+                      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/mix-zones-thumb.png" :
+                      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/part-time-artist-thumb.png"
+                    }
+                    alt={img.includes('mix-zones') ? "Mix Zones PDF Preview" : "Part Time Artist PDF Preview"}
+                    fill
+                    style={{ objectFit: "contain" }}
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
                 ) : (
                   <Image
                     src={img}
@@ -420,16 +430,26 @@ export default function ProjectPage() {
           onClick={closeModal}
         >
           <div style={{ position: "relative", maxWidth: "95%", maxHeight: "95%", width: "100%", height: "100%" }}>
-            <Image
-              src={expandedImage}
-              alt="Expanded image"
-              fill
-              style={{ objectFit: "contain" }}
-              sizes="95vw"
-              priority
-              quality={95}
-              loading="eager"
-            />
+            {expandedImage.endsWith('.pdf') ? (
+              <embed 
+                src={expandedImage} 
+                type="application/pdf" 
+                width="100%" 
+                height="100%" 
+                style={{ borderRadius: "8px" }}
+              />
+            ) : (
+              <Image
+                src={expandedImage}
+                alt="Expanded image"
+                fill
+                style={{ objectFit: "contain" }}
+                sizes="95vw"
+                priority
+                quality={95}
+                loading="eager"
+              />
+            )}
           </div>
         </div>
       )}
