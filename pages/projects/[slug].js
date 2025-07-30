@@ -190,7 +190,7 @@ export default function ProjectPage() {
     projectTitle = "Content Creation"
     shortDescription = "Education and Entertainment"
     videoSrc = "https://youtu.be/QMDK6qfFSbI?si=C5pv53JqLx4V9snf" 
-    detailedDescription = "From educational workshops to punchy carousel posts, this is where my creative storytelling and strategic production collide. I've crafted videos, livestreams, walk-throughs, and a digital book—each built to inform, entertain, or provoke thought, particularly at the intersection of music and tech.\n\nSome content is meticulously storyboarded. Some, like memes, spark from the moment. But every piece reflects a commitment to clarity, curiosity, and community building."
+    detailedDescription = "From educational workshops to punchy carousel posts, this is where my creative storytelling and strategic production collide. I've crafted videos, livestreams, walk-throughs, and a digital book—each built to inform, entertain, or provoke thought, particularly at the intersection of music and tech.\n\nSome pieces are meticulously storyboarded. Others, like memes, spark from the moment. But every one reflects clarity, curiosity, and community."
     images = [
       "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/mix-zones.pdf",
       "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/content-mixing-vocals.png",
