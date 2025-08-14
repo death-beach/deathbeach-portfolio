@@ -170,9 +170,9 @@ export default function ProjectPage() {
           className="production-image-grid"
         >
           {[
-            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/1.png",
-            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/2.png",
-            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/3.png"
+            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/1_350.png",
+            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/2_350.png",
+            "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/3_350.png"
           ].map((img, index) => (
             <div key={index} style={{ position: "relative", aspectRatio: "1.33", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)", cursor: "pointer" }} onClick={() => handleImageClick(img)}>
               <Image
