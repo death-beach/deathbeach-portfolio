@@ -389,11 +389,11 @@ export default function ProjectPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
+              gridTemplateColumns: (slug === "charon" || slug === "charon-wallet") ? 
+                "repeat(auto-fit, minmax(300px, 1fr))" : "repeat(2, 1fr)",
               gap: "32px",
               marginBottom: "48px",
             }}
-            className="charon-pages-grid"
           >
             {images.map((img, index) => (
               <div key={index} style={{ position: "relative", aspectRatio: slug === "charon-wallet" ? "1.84" : "1.6", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }} onClick={() => handleImageClick(img)}>
