@@ -73,7 +73,7 @@ export default function ProjectPage() {
             gap: "32px",
             marginBottom: "48px",
           }}
-          className="charon-image-grid"
+          // className="charon-image-grid"
         >
           {[
             "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/p00ls-social-graph.png",
@@ -393,6 +393,7 @@ export default function ProjectPage() {
               gap: "32px",
               marginBottom: "48px",
             }}
+            className="charon-pages-grid"
           >
             {images.map((img, index) => (
               <div key={index} style={{ position: "relative", aspectRatio: slug === "charon-wallet" ? "1.84" : "1.6", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }} onClick={() => handleImageClick(img)}>
