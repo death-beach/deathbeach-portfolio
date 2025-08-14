@@ -4,7 +4,10 @@
 
 @media (max-width: 768px) {
   .production-image-grid {
-    grid-template-columns: 1fr !important; /* 1 column on mobile */
+    grid-template-columns: 1fr !important;
+  }
+  .charon-image-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 
