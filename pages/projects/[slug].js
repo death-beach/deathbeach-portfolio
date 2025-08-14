@@ -166,6 +166,7 @@ export default function ProjectPage() {
             gap: "32px",
             marginBottom: "48px",
           }}
+          className="production-image-grid"
         >
           {[
             "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/1.png",

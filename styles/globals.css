@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (max-width: 768px) {
+  .production-image-grid {
+    grid-template-columns: 1fr !important; /* 1 column on mobile */
+  }
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
