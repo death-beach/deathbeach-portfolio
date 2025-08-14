@@ -73,7 +73,7 @@ export default function ProjectPage() {
             gap: "32px",
             marginBottom: "48px",
           }}
-          className="production-image-grid"
+          className="charon-image-grid"
         >
           {[
             "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/p00ls-social-graph.png",
@@ -328,7 +328,7 @@ export default function ProjectPage() {
               gap: "32px",
               marginBottom: "48px",
             }}
-            className="production-image-grid"
+            className="charon-image-grid"
           >
             {images.map((img, index) => (
               <div
