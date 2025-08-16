@@ -219,6 +219,13 @@ export default function ProjectPage({ project }) {
 
   return (
     <div style={{ minHeight: "100vh", fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: "#0f0f0f", color: "#ffffff" }}>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .charon-responsive-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
       <Hero />
 
       <div style={{ padding: "48px 16px", maxWidth: "1152px", margin: "0 auto" }}>
@@ -363,10 +370,11 @@ export default function ProjectPage({ project }) {
             style={{
               display: "grid",
               gridTemplateColumns: (slug === "charon" || slug === "charon-wallet") ? 
-                "1fr" : "repeat(2, 1fr)",
+                "repeat(2, 1fr)" : "repeat(2, 1fr)",
               gap: "32px",
               marginBottom: "48px",
             }}
+            className={(slug === "charon" || slug === "charon-wallet") ? "charon-responsive-grid" : ""}
           >
             {images.map((img, index) => (
               <div key={index} style={{ position: "relative", aspectRatio: slug === "charon-wallet" ? "1.84" : "1.6", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }} onClick={() => handleImageClick(img)}>
