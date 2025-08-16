@@ -363,7 +363,7 @@ export default function ProjectPage({ project }) {
             style={{
               display: "grid",
               gridTemplateColumns: (slug === "charon" || slug === "charon-wallet") ? 
-                "repeat(auto-fit, minmax(400px, 1fr))" : "repeat(2, 1fr)",
+                "1fr" : "repeat(2, 1fr)",
               gap: "32px",
               marginBottom: "48px",
             }}
