@@ -3,39 +3,20 @@ import Image from "next/image"
 import Link from "next/link"
 import Hero from "@/components/Hero"
 import { useState } from "react"
+import { getAllProjects } from "../data/projects"
 
-const portfolioItems = [
-  {
-    id: 1,
-    title: "Charon",
-    slug: "charon",
-    image: "/images/charon.png",
-  },
-  {
-    id: 2,
-    title: "Charon Wallet",
-    slug: "charon-wallet",
-    image: "/images/charon-wallet-project.png",
-  },
-  {
-    id: 3,
-    title: "Music Production",
-    slug: "production",
-    image: "/images/death-beach.png",
-  },
-  {
-    id: 4,
-    title: "POOLS",
-    slug: "pools",
-    image: "/images/p00ls.png",
-  },
-  {
-    id: 5,
-    title: "Content",
-    slug: "content",
-    image: "/images/content.png",
-  },
-]
+// Generate portfolio items from projects data
+const generatePortfolioItems = () => {
+  const projects = getAllProjects()
+  return projects.map(project => ({
+    id: project.slug,
+    title: project.title,
+    slug: project.slug,
+    image: project.thumbnailImage,
+  }))
+}
+
+const portfolioItems = generatePortfolioItems()
 
 export default function Portfolio() {
   return (
