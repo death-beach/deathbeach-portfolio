@@ -43,7 +43,7 @@ export default function ProjectPage({ project }) {
     setExpandedImage(null)
   }
 
-  const { slug, title, projectTitle, shortDescription, videoSrc, detailedDescription, images, websiteUrl, additionalContent, customContent } = project
+  const { slug, title, projectTitle, shortDescription, videoSrc, detailedDescription, images, websiteUrl, starterRepoUrl, additionalContent, customContent } = project
 
   // Render additional content for P00LS project
   const renderPoolsAdditionalContent = () => {
@@ -298,6 +298,36 @@ export default function ProjectPage({ project }) {
           <p style={{ fontSize: "16px", lineHeight: "1.6", marginBottom: "48px", textAlign: "justify", whiteSpace: "pre-line" }}
             dangerouslySetInnerHTML={{ __html: detailedDescription }}
           />
+        )}
+
+        {slug === "charon" && starterRepoUrl && (
+          <div style={{ 
+            marginBottom: "48px", 
+            padding: "24px", 
+            backgroundColor: "#1a1a1a", 
+            borderRadius: "8px", 
+            border: "1px solid #333"
+          }}>
+            <p style={{ 
+              fontSize: "16px", 
+              lineHeight: "1.6", 
+              margin: "0", 
+              color: "#d1d5db",
+              textAlign: "left"
+            }}>
+              Want to build your own Solana Pay POS? Check out my open-source starter repo with a simple web UI and Solana Pay integration to get you up and running quickly. <a
+                href={starterRepoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ 
+                  color: "#60a5fa", 
+                  textDecoration: "underline"
+                }}
+              >
+                {starterRepoUrl}
+              </a>
+            </p>
+          </div>
         )}
 
         {slug === "content" && images.length > 0 && (
