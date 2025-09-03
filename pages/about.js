@@ -43,12 +43,12 @@ export default function About() {
 
             <div style={{ maxWidth: "650px", margin: "0 auto", color: "#6b7280", lineHeight: "1.6" }}>
               <p style={{ fontSize: "18px", marginBottom: "24px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                Josh Mallit specializes in Web 3 integrations, product management, and music production, creating
+                I specialize in Web 3 integrations, product management, and music production, creating
                 digital experiences at the intersection of technology and creativity.
               </p>
 
               <p style={{ marginBottom: "48px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                With expertise spanning blockchain technology, product strategy, and audio production, Josh brings a unique
+                With expertise spanning blockchain technology, product strategy, and audio production, I bring a unique
                 perspective to every project, always focusing on scaling, pushing boundaries, and exploring new possibilities.
               </p>
 
