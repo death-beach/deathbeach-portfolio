@@ -1,5 +1,27 @@
 export const projects = [
   {
+    slug: "production",
+    title: "Death Beach",
+    projectTitle: "Producer, Mixer, Engineer",
+    shortDescription: "Studio and location recording experiences.",
+    detailedDescription: "Death Beach is a music producer focused on building immersive, emotionally resonant albums across genres like pop, rock, trip hop, indie, trance, and techno. Known for blending raw, unfiltered performances with meticulous sound design, Death Beach creates sonic environments that artists can truly lose themselves in.\n\nWith experience ranging from top-tier studios like Studio West and Rarefied in San Diego to makeshift setups in Airbnbs, hotel rooms, and remote homes, Death Beach prioritizes flexibility and inspiration over formality. Every session is designed to help artists tap into their truest voice, beyond studio constraints or clocked hours.\n\nProjects have included a five song EP recorded in Joshua Tree with Marc Oliver, a multi-location album journey recording with Choirs in Bakersfield and multiple studios in San Diego, assisting Ulrich Wilde recording Psychotic Waltz, and producing with the Dope Jackets.\n\nOriginally starting as a studio intern at Capricorn Studios learning from Bryan Stratman, Death Beach has since evolved into a producer dedicated to full length work; writing, tracking, and building records from the ground up. With a philosophy that values character over perfection, Death Beach believes the best records come from capturing real moments, whether they're recorded on a $4,000 mic in a multi-million dollar studio or a phone.\n\nAvailable for select collaborations focused on long form album production and deep creative partnership.",
+    images: [
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/1_350.png",
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/2_350.png",
+      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/3_350.png"
+    ],
+    thumbnailImage: "/images/death-beach.png",
+    customContent: {
+      type: "production",
+      spotifyEmbed: "https://open.spotify.com/embed/playlist/0m6i2hbWuTIaPiM5a59d9G?utm_source=generator",
+      soundcloudEmbed: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2057401593%3Fsecret_token%3Ds-7fj6ZH637y1&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true",
+      youtubeVideos: [
+        "https://www.youtube.com/embed/eT9fDO06C7M?si=nI8SuApPo63si22k",
+        "https://www.youtube.com/embed/cpVPE_BQXEI?si=Ftu16tMicW63_GYW"
+      ]
+    }
+  },
+  {
     slug: "charon",
     title: "Charon",
     projectTitle: "Founder and Builder",
@@ -28,28 +50,6 @@ export const projects = [
       "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/wallet-options.png"
     ],
     thumbnailImage: "/images/charon-wallet-project.png"
-  },
-  {
-    slug: "production",
-    title: "Death Beach",
-    projectTitle: "Producer, Mixer, Engineer",
-    shortDescription: "Studio and location recording experiences.",
-    detailedDescription: "Death Beach is a music producer focused on building immersive, emotionally resonant albums across genres like pop, rock, trip hop, indie, trance, and techno. Known for blending raw, unfiltered performances with meticulous sound design, Death Beach creates sonic environments that artists can truly lose themselves in.\n\nWith experience ranging from top-tier studios like Studio West and Rarefied in San Diego to makeshift setups in Airbnbs, hotel rooms, and remote homes, Death Beach prioritizes flexibility and inspiration over formality. Every session is designed to help artists tap into their truest voice, beyond studio constraints or clocked hours.\n\nProjects have included a five song EP recorded in Joshua Tree with Marc Oliver, a multi-location album journey recording with Choirs in Bakersfield and multiple studios in San Diego, assisting Ulrich Wilde recording Psychotic Waltz, and producing with the Dope Jackets.\n\nOriginally starting as a studio intern at Capricorn Studios learning from Bryan Stratman, Death Beach has since evolved into a producer dedicated to full length work; writing, tracking, and building records from the ground up. With a philosophy that values character over perfection, Death Beach believes the best records come from capturing real moments, whether they're recorded on a $4,000 mic in a multi-million dollar studio or a phone.\n\nAvailable for select collaborations focused on long form album production and deep creative partnership.",
-    images: [
-      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/1_350.png",
-      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/2_350.png",
-      "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/3_350.png"
-    ],
-    thumbnailImage: "/images/death-beach.png",
-    customContent: {
-      type: "production",
-      spotifyEmbed: "https://open.spotify.com/embed/playlist/0m6i2hbWuTIaPiM5a59d9G?utm_source=generator",
-      soundcloudEmbed: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2057401593%3Fsecret_token%3Ds-7fj6ZH637y1&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true",
-      youtubeVideos: [
-        "https://www.youtube.com/embed/eT9fDO06C7M?si=nI8SuApPo63si22k",
-        "https://www.youtube.com/embed/cpVPE_BQXEI?si=Ftu16tMicW63_GYW"
-      ]
-    }
   },
   {
     slug: "pools",
