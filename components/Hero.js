@@ -114,7 +114,7 @@ export default function Hero() {
       >
         Music Production, Product Manager, Crypto Integrations <br />
         <br />  
-        <b><i>Your wildest ideas deserve to exist as your legacy. I make sure they don't just stay dreams.</i><b>
+        <b><i>Your wildest ideas deserve to exist as your legacy. I make sure they don't just stay dreams.</i></b>
       </h1>
 
       {/* Social Icons */}
