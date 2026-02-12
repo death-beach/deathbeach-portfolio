@@ -112,7 +112,8 @@ export default function Hero() {
           fontFamily: "'Hanken Grotesk', sans-serif",
         }}
       >
-        Web3 Integrations, Product Manager, Music Production
+        Music Production, Product Manager, Crypto Integrations
+        Your wildest ideas deserve to exist as your legacy. I make sure they don't just stay dreams.
       </h1>
 
       {/* Social Icons */}
@@ -126,7 +127,7 @@ export default function Hero() {
       >
         {/* X (Twitter) */}
         <a
-          href="https://x.com/deathbeach_"
+          href="https://x.com/deathbeach"
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: "#9ca3af", textDecoration: "none" }}
