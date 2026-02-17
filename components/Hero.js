@@ -112,7 +112,7 @@ export default function Hero() {
           fontFamily: "'Hanken Grotesk', sans-serif",
         }}
       >
-        Music Production, Product Manager, Crypto Integrations <br />
+        Music Production, Product Manager, Crypto<br />
         <br />  
         <b><i>Your wildest ideas deserve to exist as your legacy. I make sure they don't just stay dreams.</i></b>
       </h1>
