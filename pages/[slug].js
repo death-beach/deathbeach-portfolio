@@ -492,4 +492,4 @@ export default function ProjectPage({ project }) {
       )}
     </div>
   )
-}
+} 
