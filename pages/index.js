@@ -1,107 +1,175 @@
-// pages/index.js
+// pages/index.js - Shows production content at root URL
 import Image from "next/image"
-import Link from "next/link"
 import Hero from "@/components/Hero"
 import { useState } from "react"
-import { getAllProjects } from "../data/projects"
+import { getProjectBySlug } from "../data/projects"
 
-// Generate portfolio items from projects data
-const generatePortfolioItems = () => {
-  const projects = getAllProjects()
-  return projects.map(project => ({
-    id: project.slug,
-    title: project.title,
-    slug: project.slug,
-    image: project.thumbnailImage,
-  }))
+export async function getStaticProps() {
+  const project = getProjectBySlug("production")
+  
+  if (!project) {
+    return {
+      notFound: true
+    }
+  }
+
+  return {
+    props: {
+      project
+    }
+  }
 }
 
-const portfolioItems = generatePortfolioItems()
+export default function Home({ project }) {
+  const [expandedImage, setExpandedImage] = useState(null)
 
-export default function Portfolio() {
-  return (
-    <div style={{ minHeight: "100vh", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-      {/* Hero Section */}
-      <Hero />
+  const handleImageClick = (imageSrc) => {
+    setExpandedImage(imageSrc)
+  }
 
-      {/* Portfolio Grid with darker charcoal background */}
-      <div style={{ backgroundColor: "#0f0f0f", padding: "48px 16px" }}>
-        <div style={{ maxWidth: "1152px", margin: "0 auto" }}>
-          <style jsx>{`
-            @media (max-width: 767px) {
-              .portfolio-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-              }
-              .project-image {
-                aspect-ratio: 1 / 1 !important;
-                box-shadow: 0 0 25px rgba(255, 255, 255, 0.4) !important; /* Stronger glow on mobile */
-              }
-            }
-            @media (min-width: 768px) {
-              .portfolio-grid {
-                grid-template-columns: repeat(3, 1fr) !important;
-              }
-              .project-image {
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.2) !important; /* Default glow for desktop */
-              }
-            }
-          `}</style>
-          <div
-            className="portfolio-grid"
-            style={{
-              display: "grid",
-              gap: "32px",
-            }}
-          >
-            {portfolioItems.map((item, index) => {
-              const [isHovered, setIsHovered] = useState(false);
-              return (
-                <Link key={item.id} href={`/projects/${item.slug}`} style={{ textDecoration: "none" }}>
-                  <div
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                    style={{
-                      cursor: "pointer",
-                      transition: "box-shadow 0.3s ease",                
-                    }}
-                  >
-                    <div className="project-image" style={{ aspectRatio: "1", position: "relative", marginBottom: "16px", borderRadius: "4px", overflow: "hidden" }}>
-                      <Image
-                        src={item.image || "/placeholder.svg"}
-                        alt={item.title}
-                        fill
-                        style={{ 
-                          objectFit: "cover", 
-                          transition: "filter 0.3s ease",
-                          filter: isHovered ? "invert(1)" : "none"
-                        }}
-                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 50vw, 33vw"
-                        priority={index < 3} // Add priority to first few for LCP
-                      />
-                    </div>
-                    <div style={{ padding: "0 16px 16px 16px" }}>
-                      <h3
-                        style={{
-                          fontWeight: "600",
-                          color: "white",
-                          marginBottom: "8px",
-                          fontFamily: "'Hanken Grotesk', sans-serif",
-                          textAlign: "center",
-                        }}
-                      >
-                        {item.title}
-                      </h3>
-                      <p style={{ fontSize: "14px", color: "#6b7280", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                        {item.description}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              )
-            })}
+  const closeModal = () => {
+    setExpandedImage(null)
+  }
+
+  const { slug, title, projectTitle, shortDescription, detailedDescription, images, customContent } = project
+
+  // Render custom content for production project
+  const renderProductionCustomContent = () => {
+    if (!customContent || customContent.type !== "production") return null
+    
+    return (
+      <>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
+            gap: "32px",
+            marginBottom: "48px",
+          }}
+        >
+          <div style={{ position: "relative", height: "352px", backgroundColor: "#1a1a1a", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <iframe
+              data-testid="embed-iframe"
+              style={{ borderRadius: "12px", height: "352px", border: "none" }}
+              src={customContent.spotifyEmbed}
+              width="100%"
+              allowFullScreen=""
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
+          </div>
+          <div style={{ position: "relative", height: "352px", backgroundColor: "#1a1a1a", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <iframe
+              width="100%"
+              height="352"
+              style={{ border: "none" }}
+              allow="autoplay"
+              src={customContent.soundcloudEmbed}
+              loading="lazy"
+            ></iframe>
           </div>
         </div>
+        <p style={{ fontSize: "16px", lineHeight: "1.6", marginBottom: "48px", textAlign: "justify", whiteSpace: "pre-line" }}>
+          {detailedDescription}
+        </p>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
+            gap: "32px",
+            marginBottom: "48px",
+          }}
+        >
+          {customContent.youtubeVideos.map((videoUrl, index) => (
+            <iframe 
+              key={index}
+              width="100%" 
+              height="315" 
+              src={videoUrl} 
+              title={`YouTube video player ${index + 1}`} 
+              style={{ border: "none" }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              referrerPolicy="strict-origin-when-cross-origin" 
+              allowFullScreen
+            />
+          ))}
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "32px",
+            marginBottom: "48px",
+          }}
+          className="production-image-grid"
+        >
+          {images.map((img, index) => (
+            <div key={index} style={{ position: "relative", aspectRatio: "1.33", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)", cursor: "pointer" }} onClick={() => handleImageClick(img)}>
+              <Image
+                src={img}
+                alt={`Music Production image ${index + 1}`}
+                fill
+                style={{ objectFit: "contain" }}
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+            </div>
+          ))}
+        </div>
+      </>
+    )
+  }
+
+  return (
+    <div style={{ minHeight: "100vh", fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: "#0f0f0f", color: "#ffffff" }}>
+      <Hero />
+
+      <div style={{ padding: "48px 16px", maxWidth: "1152px", margin: "0 auto" }}>
+        <h1 style={{ fontSize: "48px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>
+          {title}
+        </h1>
+
+        <p style={{ fontSize: "22px", fontWeight: "normal", marginBottom: "16px", textAlign: "center", color: "#d1d5db" }}>
+          {projectTitle}
+        </p>
+
+        <h3 style={{ fontSize: "32px", fontWeight: "normal", marginBottom: "32px", textAlign: "center", color: "#d1d5db" }}>
+          {shortDescription}
+        </h3>
+
+        {renderProductionCustomContent()}
       </div>
+
+      {expandedImage && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.9)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+            cursor: "pointer"
+          }}
+          onClick={closeModal}
+        >
+          <div style={{ position: "relative", maxWidth: "95%", maxHeight: "95%", width: "100%", height: "100%" }}>
+            <Image
+              src={expandedImage}
+              alt="Expanded image"
+              fill
+              style={{ objectFit: "contain" }}
+              sizes="95vw"
+              priority
+              quality={95}
+              loading="eager"
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

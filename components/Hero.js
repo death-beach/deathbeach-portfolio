@@ -73,7 +73,19 @@ export default function Hero() {
               fontFamily: "'Hanken Grotesk', sans-serif",
             }}
           >
-            Portfolio
+            Music
+          </Link>
+          <Link
+            className="nav-link"
+            href="/projects"
+            style={{
+              color: currentPath === "/projects" ? "#ffffff" : "#9ca3af",
+              fontWeight: currentPath === "/projects" ? "500" : "normal",
+              textDecoration: "none",
+              fontFamily: "'Hanken Grotesk', sans-serif",
+            }}
+          >
+            Projects
           </Link>
           <Link
             className="nav-link"

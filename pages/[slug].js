@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Hero from "@/components/Hero"
 import { useState } from "react"
-import { getProjectBySlug, getAllProjectSlugs } from "../../data/projects"
+import { getProjectBySlug, getAllProjectSlugs } from "../data/projects"
 
 export async function getStaticPaths() {
   const slugs = getAllProjectSlugs()
