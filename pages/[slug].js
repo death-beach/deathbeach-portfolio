@@ -97,14 +97,38 @@ export default function ProjectPage({ project }) {
     
     return (
       <>
-        <div className="mobile-stack"
-          style={{
-            display: "grid",
-            gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
-            gap: "32px",
-            marginBottom: "48px",
-          }}
-        >
+        <style jsx>{`
+          .embeds-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin-bottom: 48px;
+          }
+          .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin-bottom: 48px;
+          }
+          .images-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 48px;
+          }
+          @media (max-width: 768px) {
+            .embeds-grid {
+              grid-template-columns: 1fr;
+            }
+            .videos-grid {
+              grid-template-columns: 1fr;
+            }
+            .images-grid {
+              grid-template-columns: 1fr;
+            }
+          }
+        `}</style>
+        <div className="embeds-grid">
           <div style={{ position: "relative", height: "352px", backgroundColor: "#1a1a1a", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <iframe
               data-testid="embed-iframe"
@@ -130,14 +154,7 @@ export default function ProjectPage({ project }) {
         <p style={{ fontSize: "16px", lineHeight: "1.6", marginBottom: "48px", textAlign: "justify", whiteSpace: "pre-line" }}>
           {detailedDescription}
         </p>
-        <div className="mobile-stack"
-          style={{
-            display: "grid",
-            gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
-            gap: "32px",
-            marginBottom: "48px",
-          }}
-        >
+        <div className="videos-grid">
           {customContent.youtubeVideos.map((videoUrl, index) => (
             <iframe 
               key={index}
@@ -152,15 +169,7 @@ export default function ProjectPage({ project }) {
             />
           ))}
         </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "32px",
-            marginBottom: "48px",
-          }}
-          className="production-image-grid"
-        >
+        <div className="images-grid">
           {images.map((img, index) => (
             <div key={index} style={{ position: "relative", aspectRatio: "1.33", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)", cursor: "pointer" }} onClick={() => handleImageClick(img)}>
               <Image
@@ -183,14 +192,20 @@ export default function ProjectPage({ project }) {
     
     return (
       <>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
-            gap: "32px",
-            marginBottom: "48px",
-          }}
-        >
+        <style jsx>{`
+          .workshop-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin-bottom: 48px;
+          }
+          @media (max-width: 768px) {
+            .workshop-grid {
+              grid-template-columns: 1fr;
+            }
+          }
+        `}</style>
+        <div className="workshop-grid">
           {additionalContent.workshopImages.map((img, index) => (
             <div key={index} style={{ position: "relative", aspectRatio: "16 / 9", borderRadius: "8px", overflow: "hidden", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)", cursor: "pointer" }} onClick={() => handleImageClick(img)}>
               <Image
@@ -224,7 +239,6 @@ export default function ProjectPage({ project }) {
           .charon-responsive-grid {
             grid-template-columns: 1fr !important;
           }
-          .mobile-stack { grid-template-columns: 1fr !important; }
         }
       `}</style>
       <Hero />
