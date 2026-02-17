@@ -97,7 +97,7 @@ export default function ProjectPage({ project }) {
     
     return (
       <>
-        <div
+        <div className="mobile-stack"
           style={{
             display: "grid",
             gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
@@ -130,7 +130,7 @@ export default function ProjectPage({ project }) {
         <p style={{ fontSize: "16px", lineHeight: "1.6", marginBottom: "48px", textAlign: "justify", whiteSpace: "pre-line" }}>
           {detailedDescription}
         </p>
-        <div
+        <div className="mobile-stack"
           style={{
             display: "grid",
             gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
@@ -224,6 +224,7 @@ export default function ProjectPage({ project }) {
           .charon-responsive-grid {
             grid-template-columns: 1fr !important;
           }
+          .mobile-stack { grid-template-columns: 1fr !important; }
         }
       `}</style>
       <Hero />

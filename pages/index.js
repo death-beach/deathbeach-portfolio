@@ -39,7 +39,7 @@ export default function Home({ project }) {
     
     return (
       <>
-        <div
+        <div className="mobile-stack"
           style={{
             display: "grid",
             gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
@@ -72,7 +72,7 @@ export default function Home({ project }) {
         <p style={{ fontSize: "16px", lineHeight: "1.6", marginBottom: "48px", textAlign: "justify", whiteSpace: "pre-line" }}>
           {detailedDescription}
         </p>
-        <div
+        <div className="mobile-stack"
           style={{
             display: "grid",
             gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth <= 768 ? "1fr" : "repeat(2, 1fr)",
@@ -121,6 +121,11 @@ export default function Home({ project }) {
 
   return (
     <div style={{ minHeight: "100vh", fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: "#0f0f0f", color: "#ffffff" }}>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .mobile-stack { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
       <Hero />
 
       <div style={{ padding: "48px 16px", maxWidth: "1152px", margin: "0 auto" }}>
