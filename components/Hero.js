@@ -34,8 +34,18 @@ export default function Hero() {
         }}
       />
 
+      {/* Gradient fade: image → black at bottom */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(to bottom, transparent 40%, #0f0f0f 100%)",
+          zIndex: 1,
+        }}
+      />
+
       {/* All content sits above the image */}
-      <div style={{ position: "relative", zIndex: 1 }}>
+      <div style={{ position: "relative", zIndex: 2 }}>
 
       <style jsx global>{`
         @media (max-width: 767px) {
@@ -193,6 +203,16 @@ export default function Hero() {
         </a>
       </div>
       </div>{/* end z-index wrapper */}
+
+      {/* White radial glow divider — bright center, fades to edges */}
+      <div
+        style={{
+          height: "5px",
+          marginTop: "32px",
+          background:
+            "radial-gradient(ellipse at center, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.45) 30%, rgba(255,255,255,0.08) 60%, transparent 80%)",
+        }}
+      />
     </div>
   )
 }
