@@ -6,9 +6,12 @@ import { getProjectBySlug, getAllProjectSlugs } from "../data/projects"
 export async function getStaticPaths() {
   const slugs = getAllProjectSlugs()
   
-  const paths = slugs.map((slug) => ({
-    params: { slug }
-  }))
+  // Exclude 'production' — it redirects to home via next.config.mjs
+  const paths = slugs
+    .filter((slug) => slug !== "production")
+    .map((slug) => ({
+      params: { slug }
+    }))
 
   return {
     paths,
@@ -17,16 +20,6 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  // Redirect the production slug to the home page
-  if (params.slug === "production") {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    }
-  }
-
   const project = getProjectBySlug(params.slug)
   
   if (!project) {
