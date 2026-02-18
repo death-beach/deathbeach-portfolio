@@ -424,7 +424,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 4 — Experience the Worlds
       ──────────────────────────────────────────── */}
-      <div style={{ backgroundColor: "#0f0f0f", padding: "80px 16px" }}>
+      <div style={{ background: "linear-gradient(to bottom, rgba(18, 171, 255, 0.20), #0f0f0f)", padding: "80px 16px" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <h1
             className="gradient-pink-magenta"
