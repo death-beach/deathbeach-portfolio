@@ -57,17 +57,18 @@ export default function Hero() {
           .nav-link {
             font-size: 24px !important; /* nav text size for mobile */
           }
-          /* Mobile: boost hero background image visibility */
+          /* Mobile: lower hero background image opacity */
           .hero-bg-image {
-            opacity: 0.18 !important;
+            opacity: 0.36 !important;
           }
           /* Mobile: tighten gradient so fade starts sooner */
           .hero-gradient {
             background: linear-gradient(to bottom, transparent 20%, #0f0f0f 100%) !important;
           }
-          /* Mobile: brighter divider line */
+          /* Mobile: 2x brighter divider */
           .hero-divider {
-            background: radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.65) 30%, rgba(255,255,255,0.18) 60%, transparent 80%) !important;
+            height: 10px !important;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,1.0) 30%, rgba(255,255,255,0.36) 60%, transparent 80%) !important;
           }
         }
         @media (min-width: 768px) {

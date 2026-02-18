@@ -115,6 +115,10 @@ export default function Home({ project }) {
             flex-direction: column;
             gap: 16px;
           }
+          /* ── Mobile: tighten space above Death Beach section ── */
+          .section-bio {
+            padding-top: 32px !important;
+          }
           /* ── Mobile section background boosts ── */
           .section-what-i-build {
             background: linear-gradient(to bottom, #0f0f0f, rgba(18, 171, 255, 0.35)) !important;
@@ -152,7 +156,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 2 — Bio Split
       ──────────────────────────────────────────── */}
-      <div style={{ backgroundColor: "#0f0f0f", padding: "80px 16px" }}>
+      <div className="section-bio" style={{ backgroundColor: "#0f0f0f", padding: "80px 16px" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <div className="bio-split">
 
