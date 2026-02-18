@@ -63,11 +63,11 @@ export default function Hero() {
           }
           /* Mobile: tighten gradient so fade starts sooner */
           .hero-gradient {
-            background: linear-gradient(to bottom, transparent 20%, #0f0f0f 100%) !important;
+            background: linear-gradient(to bottom, transparent 40%, #0f0f0f 100%) !important;
           }
           /* Mobile: 2x brighter divider */
           .hero-divider {
-            height: 10px !important;
+            height: 25px !important;
             background: radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,1.0) 30%, rgba(255,255,255,0.36) 60%, transparent 80%) !important;
           }
         }

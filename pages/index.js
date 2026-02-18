@@ -117,7 +117,7 @@ export default function Home({ project }) {
           }
           /* ── Mobile: tighten space above Death Beach section ── */
           .section-bio {
-            padding-top: 32px !important;
+            padding-top: 12px !important;
           }
           /* ── Mobile section background boosts ── */
           .section-what-i-build {
