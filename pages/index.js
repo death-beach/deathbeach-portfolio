@@ -115,6 +115,19 @@ export default function Home({ project }) {
             flex-direction: column;
             gap: 16px;
           }
+          /* ── Mobile section background boosts ── */
+          .section-what-i-build {
+            background: linear-gradient(to bottom, #0f0f0f, rgba(18, 171, 255, 0.35)) !important;
+          }
+          .section-experience {
+            background: linear-gradient(to bottom, rgba(18, 171, 255, 0.20) 60%, #0f0f0f 100%) !important;
+          }
+          .section-selected-worlds {
+            background: linear-gradient(to bottom, #0f0f0f, rgba(240, 12, 111, 0.28)) !important;
+          }
+          .section-lets-build {
+            background-color: rgba(221, 17, 176, 0.18) !important;
+          }
         }
       `}</style>
       <style jsx global>{`
@@ -338,7 +351,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 3 — What I Build
       ──────────────────────────────────────────── */}
-      <div style={{ background: "linear-gradient(to bottom, #0f0f0f, rgba(18, 171, 255, 0.20))", padding: "80px 16px" }}>
+      <div className="section-what-i-build" style={{ background: "linear-gradient(to bottom, #0f0f0f, rgba(18, 171, 255, 0.20))", padding: "80px 16px" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <h2
             className="gradient-pink-magenta"
@@ -434,7 +447,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 4 — Experience the Worlds
       ──────────────────────────────────────────── */}
-      <div style={{ background: "linear-gradient(to bottom, rgba(18, 171, 255, 0.20), #0f0f0f)", padding: "80px 16px" }}>
+      <div className="section-experience" style={{ background: "linear-gradient(to bottom, rgba(18, 171, 255, 0.20), #0f0f0f)", padding: "80px 16px" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <h1
             className="gradient-pink-magenta"
@@ -549,7 +562,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 5 — Selected Worlds
       ──────────────────────────────────────────── */}
-      <div style={{ background: "linear-gradient(to bottom, #0f0f0f, rgba(240, 12, 111, 0.14))", padding: "80px 16px" }}>
+      <div className="section-selected-worlds" style={{ background: "linear-gradient(to bottom, #0f0f0f, rgba(240, 12, 111, 0.14))", padding: "80px 16px" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <h2
             className="gradient-pink-magenta"
@@ -710,7 +723,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 7 — Let's Build Something That Lives
       ──────────────────────────────────────────── */}
-      <div style={{ backgroundColor: "rgba(221, 17, 176, 0.08)", padding: "80px 16px" }}>
+      <div className="section-lets-build" style={{ backgroundColor: "rgba(221, 17, 176, 0.08)", padding: "80px 16px" }}>
         <div
           style={{
             maxWidth: "600px",

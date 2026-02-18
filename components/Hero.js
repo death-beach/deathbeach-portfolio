@@ -23,6 +23,7 @@ export default function Hero() {
     >
       {/* Background image at 30% opacity — #1a1a1a bleeds through */}
       <div
+        className="hero-bg-image"
         style={{
           position: "absolute",
           inset: 0,
@@ -36,6 +37,7 @@ export default function Hero() {
 
       {/* Gradient fade: image → black at bottom */}
       <div
+        className="hero-gradient"
         style={{
           position: "absolute",
           inset: 0,
@@ -54,6 +56,18 @@ export default function Hero() {
           }
           .nav-link {
             font-size: 24px !important; /* nav text size for mobile */
+          }
+          /* Mobile: boost hero background image visibility */
+          .hero-bg-image {
+            opacity: 0.18 !important;
+          }
+          /* Mobile: tighten gradient so fade starts sooner */
+          .hero-gradient {
+            background: linear-gradient(to bottom, transparent 20%, #0f0f0f 100%) !important;
+          }
+          /* Mobile: brighter divider line */
+          .hero-divider {
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.65) 30%, rgba(255,255,255,0.18) 60%, transparent 80%) !important;
           }
         }
         @media (min-width: 768px) {
@@ -206,6 +220,7 @@ export default function Hero() {
 
       {/* White radial glow divider — bright center, fades to edges */}
       <div
+        className="hero-divider"
         style={{
           height: "5px",
           marginTop: "32px",
