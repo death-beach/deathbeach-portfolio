@@ -17,6 +17,16 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  // Redirect the production slug to the home page
+  if (params.slug === "production") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    }
+  }
+
   const project = getProjectBySlug(params.slug)
   
   if (!project) {
