@@ -338,7 +338,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 3 — What I Build
       ──────────────────────────────────────────── */}
-      <div style={{ backgroundColor: "rgba(18, 171, 255, 0.10)", padding: "80px 16px" }}>
+      <div style={{ background: "linear-gradient(to bottom, #0f0f0f, rgba(18, 171, 255, 0.20))", padding: "80px 16px" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <h2
             className="gradient-pink-magenta"
@@ -420,6 +420,16 @@ export default function Home({ project }) {
           </div>
         </div>
       </div>
+
+      {/* ── Glowing divider ── */}
+      <div
+        style={{
+          height: "1px",
+          background: "rgba(18, 171, 255, 0.7)",
+          boxShadow:
+            "0 0 8px 2px rgba(18, 171, 255, 0.6), 0 0 24px 6px rgba(18, 171, 255, 0.3), 0 0 60px 12px rgba(18, 171, 255, 0.1)",
+        }}
+      />
 
       {/* ────────────────────────────────────────────
           Section 4 — Experience the Worlds
@@ -527,10 +537,19 @@ export default function Home({ project }) {
         </div>
       </div>
 
+      {/* ── Pink radial divider — glows center, fades to edges ── */}
+      <div
+        style={{
+          height: "1px",
+          background:
+            "radial-gradient(ellipse at center, rgba(240, 12, 111, 0.9) 0%, rgba(240, 12, 111, 0.5) 30%, rgba(240, 12, 111, 0.1) 60%, transparent 80%)",
+        }}
+      />
+
       {/* ────────────────────────────────────────────
           Section 5 — Selected Worlds
       ──────────────────────────────────────────── */}
-      <div style={{ backgroundColor: "rgba(240, 12, 111, 0.10)", padding: "80px 16px" }}>
+      <div style={{ background: "linear-gradient(to bottom, #0f0f0f, rgba(240, 12, 111, 0.14))", padding: "80px 16px" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <h2
             className="gradient-pink-magenta"

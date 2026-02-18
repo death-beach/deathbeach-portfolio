@@ -42,7 +42,7 @@ export default function Hero() {
       <div style={{ marginBottom: "-4px" }}>
         <div style={{ display: "inline-block" }}>
           <Image
-            src="/logo_site.png"
+            src="/Death_Beach.png"
             alt="Death Beach Studio Logo"
             width={100}
             height={100}
