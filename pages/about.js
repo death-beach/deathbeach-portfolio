@@ -43,7 +43,7 @@ export default function About() {
 
             <div style={{ maxWidth: "650px", margin: "0 auto", color: "#6b7280", lineHeight: "1.6" }}>
               <p style={{ fontSize: "18px", marginBottom: "24px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                I specialize in Web 3 integrations, product management, and music production, creating
+                I specialize in crypto integrations, product management, and music production, creating
                 digital experiences at the intersection of technology and creativity.
               </p>
 
@@ -67,10 +67,10 @@ export default function About() {
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                 <ul style={{ listStyle: "none", padding: "0" }}>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                      • Web 3 Integration
+                      • Engineering
                     </li>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                      • PM
+                      • Product
                     </li>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
                       • Music Production
@@ -82,13 +82,13 @@ export default function About() {
                     paddingLeft: "16px"
                   }}>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                      • Blockchain
+                      • Crypto Integration
                     </li>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                      • Cryptocurrency
+                      • Mixing
                     </li>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                      • AI
+                      • AI Vibe-coding
                     </li>
                   </ul>
                 </div>
