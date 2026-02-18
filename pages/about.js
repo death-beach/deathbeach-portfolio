@@ -82,7 +82,7 @@ export default function About() {
                     paddingLeft: "16px"
                   }}>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                      • Crypto Integration
+                      • Crypto
                     </li>
                     <li style={{ marginBottom: "8px", fontFamily: "'Hanken Grotesk', sans-serif" }}>
                       • Mixing
