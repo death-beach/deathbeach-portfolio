@@ -17,8 +17,26 @@ export default function Hero() {
         marginBottom: "0",
         padding: "48px 16px",
         fontFamily: "'Hanken Grotesk', sans-serif",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
+      {/* Background image at 30% opacity — #1a1a1a bleeds through */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: "url(https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/hero-bg.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: 0.07,
+          zIndex: 0,
+        }}
+      />
+
+      {/* All content sits above the image */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+
       <style jsx global>{`
         @media (max-width: 767px) {
           .nav-container {
@@ -174,6 +192,7 @@ export default function Hero() {
           </svg>
         </a>
       </div>
+      </div>{/* end z-index wrapper */}
     </div>
   )
 }
