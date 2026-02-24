@@ -36,5 +36,3 @@ a {
 strong {
   font-weight: 700;
 }
-
-canvas { touch-action: pan-y !important; }
