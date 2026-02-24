@@ -188,6 +188,23 @@ export default function Home({ project }) {
         }}
       >
         <Hero />
+        {/* ── HERO DIVIDER ────────────────────────────────────────────
+            This sits at the exact boundary between the hero and the
+            rest of the page. Adjust height (default 5px) or the
+            radial-gradient stops to change the glow intensity/spread.
+            The mobile override in hero.jsx (.hero-divider media query)
+            makes it taller and brighter on small screens.
+        ─────────────────────────────────────────────────────────── */}
+        {/*<div
+          className="hero-divider"
+          style={{
+            height: "5px",
+            position: "relative",
+            zIndex: 2,
+            background:
+              "radial-gradient(ellipse at center, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.45) 30%, rgba(255,255,255,0.08) 60%, transparent 80%)",
+          }}
+        /> */}
       </div>
 
       {/* ────────────────────────────────────────────
@@ -218,7 +235,7 @@ export default function Home({ project }) {
                   lineHeight: "1.6",
                 }}
               >
-                Music Production, Engineering, &amp; Mixing &bull; Vibe Coding &bull; Product &amp; Crypto
+                <i>Music Production, Engineering, &amp; Mixing</i>
               </h3>
 
               {/* Mobile only: first image between subtitle and bio */}
@@ -255,8 +272,9 @@ export default function Home({ project }) {
                 <p style={{ marginBottom: "20px" }}>
                   Sounds that hit deeper than words alone ever could. Layers that wrap around your soul and refuse to
                   let go. Moments so raw they crack you open and make whoever hears it feel everything right along with
-                  you. Lyrics and music dripping into the ear of fans offering a world for them to live in.
+                  you.
                 </p>
+                <p style={{ marginBottom: "20px"}}>Lyrics and music dripping into the ear of fans offering a world for them to live in.</p>
                 <p style={{ marginBottom: "20px" }}>
                   You don&apos;t want these sounds &ldquo;recorded.&rdquo; You want them felt. Alive, haunting, honest.
                 </p>
@@ -271,7 +289,7 @@ export default function Home({ project }) {
                 <p style={{ marginBottom: "20px" }}>
                   That path took me from studio intern at Capricorn Studios (learning from Bryan Stratman) to producing
                   full-length albums from the ground up writing, tracking, sound design, the whole thing. I&apos;ve
-                  worked in places like Studio West, Rarefied Recording, and Capricorn Studios in San Diego, but
+                  worked in places like Studio West and Rarefied Recording in San Diego, but
                   I&apos;m just as comfortable (and usually more inspired) in a desert Airbnb, a hotel room, or
                   someone&apos;s remote house. The setting doesn&apos;t matter. The feeling does.
                 </p>

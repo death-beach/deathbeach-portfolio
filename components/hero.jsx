@@ -42,8 +42,15 @@ export default function Hero() {
         backgroundColor: "#1a1a1a",
         color: "#ffffff",
         textAlign: "center",
-        marginBottom: "50",
-        padding: "48px 16px",
+        /* ── HERO SPACING ──────────────────────────────────────────
+           paddingTop:    space above the logo at the top of the hero
+           paddingBottom: space below the social icons, before the divider
+           Adjust these two values to fine-tune the hero height.
+        ─────────────────────────────────────────────────────────── */
+        paddingTop: "100px",
+        paddingBottom: "5px",
+        paddingLeft: "16px",
+        paddingRight: "16px",
         fontFamily: "'Hanken Grotesk', sans-serif",
         position: "relative",
         overflow: "hidden",
@@ -179,7 +186,7 @@ export default function Hero() {
             fontFamily: "'Hanken Grotesk', sans-serif",
           }}
         >
-          Music Production, Product Manager, Crypto<br />
+          Music Production, Product, Crypto<br />
           <br />
           <b>
             <i>
@@ -236,21 +243,6 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* White radial glow divider — bright center, fades to edges */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="hero-divider"
-        style={{
-          height: "5px",
-          marginTop: "132px",
-          position: "relative",
-          zIndex: 2,
-          background:
-            "radial-gradient(ellipse at center, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.45) 30%, rgba(255,255,255,0.08) 60%, transparent 80%)",
-        }}
-      />
     </div>
   );
 }

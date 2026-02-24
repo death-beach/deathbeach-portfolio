@@ -232,11 +232,11 @@ function Waveforms() {
 export default function AudioSingularity() {
   return (
     <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "#050505", overflow: "hidden" }}>
-      <Canvas camera={{ position: [0, 0, 12], fov: 60 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 0, 12], fov: 45 }} dpr={[1, 2]}>
         <fog attach="fog" args={["#050505", 5, 25]} />
         
         {/* Wrapping the elements in a group to easily shift the composition center */}
-        <group position={[9.0, 1.5, 0]}>
+        <group position={[8.0, 1.5, 0]}>
           <SingularityCore />
           <Particles count={2000} />
           <Waveforms />
