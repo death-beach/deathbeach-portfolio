@@ -24,10 +24,7 @@ export default function Home({ project }) {
       entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add('active');
       });
-    }, { 
-      threshold: 0,
-      rootMargin: '0px 0px -20px 0px' 
-     });
+    }, { threshold: 0.02 });
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     

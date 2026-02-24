@@ -58,7 +58,6 @@ export default function Hero() {
         paddingRight: "16px",
         fontFamily: "'Hanken Grotesk', sans-serif",
         position: "relative",
-        overflow: "hidden",
         minHeight: "65vh", // Ensure it takes up enough space for the 3D background
         display: "block",
         flexDirection: "column",
