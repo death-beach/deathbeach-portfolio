@@ -82,7 +82,7 @@ export default function Hero() {
             .nav-link {
               font-size: 24px !important; /* nav text size for mobile */
             }
-            /* Mobile: 2x brighter divider */
+            /* Mobile: 2x brighter divider — commented out while divider is hidden
             .hero-divider {
               height: 18px !important;
               background: radial-gradient(
@@ -93,6 +93,7 @@ export default function Hero() {
                 transparent 80%
               ) !important;
             }
+            */
           }
           @media (min-width: 768px) {
             .nav-container {
