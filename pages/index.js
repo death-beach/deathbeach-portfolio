@@ -175,6 +175,13 @@ export default function Home({ project }) {
         .hero-wrapper > div {
           background-color: rgba(26, 26, 26, 0.65) !important;
         }
+        .contact-btn {
+          transition: box-shadow 0.3s ease, color 0.3s ease;
+        }
+        .contact-btn:hover {
+          box-shadow: 0 0 12px 3px rgba(18, 171, 255, 0.6), 0 0 30px 8px rgba(18, 171, 255, 0.25);
+          color: #ffffff !important;
+        }
       `}</style>
 
       {/* ── Nav / Logo — hero image bleeds through Hero.js background ── */}
@@ -820,6 +827,7 @@ export default function Home({ project }) {
           </p>
           <Link
             href="/contact"
+            className="contact-btn"
             style={{
               display: "inline-block",
               padding: "14px 40px",

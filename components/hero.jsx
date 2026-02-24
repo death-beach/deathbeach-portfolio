@@ -11,6 +11,11 @@ const AudioSingularity = dynamic(() => import("./AudioSingularity"), {
   ssr: false,
 });
 
+// Kick off the download of the module immediately when this page loads in the browser
+if (typeof window !== "undefined") {
+  import("./AudioSingularity");
+}
+
 export default function Hero() {
   const router = useRouter();
   const currentPath = router.pathname;
