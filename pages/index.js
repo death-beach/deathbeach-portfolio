@@ -151,7 +151,7 @@ export default function Home({ project }) {
         .reveal {
           opacity: 0;
           transform: translateY(30px);
-          transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+          transition: opacity 0.8s, transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
         .reveal.active {
           opacity: 1;
