@@ -19,7 +19,7 @@ export async function getStaticProps() {
 export default function Home({ project }) {
   const { customContent } = project || {}
 
-  useEffect(() => {
+  /*useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add('active');
@@ -29,7 +29,7 @@ export default function Home({ project }) {
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     
     return () => observer.disconnect();
-  }, []);
+  }, []); */
 
   return (
     <div
@@ -151,7 +151,7 @@ export default function Home({ project }) {
         .reveal {
           opacity: 0;
           transform: translateY(30px);
-          transition: opacity 0.8s, transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+          transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
         .reveal.active {
           opacity: 1;
