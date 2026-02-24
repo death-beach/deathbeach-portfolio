@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import emailjs from '@emailjs/browser'
-import Hero from "@/components/Hero"
+import Hero from "@/components/hero"
 import { Button } from "@/components/ui/button"
 
 export default function Contact() {

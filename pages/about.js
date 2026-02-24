@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link" //new save
-import Hero from "@/components/Hero"
+import Hero from "@/components/hero"
 import { Button } from "@/components/ui/button"
 
 export default function About() {

@@ -1,5 +1,5 @@
 import Image from "next/image"
-import Hero from "@/components/Hero"
+import Hero from "@/components/hero"
 import { useState } from "react"
 import { getProjectBySlug, getAllProjectSlugs } from "../data/projects"
 

@@ -2,7 +2,7 @@
 import { useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import Hero from "@/components/Hero"
+import Hero from "@/components/hero"
 import { getProjectBySlug } from "../data/projects"
 
 const CDN = "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images"

@@ -1,7 +1,7 @@
 // pages/projects/index.js
 import Image from "next/image"
 import Link from "next/link"
-import Hero from "@/components/Hero"
+import Hero from "@/components/hero"
 import { useState } from "react"
 import { getAllProjects } from "../../data/projects"
 
