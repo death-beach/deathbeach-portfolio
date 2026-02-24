@@ -42,15 +42,14 @@ export default function Hero() {
         backgroundColor: "#1a1a1a",
         color: "#ffffff",
         textAlign: "center",
-        marginBottom: "0",
+        marginBottom: "50",
         padding: "48px 16px",
         fontFamily: "'Hanken Grotesk', sans-serif",
         position: "relative",
         overflow: "hidden",
-        minHeight: "100vh", // Ensure it takes up enough space for the 3D background
-        display: "flex",
+        minHeight: "65vh", // Ensure it takes up enough space for the 3D background
+        display: "block",
         flexDirection: "column",
-        justifyContent: "center",
       }}
     >
       {/* 3D Background */}
@@ -245,7 +244,7 @@ export default function Hero() {
         className="hero-divider"
         style={{
           height: "5px",
-          marginTop: "32px",
+          marginTop: "132px",
           position: "relative",
           zIndex: 2,
           background:

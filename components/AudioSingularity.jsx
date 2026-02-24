@@ -6,7 +6,7 @@ import * as THREE from "three";
 
 function SingularityCore() {
   const coreRef = useRef(null);
-  
+
   useFrame((state) => {
     if (coreRef.current) {
       coreRef.current.rotation.y += 0.01;
@@ -16,10 +16,42 @@ function SingularityCore() {
     }
   });
 
+  const eventHorizonShader = useMemo(() => ({
+    uniforms: {
+      color1: { value: new THREE.Color("#f00c6f") }, // Magenta
+      color2: { value: new THREE.Color("#12abff") } // Cyan
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 color1;
+      uniform vec3 color2;
+      varying vec3 vNormal;
+
+      void main() {
+        float fresnel = dot(vNormal, vec3(0.0, 0.0, 1.0));
+        float intensity = pow(1.0 - fresnel, 3.0);
+
+        // Gradient on the RIGHT half of the sphere
+        float gradientFactor = vNormal.x * 0.5 + 0.5;  // 0.0 to 1.0 across sphere
+        float rightSideMask = smoothstep(0.0, 0.5, gradientFactor); // Only right half
+        
+        vec3 rimColor = mix(color1, color2, gradientFactor) * rightSideMask;
+
+        gl_FragColor = vec4(rimColor * intensity * 1.5, 1.0);
+      }
+    `
+  }), []);
+
   return (
     <mesh ref={coreRef}>
-      <sphereGeometry args={[1.5, 32, 32]} />
-      <meshBasicMaterial color="#000000" />
+      <sphereGeometry args={[1.5, 64, 64]} />
+      <shaderMaterial args={[eventHorizonShader]} />
     </mesh>
   );
 }
@@ -49,10 +81,58 @@ function Particles({ count = 4000 }) {
       const mixedColor = color1.clone().lerp(color2, Math.random());
       colors.set([mixedColor.r, mixedColor.g, mixedColor.b], i * 3);
       
-      sizes[i] = Math.random() * 2.0;
+      // Increased base size slightly to account for smooth anti-aliased edges
+      sizes[i] = Math.random() * 3.0 + 1.0; 
     }
     return [positions, colors, sizes];
   }, [count]);
+
+  // Custom Shader Material for round particles and depth-based coloring
+  const shaderArgs = useMemo(() => ({
+    uniforms: {
+      uTime: { value: 0 }
+    },
+    vertexShader: `
+      attribute vec3 color;
+      attribute float size;
+      varying vec3 vColor;
+      varying float vDepth;
+      
+      void main() {
+        vColor = color;
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        
+        // vDepth is the distance from the camera in view space
+        vDepth = -mvPosition.z; 
+        
+        gl_Position = projectionMatrix * mvPosition;
+        // Size attenuation based on depth to keep them grounded in 3D space
+        gl_PointSize = size * (40.0 / -mvPosition.z); 
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vColor;
+      varying float vDepth;
+      
+      void main() {
+        // 1. Create perfectly round particles with soft, anti-aliased edges
+        float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
+        float alpha = 1.0 - smoothstep(0.4, 0.5, distanceToCenter);
+        
+        if (alpha < 0.01) discard;
+
+        // 2. Depth Coloring: White in foreground, original color in background
+        // Camera is at z=12. Depth mix adjusts where the fade to white happens.
+        float depthFactor = smoothstep(8.0, 16.0, vDepth); 
+        vec3 finalColor = mix(vec3(1.0), vColor, depthFactor);
+
+        gl_FragColor = vec4(finalColor, alpha * 0.8);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  }), []);
 
   useFrame((state) => {
     if (pointsRef.current) {
@@ -87,15 +167,7 @@ function Particles({ count = 4000 }) {
           itemSize={1}
         />
       </bufferGeometry>
-      <pointsMaterial
-        size={0.08}
-        vertexColors
-        transparent
-        opacity={0.8}
-        sizeAttenuation
-        blending={THREE.AdditiveBlending}
-        depthWrite={false}
-      />
+      <shaderMaterial args={[shaderArgs]} />
     </points>
   );
 }
@@ -162,9 +234,14 @@ export default function AudioSingularity() {
     <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "#050505", overflow: "hidden" }}>
       <Canvas camera={{ position: [0, 0, 12], fov: 60 }} dpr={[1, 2]}>
         <fog attach="fog" args={["#050505", 5, 25]} />
-        <SingularityCore />
-        <Particles count={5000} />
-        <Waveforms />
+        
+        {/* Wrapping the elements in a group to easily shift the composition center */}
+        <group position={[9.0, 1.5, 0]}>
+          <SingularityCore />
+          <Particles count={2000} />
+          <Waveforms />
+        </group>
+
       </Canvas>
       {/* Gradient overlay to blend with the rest of the page */}
       <div

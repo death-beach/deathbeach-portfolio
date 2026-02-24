@@ -1,4 +1,5 @@
 // pages/index.js - Death Beach main landing page
+import { useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import Hero from "@/components/Hero"
@@ -17,6 +18,18 @@ export async function getStaticProps() {
 
 export default function Home({ project }) {
   const { customContent } = project || {}
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('active');
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div
@@ -133,6 +146,30 @@ export default function Home({ project }) {
             background-color: rgba(221, 17, 176, 0.18) !important;
           }
         }
+
+        /* ── NEW: Scroll Reveal Animation ── */
+        .reveal {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .reveal.active {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        /* ── NEW: Glow & Hover Effects for Cards ── */
+        .section-what-i-build .cards-grid > div,
+        .section-selected-worlds .cards-grid > div {
+          transition: all 0.3s ease !important;
+          cursor: default;
+        }
+        .section-what-i-build .cards-grid > div:hover,
+        .section-selected-worlds .cards-grid > div:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 30px rgba(18, 171, 255, 0.25);
+          border-left-color: #f00c6f !important;
+        }
       `}</style>
       <style jsx global>{`
         .hero-wrapper > div {
@@ -156,7 +193,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 2 — Bio Split
       ──────────────────────────────────────────── */}
-      <div className="section-bio" style={{ backgroundColor: "#0f0f0f", padding: "35px 16px" }}>
+      <div className="section-bio reveal" style={{ backgroundColor: "#0f0f0f", padding: "35px 16px" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <div className="bio-split">
 
@@ -355,7 +392,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 3 — What I Build
       ──────────────────────────────────────────── */}
-      <div className="section-what-i-build" style={{ background: "linear-gradient(to bottom, #0f0f0f, rgba(18, 171, 255, 0.20))", padding: "80px 16px" }}>
+      <div className="section-what-i-build reveal" style={{ background: "linear-gradient(to bottom, #0f0f0f, rgba(18, 171, 255, 0.20))", padding: "80px 16px" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <h2
             className="gradient-pink-magenta"
@@ -440,6 +477,7 @@ export default function Home({ project }) {
 
       {/* ── Glowing divider ── */}
       <div
+        className="reveal"
         style={{
           height: "1px",
           background: "rgba(18, 171, 255, 0.7)",
@@ -451,7 +489,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 4 — Experience the Worlds
       ──────────────────────────────────────────── */}
-      <div className="section-experience" style={{ background: "linear-gradient(to bottom, rgba(18, 171, 255, 0.20), #0f0f0f)", padding: "80px 16px" }}>
+      <div className="section-experience reveal" style={{ background: "linear-gradient(to bottom, rgba(18, 171, 255, 0.20), #0f0f0f)", padding: "80px 16px" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <h1
             className="gradient-pink-magenta"
@@ -556,6 +594,7 @@ export default function Home({ project }) {
 
       {/* ── Pink radial divider — glows center, fades to edges ── */}
       <div
+        className="reveal"
         style={{
           height: "1px",
           background:
@@ -566,7 +605,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 5 — Selected Worlds
       ──────────────────────────────────────────── */}
-      <div className="section-selected-worlds" style={{ background: "linear-gradient(to bottom, #0f0f0f, rgba(240, 12, 111, 0.14))", padding: "80px 16px" }}>
+      <div className="section-selected-worlds reveal" style={{ background: "linear-gradient(to bottom, #0f0f0f, rgba(240, 12, 111, 0.14))", padding: "80px 16px" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <h2
             className="gradient-pink-magenta"
@@ -690,7 +729,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 6 — Still in the Trenches
       ──────────────────────────────────────────── */}
-      <div style={{ backgroundColor: "#0f0f0f", padding: "80px 16px" }}>
+      <div className="reveal" style={{ backgroundColor: "#0f0f0f", padding: "80px 16px" }}>
         <div
           style={{
             maxWidth: "600px",
@@ -727,7 +766,7 @@ export default function Home({ project }) {
       {/* ────────────────────────────────────────────
           Section 7 — Let's Build Something That Lives
       ──────────────────────────────────────────── */}
-      <div className="section-lets-build" style={{ backgroundColor: "rgba(221, 17, 176, 0.08)", padding: "80px 16px" }}>
+      <div className="section-lets-build reveal" style={{ backgroundColor: "rgba(221, 17, 176, 0.08)", padding: "80px 16px" }}>
         <div
           style={{
             maxWidth: "600px",
