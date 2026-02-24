@@ -231,44 +231,27 @@ function Waveforms() {
 
 export default function AudioSingularity() {
   return (
-    <>
-      <style jsx>{`
-        .bg-canvas-wrapper {
-          position: absolute;
-          inset: 0;
-          z-index: 0;
-          background: #050505;
-          overflow: hidden;
-        }
-        /* Completely disable touch hijacking on mobile */
-        @media (max-width: 768px) {
-          .bg-canvas-wrapper {
-            pointer-events: none !important; 
-          }
-        }
-      `}</style>
-      
-      <div className="bg-canvas-wrapper">
-        <Canvas camera={{ position: [0, 0, 12], fov: 60 }} dpr={[1, 2]}>
-          <fog attach="fog" args={["#050505", 5, 25]} />
-          
-          <group position={[6.0, 1.5, 0]}>
-            <SingularityCore />
-            <Particles count={5000} />
-            <Waveforms />
-          </group>
-
-        </Canvas>
+    <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "#050505", overflow: "hidden" }}>
+      <Canvas camera={{ position: [0, 0, 12], fov: 45 }} dpr={[1, 2]}>
+        <fog attach="fog" args={["#050505", 5, 25]} />
         
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "linear-gradient(to bottom, transparent 40%, #0f0f0f 100%)",
-            pointerEvents: "none",
-          }}
-        />
-      </div>
-    </>
+        {/* Wrapping the elements in a group to easily shift the composition center */}
+        <group position={[8.0, 1.5, 0]}>
+          <SingularityCore />
+          <Particles count={2000} />
+          <Waveforms />
+        </group>
+
+      </Canvas>
+      {/* Gradient overlay to blend with the rest of the page */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(to bottom, transparent 40%, #0f0f0f 100%)",
+          pointerEvents: "none",
+        }}
+      />
+    </div>
   );
 }

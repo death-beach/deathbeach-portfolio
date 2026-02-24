@@ -34,7 +34,7 @@ export default function Home({ project }) {
   return (
     <div
       style={{
-        minHeight: "100dvh",
+        minHeight: "100vh",
         fontFamily: "'Hanken Grotesk', sans-serif",
         backgroundColor: "#0f0f0f",
         color: "#ffffff",
