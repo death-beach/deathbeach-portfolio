@@ -19,7 +19,7 @@ export async function getStaticProps() {
 export default function Home({ project }) {
   const { customContent } = project || {}
 
-  /*useEffect(() => {
+  useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add('active');
@@ -29,7 +29,7 @@ export default function Home({ project }) {
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     
     return () => observer.disconnect();
-  }, []); */
+  }, []);
 
   return (
     <div
