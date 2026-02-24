@@ -232,7 +232,8 @@ function Waveforms() {
 export default function AudioSingularity() {
   return (
     <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "#050505", overflow: "hidden" }}>
-      <Canvas camera={{ position: [0, 0, 12], fov: 45 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 0, 12], fov: 45 }} dpr={[1, 2]}
+       style={{ touchAction: 'pan-y' }}>
         <fog attach="fog" args={["#050505", 5, 25]} />
         
         {/* Wrapping the elements in a group to easily shift the composition center */}
