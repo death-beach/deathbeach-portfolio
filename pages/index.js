@@ -19,12 +19,21 @@ export async function getStaticProps() {
 export default function Home({ project }) {
   const { customContent } = project || {}
 
+  // In index.js useEffect
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('active');
+        // If it's even slightly visible, trigger it
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          // Stop observing once it's revealed to save memory
+          observer.unobserve(entry.target);
+        }
       });
-    }, { threshold: 0.02 });
+    }, { 
+      threshold: 0, 
+      rootMargin: "0px 0px -50px 0px" // Triggers 50px before it enters the bottom of screen
+    });
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     
@@ -150,8 +159,9 @@ export default function Home({ project }) {
         /* ── NEW: Scroll Reveal Animation ── */
         .reveal {
           opacity: 0;
-          transform: translateY(30px);
-          transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+          transform: translateY(20px);
+          transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);        
+          will-change: opacity, transform; 
         }
         .reveal.active {
           opacity: 1;
