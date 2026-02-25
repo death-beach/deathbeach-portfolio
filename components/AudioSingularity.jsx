@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 function SingularityCore() {
@@ -225,6 +225,25 @@ function Waveforms() {
           />
         </mesh>
       ))}
+    </group>
+  );
+}
+
+// ── ADD THIS NEW COMPONENT ───────────────────────────────
+function ResponsiveScene() {
+  const { size } = useThree();
+  // Standard mobile breakpoint (768px)
+  const isMobile = size.width < 768; 
+
+  // Desktop: Shifted right (8.0). 
+  // Mobile: Centered X (0), and pushed back on Z (-4.0) to scale it down visually
+  const groupPosition = isMobile ? [0, 2.0, -4.0] : [8.0, 1.5, 0];
+  
+  return (
+    <group position={groupPosition}>
+      <SingularityCore />
+      <Particles count={2000} />
+      <Waveforms />
     </group>
   );
 }
