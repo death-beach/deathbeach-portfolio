@@ -709,7 +709,7 @@ export default function Home({ project }) {
                   >
                     Brewery Management System
                   </a>{" "}
-                  &ndash; full vibe coded operations tool in development with Burning Beard Brewing
+                  &ndash; full vibe coded operations tool in development
                 </li>
                 <li>
                   •{" "}
