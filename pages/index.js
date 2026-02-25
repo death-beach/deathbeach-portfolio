@@ -704,10 +704,7 @@ export default function Home({ project }) {
                 </li>
                 <li>
                   •{" "}
-                  <a
-                    href="https://www.burningbeardbrewing.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <a                    
                     style={{ color: "#d1d5db", textDecoration: "underline" }}
                   >
                     Brewery Management System
