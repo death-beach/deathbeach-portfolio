@@ -113,10 +113,7 @@ export default function Projects() {
                         }}
                       >
                         {item.title}
-                      </h3>
-                      <p style={{ fontSize: "14px", color: "#6b7280", fontFamily: "'Hanken Grotesk', sans-serif" }}>
-                        {item.shortDescription}
-                      </p>
+                      </h3>                      
                     </div>
                   </div>
                 </Link>
