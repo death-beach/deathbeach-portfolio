@@ -237,7 +237,7 @@ function ResponsiveScene() {
 
   // Desktop: Shifted right (8.0). 
   // Mobile: Centered X (0), and pushed back on Z (-4.0) to scale it down visually
-  const groupPosition = isMobile ? [6, 1.5, -4.0] : [8.0, 1.5, 0];
+  const groupPosition = isMobile ? [3, 1.5, -4.0] : [8.0, 1.5, 0];
   
   return (
     <group position={groupPosition}>
