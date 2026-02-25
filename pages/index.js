@@ -254,8 +254,7 @@ export default function Home({ project }) {
               >
                 <p style={{ marginBottom: "20px" }}>You carry entire worlds inside you.</p>
                 <p style={{ marginBottom: "20px" }}>
-                  Sounds that hit deeper than words alone ever could. Layers that wrap around your soul and refuse to
-                  let go. Moments so raw they crack you open and make whoever hears it feel everything right along with
+                  Sounds that hit deeper than words alone ever could. Moments so raw they crack you open and make whoever hears it feel everything right along with
                   you.
                 </p>
                 <p style={{ marginBottom: "20px"}}>Lyrics and music dripping into the ear of fans offering a world for them to live in.</p>
@@ -266,7 +265,9 @@ export default function Home({ project }) {
                 <p style={{ marginBottom: "20px" }}>
                   I&apos;m Death Beach. I&apos;ve been right where you are obsessing over tone, frequencies, and
                   vibration since I was a kid, teaching myself everything I could get my hands on because the hunger
-                  wouldn&apos;t let me stop. I poured my life into bands, chasing that electric, alive feeling on
+                  wouldn&apos;t let me stop.
+                </p>
+                < p style={{ marginBottom: "20px" }} >I poured my life into bands, chasing that electric, alive feeling on
                   stage. Our biggest night with Fing was opening for The Damned at the Casbah, and that same fire still
                   drives every single thing I do.
                 </p>
