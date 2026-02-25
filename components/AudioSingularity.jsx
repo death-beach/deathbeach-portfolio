@@ -254,12 +254,7 @@ export default function AudioSingularity() {
       <Canvas camera={{ position: [0, 0, 12], fov: 45 }} dpr={[1, 2]}>
         <fog attach="fog" args={["#050505", 5, 25]} />
         
-        {/* Wrapping the elements in a group to easily shift the composition center */}
-        <group position={[8.0, 1.5, 0]}>
-          <SingularityCore />
-          <Particles count={2000} />
-          <Waveforms />
-        </group>
+        <ResponsiveScene />
 
       </Canvas>
       {/* Gradient overlay to blend with the rest of the page */}
