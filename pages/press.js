@@ -1,12 +1,23 @@
 // pages/press.js
-import React from "react";
+import React, { useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import CustomWavePlayer from "../components/CustomWavePlayer";
 
+// Dynamically import AudioSingularity to avoid SSR issues (Three.js needs browser)
+const AudioSingularity = dynamic(() => import("../components/AudioSingularity"), { ssr: false });
+
 export default function PressKit() {
-  // Framer Motion variants for high-end staggered entrance
+  // Shared audio frequency data — stored in a ref so updates don't trigger re-renders.
+  // The Three.js useFrame loops read audioDataRef.current directly at 60fps.
+  const audioDataRef = useRef(null);
+
+  const handleAudioData = useCallback((data) => {
+    audioDataRef.current = data || null;
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -38,7 +49,6 @@ export default function PressKit() {
         overflowX: "hidden",
       }}
     >
-      {/* ── SCREEN STYLES ── */}
       <style jsx>{`
         .gradient-pink-magenta {
           background: linear-gradient(90deg, #f00c6f, #dd11b0);
@@ -53,12 +63,14 @@ export default function PressKit() {
           background-clip: text;
         }
         .track-card {
-          background-color: #1a1a1a;
+          background-color: rgba(26, 26, 26, 0.85);
           border: 1px solid #333;
           border-left: 4px solid #333;
           border-radius: 12px;
           padding: 32px;
           transition: all 0.4s ease;
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
         }
         .track-card.pink:hover {
           transform: translateY(-5px);
@@ -78,7 +90,7 @@ export default function PressKit() {
           color: #ffffff !important;
           background-color: rgba(18, 171, 255, 0.1);
         }
-        
+
         @media (max-width: 768px) {
           .content-wrapper {
             padding: 100px 24px 80px 24px !important;
@@ -92,7 +104,7 @@ export default function PressKit() {
         }
       `}</style>
 
-      {/* FIXED LOGO */}
+      {/* ── FIXED LOGO ── */}
       <div className="fixed-logo" style={{ position: "fixed", top: "32px", left: "32px", zIndex: 50 }}>
         <Link href="/">
           <div style={{ cursor: "pointer", transition: "opacity 0.3s", opacity: 0.9 }} className="hover:opacity-100">
@@ -107,7 +119,7 @@ export default function PressKit() {
         </Link>
       </div>
 
-      {/* MAIN CONTENT */}
+      {/* ── MAIN CONTENT ── */}
       <motion.div
         className="content-wrapper"
         style={{
@@ -119,7 +131,7 @@ export default function PressKit() {
         initial="hidden"
         animate="visible"
       >
-        {/* 1. HOOK */}
+        {/* 1. THE HOOK */}
         <motion.section variants={itemVariants} className="section-spacing" style={{ marginBottom: "140px" }}>
           <h1
             className="headline gradient-blue-pink"
@@ -147,46 +159,90 @@ export default function PressKit() {
           </p>
         </motion.section>
 
-        {/* 2. TRACKS */}
-        <motion.section variants={itemVariants} className="section-spacing" style={{ marginBottom: "140px" }}>
-          <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#6b7280", marginBottom: "40px" }}>
-            01 // The Sonic Thesis
-          </h2>
+        {/* 2. THE TRACKS — AudioSingularity lives behind this section */}
+        <motion.section
+          variants={itemVariants}
+          className="section-spacing"
+          style={{
+            marginBottom: "140px",
+            position: "relative",
+            paddingTop: "60px",
+            paddingBottom: "60px",
+          }}
+        >
+          {/* ── 3D BACKGROUND: absolute inside section, bleeds to viewport edges ── */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: "calc(-50vw + 50%)",
+              right: "calc(-50vw + 50%)",
+              zIndex: 0,
+              pointerEvents: "none",
+              overflow: "hidden",
+            }}
+          >
+            <AudioSingularity
+              audioDataRef={audioDataRef}
+              position={[4.5, 0, 0]}
+            />
+            {/* Top fade-in — mirrors the bottom fade-out inside AudioSingularity */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "30%",
+                background: "linear-gradient(to bottom, #0f0f0f 0%, transparent 100%)",
+                pointerEvents: "none",
+                zIndex: 1,
+              }}
+            />
+          </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-            <div className="track-card pink">
-              <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
-                "Drunk on the Mic" (Death Beach Remix)
-              </h3>
-              <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
-                A masterclass in tension, release, and undeniable bounce. It doesn’t just fill a room—it commands the culture.
-              </p>
-              <CustomWavePlayer audioUrl="/audio/drunk-on-the-mic-remix.mp3" />
-            </div>
+          {/* ── CONTENT (sits above the 3D scene) ── */}
+          <div style={{ position: "relative", zIndex: 1, width: "100%" }}>
+            <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#6b7280", marginBottom: "40px" }}>
+              01 // The Sonic Thesis
+            </h2>
 
-            <div className="track-card blue">
-              <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
-                Desert Transmission
-              </h3>
-              <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
-                A brooding, frequency-rich descent into analog synthesis and digital precision. This track strips away the static to leave pure, vibrating emotion.
-              </p>
-              <CustomWavePlayer audioUrl="/audio/desert-transmission.mp3" />
-            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+              <div className="track-card pink">
+                <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
+                  "Drunk on the Mic" (Death Beach Remix)
+                </h3>
+                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
+                  A masterclass in tension, release, and undeniable bounce. It doesn't just fill a room—it commands the culture.
+                </p>
+                <CustomWavePlayer audioUrl="/audio/drunk-on-the-mic-remix.mp3" onAudioData={handleAudioData} />
+              </div>
 
-            <div className="track-card pink">
-              <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
-                Neon Bleed
-              </h3>
-              <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
-                Visceral drum architecture meets haunting, unfiltered vocal production. It is a sonic ecosystem designed to crack you open and leave a lasting mark.
-              </p>
-              <CustomWavePlayer audioUrl="/audio/neon-bleed.mp3" />
+              <div className="track-card blue">
+                <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
+                  Desert Transmission
+                </h3>
+                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
+                  A brooding, frequency-rich descent into analog synthesis and digital precision. This track strips away the static to leave pure, vibrating emotion.
+                </p>
+                <CustomWavePlayer audioUrl="/audio/desert-transmission.mp3" onAudioData={handleAudioData} />
+              </div>
+
+              <div className="track-card pink">
+                <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
+                  Neon Bleed
+                </h3>
+                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
+                  Visceral drum architecture meets haunting, unfiltered vocal production. It is a sonic ecosystem designed to crack you open and leave a lasting mark.
+                </p>
+                <CustomWavePlayer audioUrl="/audio/neon-bleed.mp3" onAudioData={handleAudioData} />
+              </div>
             </div>
           </div>
         </motion.section>
 
-        {/* 3. BUSINESS */}
+        {/* 3. THE BUSINESS PROWESS */}
         <motion.section variants={itemVariants} className="section-spacing" style={{ marginBottom: "140px" }}>
           <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#6b7280", marginBottom: "32px" }}>
             02 // The Economic Engine
@@ -202,7 +258,7 @@ export default function PressKit() {
           </p>
         </motion.section>
 
-        {/* 4. TECH */}
+        {/* 4. THE TECH / 3D EDGE */}
         <motion.section variants={itemVariants} className="section-spacing" style={{ marginBottom: "160px" }}>
           <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#6b7280", marginBottom: "32px" }}>
             03 // The Digital Dimension
@@ -211,11 +267,11 @@ export default function PressKit() {
             The screen is a canvas. The browser is a venue. Code is the ultimate instrument.
           </h3>
           <p style={{ fontSize: "18px", lineHeight: "1.8", color: "#d1d5db" }}>
-            My “Audio Singularity” real-time 3D environments transform static domains into living, breathing visual ecosystems. In an industry fighting for passive attention, I don’t just pitch a sound—I engineer a fully immersive, vibe-coded world that demands absolute focus.
+            My "Audio Singularity" real-time 3D environments transform static domains into living, breathing visual ecosystems. In an industry fighting for passive attention, I don't just pitch a sound—I engineer a fully immersive, vibe-coded world that demands absolute focus.
           </p>
         </motion.section>
 
-        {/* 5. CTA - FIXED WITH CLASS */}
+        {/* 5. THE CALL TO ACTION */}
         <motion.section
           variants={itemVariants}
           className="section-spacing"
@@ -223,7 +279,7 @@ export default function PressKit() {
             textAlign: "center",
             paddingTop: "60px",
             borderTop: "1px solid rgba(255,255,255,0.05)",
-            marginBottom: 0
+            marginBottom: 0,
           }}
         >
           <h2 style={{ fontSize: "32px", fontWeight: "bold", marginBottom: "24px", color: "#ffffff" }}>
@@ -232,7 +288,7 @@ export default function PressKit() {
           <p style={{ fontSize: "18px", lineHeight: "1.8", color: "#9ca3af", marginBottom: "48px", maxWidth: "600px", margin: "0 auto 48px auto" }}>
             Whether you are an artist demanding a sonic signature, a founder scaling a cultural movement, or a brand requiring an unforgettable digital world, the standard is set.
             <br /><br />
-            Let’s build something that lives.
+            Let's build something that lives.
           </p>
           <Link
             href="/contact"

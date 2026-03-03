@@ -3,6 +3,7 @@
 // Each slide is a fixed 1280x720 div (16:9) styled identically to press.js
 
 import React from "react";
+import Image from "next/image";
 
 const SLIDE_W = 1280;
 const SLIDE_H = 720;
@@ -100,7 +101,11 @@ export default function PressPDF() {
 
       {/* ── SLIDE 1: THE HOOK ── */}
       <div className="slide" style={slideStyle}>
-        <span className="slide-label">Death Beach Studio</span>
+        {/* Logo top-left */}
+        <div style={{ position: "absolute", top: "28px", left: "36px" }}>
+          <Image src="/Death_Beach.png" alt="Death Beach" width={52} height={52} />
+        </div>
+        <span className="slide-label" style={{ left: "100px" }}>Death Beach Studio</span>
         <span className="slide-number">01 / 05</span>
 
         <h1
@@ -132,9 +137,31 @@ export default function PressPDF() {
 
       {/* ── SLIDE 2: THE TRACKS ── */}
       <div className="slide" style={slideStyle}>
-        <span className="slide-label">Death Beach Studio</span>
+        {/* Logo top-left */}
+        <div style={{ position: "absolute", top: "28px", left: "36px" }}>
+          <Image src="/Death_Beach.png" alt="Death Beach" width={52} height={52} />
+        </div>
+        <span className="slide-label" style={{ left: "100px" }}>Death Beach Studio</span>
         <span className="slide-number">02 / 05</span>
 
+        {/* Static gradient background mimicking AudioSingularity */}
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          background: "radial-gradient(ellipse at 75% 50%, rgba(240,12,111,0.12) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(18,171,255,0.10) 0%, transparent 55%)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }} />
+        {/* Decorative rings */}
+        <svg style={{ position: "absolute", right: "-60px", top: "50%", transform: "translateY(-50%)", opacity: 0.15, zIndex: 0 }} width="500" height="500" viewBox="0 0 500 500">
+          <circle cx="250" cy="250" r="200" fill="none" stroke="#f00c6f" strokeWidth="1" />
+          <circle cx="250" cy="250" r="160" fill="none" stroke="#12abff" strokeWidth="0.5" />
+          <circle cx="250" cy="250" r="120" fill="none" stroke="#f00c6f" strokeWidth="1" />
+          <circle cx="250" cy="250" r="80" fill="none" stroke="#12abff" strokeWidth="0.5" />
+          <circle cx="250" cy="250" r="40" fill="none" stroke="#f00c6f" strokeWidth="1" />
+        </svg>
+
+        <div style={{ position: "relative", zIndex: 1, width: "100%" }}>
         <h2
           style={{
             fontSize: "13px",
@@ -142,6 +169,7 @@ export default function PressPDF() {
             letterSpacing: "0.15em",
             color: "#6b7280",
             marginBottom: "48px",
+            textAlign: "center",
           }}
         >
           01 // The Sonic Thesis
@@ -179,11 +207,15 @@ export default function PressPDF() {
             </p>
           </div>
         </div>
-      </div>
+        </div>{/* close zIndex wrapper */}
+      </div>{/* close slide 2 */}
 
       {/* ── SLIDE 3: THE BUSINESS ── */}
       <div className="slide" style={slideStyle}>
-        <span className="slide-label">Death Beach Studio</span>
+        <div style={{ position: "absolute", top: "28px", left: "36px" }}>
+          <Image src="/Death_Beach.png" alt="Death Beach" width={52} height={52} />
+        </div>
+        <span className="slide-label" style={{ left: "100px" }}>Death Beach Studio</span>
         <span className="slide-number">03 / 05</span>
 
         <h2
@@ -217,7 +249,10 @@ export default function PressPDF() {
 
       {/* ── SLIDE 4: THE TECH ── */}
       <div className="slide" style={slideStyle}>
-        <span className="slide-label">Death Beach Studio</span>
+        <div style={{ position: "absolute", top: "28px", left: "36px" }}>
+          <Image src="/Death_Beach.png" alt="Death Beach" width={52} height={52} />
+        </div>
+        <span className="slide-label" style={{ left: "100px" }}>Death Beach Studio</span>
         <span className="slide-number">04 / 05</span>
 
         <h2
@@ -252,7 +287,10 @@ export default function PressPDF() {
 
       {/* ── SLIDE 5: THE CTA ── */}
       <div className="slide" style={{ ...slideStyle, borderTop: "none" }}>
-        <span className="slide-label">Death Beach Studio</span>
+        <div style={{ position: "absolute", top: "28px", left: "36px" }}>
+          <Image src="/Death_Beach.png" alt="Death Beach" width={52} height={52} />
+        </div>
+        <span className="slide-label" style={{ left: "100px" }}>Death Beach Studio</span>
         <span className="slide-number">05 / 05</span>
 
         <h2

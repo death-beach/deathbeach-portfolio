@@ -2,19 +2,43 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-export default function CustomWavePlayer({ audioUrl }) {
+// onAudioData: optional callback(Float32Array) called every animation frame while playing
+export default function CustomWavePlayer({ audioUrl, onAudioData }) {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
+  const analyserRef = useRef(null);
+  const animFrameRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
+
+  // Poll analyser for frequency data while playing
+  const startAnalysis = () => {
+    if (!analyserRef.current || !onAudioData) return;
+    const analyser = analyserRef.current;
+    const data = new Uint8Array(analyser.frequencyBinCount);
+
+    const tick = () => {
+      analyser.getByteFrequencyData(data);
+      onAudioData(data);
+      animFrameRef.current = requestAnimationFrame(tick);
+    };
+    animFrameRef.current = requestAnimationFrame(tick);
+  };
+
+  const stopAnalysis = () => {
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
+    if (onAudioData) onAudioData(null);
+  };
 
   useEffect(() => {
     if (!waveformRef.current || !audioUrl) return;
 
     let ws;
 
-    // Dynamically import WaveSurfer to avoid SSR issues
     import("wavesurfer.js").then((WaveSurfer) => {
       try {
         ws = WaveSurfer.default.create({
@@ -32,10 +56,9 @@ export default function CustomWavePlayer({ audioUrl }) {
 
         wavesurfer.current = ws;
 
-        // Wrap load in try-catch and handle promise rejections
         try {
           const loadPromise = ws.load(audioUrl);
-          if (loadPromise && typeof loadPromise.catch === 'function') {
+          if (loadPromise && typeof loadPromise.catch === "function") {
             loadPromise.catch((loadError) => {
               console.warn("WaveSurfer load promise rejected:", loadError);
               setHasError(true);
@@ -52,11 +75,60 @@ export default function CustomWavePlayer({ audioUrl }) {
         ws.on("ready", () => {
           setIsReady(true);
           setHasError(false);
+
+          // Set up Web Audio analyser — original working approach
+          if (onAudioData && !analyserRef.current) {
+            try {
+              const mediaEl = typeof ws.getMediaElement === "function" ? ws.getMediaElement() : null;
+              if (mediaEl) {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) throw new Error("No AudioContext");
+                const ctx = new AudioCtx();
+                // Resume context (required by browser autoplay policy)
+                ctx.resume().catch(() => {});
+                const source = ctx.createMediaElementSource(mediaEl);
+                const analyser = ctx.createAnalyser();
+                analyser.fftSize = 4096;
+                source.connect(analyser);
+                analyser.connect(ctx.destination);
+                analyserRef.current = analyser;
+              }
+              // If getMediaElement not available, skip analyser silently — audio still works
+            } catch (e) {
+              // Analyser failed — audio playback is unaffected
+              console.warn("Audio analyser unavailable (audio still plays):", e.message);
+            }
+          }
         });
 
-        ws.on("play", () => setIsPlaying(true));
-        ws.on("pause", () => setIsPlaying(false));
-        ws.on("finish", () => setIsPlaying(false));
+        ws.on("play", () => {
+          setIsPlaying(true);
+          // Sync parallel audio playback with WaveSurfer (fallback only)
+          if (analyserRef.current?.parallelAudio) {
+            analyserRef.current.parallelAudio.currentTime = ws.getCurrentTime();
+            analyserRef.current.parallelAudio.play().catch(() => {});
+          }
+          startAnalysis();
+        });
+
+        ws.on("pause", () => {
+          setIsPlaying(false);
+          // Sync parallel audio pause with WaveSurfer (fallback only)
+          if (analyserRef.current?.parallelAudio) {
+            analyserRef.current.parallelAudio.pause();
+          }
+          stopAnalysis();
+        });
+
+        ws.on("finish", () => {
+          setIsPlaying(false);
+          // Sync parallel audio stop with WaveSurfer (fallback only)
+          if (analyserRef.current?.parallelAudio) {
+            analyserRef.current.parallelAudio.pause();
+            analyserRef.current.parallelAudio.currentTime = 0;
+          }
+          stopAnalysis();
+        });
 
         ws.on("error", (error) => {
           console.warn("WaveSurfer error:", error);
@@ -64,8 +136,7 @@ export default function CustomWavePlayer({ audioUrl }) {
           setIsReady(false);
         });
 
-        ws.on("load", (url) => {
-          // Reset error state on successful load
+        ws.on("load", () => {
           setHasError(false);
         });
       } catch (initError) {
@@ -80,9 +151,12 @@ export default function CustomWavePlayer({ audioUrl }) {
     });
 
     return () => {
-      if (ws) {
-        ws.destroy();
+      stopAnalysis();
+      if (analyserRef.current?.parallelAudio) {
+        analyserRef.current.parallelAudio.pause();
+        analyserRef.current.parallelAudio = null;
       }
+      if (ws) ws.destroy();
     };
   }, [audioUrl]);
 
@@ -127,7 +201,6 @@ export default function CustomWavePlayer({ audioUrl }) {
           position: relative;
           transition: filter 0.3s ease;
         }
-        /* The Audio-Reactive Glow Effect */
         .waveform-wrapper.active {
           filter: drop-shadow(0 0 8px rgba(240, 12, 111, 0.5));
         }
@@ -144,23 +217,19 @@ export default function CustomWavePlayer({ audioUrl }) {
         }
       `}</style>
 
-      {/* Play/Pause Button */}
       <button className="play-btn" onClick={togglePlay} disabled={!isReady}>
         {isPlaying ? (
-          // Pause Icon
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <rect x="6" y="4" width="4" height="16" />
             <rect x="14" y="4" width="4" height="16" />
           </svg>
         ) : (
-          // Play Icon
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: "4px" }}>
             <path d="M8 5v14l11-7z" />
           </svg>
         )}
       </button>
 
-      {/* Waveform Container */}
       <div className={`waveform-wrapper ${isPlaying ? "active" : ""}`}>
         {!isReady && !hasError && <div className="loading-text">Loading Audio...</div>}
         {hasError && <div className="loading-text" style={{ color: "#f00c6f" }}>Audio Unavailable</div>}
