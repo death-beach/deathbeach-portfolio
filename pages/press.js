@@ -23,7 +23,7 @@ export default function PressKit() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }, // Custom premium easing
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
@@ -38,7 +38,7 @@ export default function PressKit() {
         overflowX: "hidden",
       }}
     >
-      {/* ── STYLED JSX ── */}
+      {/* ── SCREEN STYLES ── */}
       <style jsx>{`
         .gradient-pink-magenta {
           background: linear-gradient(90deg, #f00c6f, #dd11b0);
@@ -55,7 +55,7 @@ export default function PressKit() {
         .track-card {
           background-color: #1a1a1a;
           border: 1px solid #333;
-          border-left: 4px solid #333; /* Default border */
+          border-left: 4px solid #333;
           border-radius: 12px;
           padding: 32px;
           transition: all 0.4s ease;
@@ -79,7 +79,6 @@ export default function PressKit() {
           background-color: rgba(18, 171, 255, 0.1);
         }
         
-        /* Layout scaling for mobile */
         @media (max-width: 768px) {
           .content-wrapper {
             padding: 100px 24px 80px 24px !important;
@@ -93,8 +92,8 @@ export default function PressKit() {
         }
       `}</style>
 
-      {/* ── FIXED LOGO ── */}
-      <div style={{ position: "fixed", top: "32px", left: "32px", zIndex: 50 }}>
+      {/* FIXED LOGO */}
+      <div className="fixed-logo" style={{ position: "fixed", top: "32px", left: "32px", zIndex: 50 }}>
         <Link href="/">
           <div style={{ cursor: "pointer", transition: "opacity 0.3s", opacity: 0.9 }} className="hover:opacity-100">
             <Image
@@ -108,7 +107,7 @@ export default function PressKit() {
         </Link>
       </div>
 
-      {/* ── MAIN CONTENT (Scrollable with negative space) ── */}
+      {/* MAIN CONTENT */}
       <motion.div
         className="content-wrapper"
         style={{
@@ -120,7 +119,7 @@ export default function PressKit() {
         initial="hidden"
         animate="visible"
       >
-        {/* 1. THE HOOK */}
+        {/* 1. HOOK */}
         <motion.section variants={itemVariants} className="section-spacing" style={{ marginBottom: "140px" }}>
           <h1
             className="headline gradient-blue-pink"
@@ -148,7 +147,7 @@ export default function PressKit() {
           </p>
         </motion.section>
 
-        {/* 2. THE TRACKS */}
+        {/* 2. TRACKS */}
         <motion.section variants={itemVariants} className="section-spacing" style={{ marginBottom: "140px" }}>
           <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#6b7280", marginBottom: "40px" }}>
             01 // The Sonic Thesis
@@ -162,8 +161,6 @@ export default function PressKit() {
               <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
                 A masterclass in tension, release, and undeniable bounce. It doesn’t just fill a room—it commands the culture.
               </p>
-
-              {/* Inject the high-end player here */}
               <CustomWavePlayer audioUrl="/audio/drunk-on-the-mic-remix.mp3" />
             </div>
 
@@ -174,8 +171,6 @@ export default function PressKit() {
               <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
                 A brooding, frequency-rich descent into analog synthesis and digital precision. This track strips away the static to leave pure, vibrating emotion.
               </p>
-
-              {/* Inject the high-end player here */}
               <CustomWavePlayer audioUrl="/audio/desert-transmission.mp3" />
             </div>
 
@@ -186,14 +181,12 @@ export default function PressKit() {
               <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
                 Visceral drum architecture meets haunting, unfiltered vocal production. It is a sonic ecosystem designed to crack you open and leave a lasting mark.
               </p>
-
-              {/* Inject the high-end player here */}
               <CustomWavePlayer audioUrl="/audio/neon-bleed.mp3" />
             </div>
           </div>
         </motion.section>
 
-        {/* 3. THE BUSINESS PROWESS */}
+        {/* 3. BUSINESS */}
         <motion.section variants={itemVariants} className="section-spacing" style={{ marginBottom: "140px" }}>
           <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#6b7280", marginBottom: "32px" }}>
             02 // The Economic Engine
@@ -209,7 +202,7 @@ export default function PressKit() {
           </p>
         </motion.section>
 
-        {/* 4. THE TECH / 3D EDGE */}
+        {/* 4. TECH */}
         <motion.section variants={itemVariants} className="section-spacing" style={{ marginBottom: "160px" }}>
           <h2 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#6b7280", marginBottom: "32px" }}>
             03 // The Digital Dimension
@@ -222,13 +215,15 @@ export default function PressKit() {
           </p>
         </motion.section>
 
-        {/* 5. THE CALL TO ACTION */}
+        {/* 5. CTA - FIXED WITH CLASS */}
         <motion.section
           variants={itemVariants}
+          className="section-spacing"
           style={{
             textAlign: "center",
             paddingTop: "60px",
-            borderTop: "1px solid rgba(255,255,255,0.05)"
+            borderTop: "1px solid rgba(255,255,255,0.05)",
+            marginBottom: 0
           }}
         >
           <h2 style={{ fontSize: "32px", fontWeight: "bold", marginBottom: "24px", color: "#ffffff" }}>
