@@ -28,57 +28,50 @@ function binAvg(data, lo, hi) {
 }
 
 // ── CORE ─────────────────────────────────────────────────────────────────────
-// Reads sub-bass bins 0–7 (0–86Hz).
-// Pumps on each bass note using a peak envelope with hysteresis:
-//   - Fires when peak > HIGH_THRESH (0.60)
-//   - Resets only when peak < LOW_THRESH (0.30)
-//   - Holds state in between — no flicker on sustained notes
-// Core always rotates at a constant slow rate. Only scale is frequency-driven.
+// Reads blended bass signal: 30% sub-bass (0–86Hz) + 70% lower-mid harmonics (130–430Hz).
+// Simple direct energy tracking with asymmetric smoothing:
+//   - Sub-bass tells it when bass is active (always elevated in mixed track)
+//   - Lower-mid harmonics provide per-note variation (clearly changes in log data)
+//   - Fast attack (0.4 lerp), slow release (0.04 lerp) for natural feel
+//   - No onset detection, no dynamic threshold — just direct energy response
+// Core always rotates at constant speed. Only scale is audio-driven.
 function Core({ audioDataRef }) {
   const meshRef = useRef(null);
   const scale = useRef(1.0);
-  const firing = useRef(false);   // hysteresis state
   const frameCount = useRef(0);
-  const HIGH_THRESH = 0.55;
-  const LOW_THRESH  = 0.25;
 
   useFrame((state) => {
     if (!meshRef.current) return;
 
-    // Constant slow rotation — never changes regardless of audio
     meshRef.current.rotation.y += 0.008;
     meshRef.current.rotation.x += 0.004;
 
     const data = audioDataRef?.current ?? null;
 
-    // Debug: log every 2 seconds so we can verify Core sees the data
     if (++frameCount.current % 120 === 0) {
-      const bassVal = data ? binPeak(data, 0, 7) : -1;
-      console.log(`[Core] audioDataRef=${audioDataRef ? "ref" : "null"} data=${data ? "Uint8Array" : "null"} bass=${bassVal.toFixed(3)} firing=${firing.current}`);
+      const sub = data ? binPeak(data, 0, 7) : -1;
+      const mid = data ? binPeak(data, 12, 40) : -1;
+      const blended = data ? sub * 0.3 + mid * 0.7 : -1;
+      console.log(`[Core] sub=${sub.toFixed(3)} mid=${mid.toFixed(3)} blended=${blended.toFixed(3)} scale=${scale.current.toFixed(2)}`);
     }
 
     if (!data) {
-      // Idle: gentle breathe
-      const target = 1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.04;
-      scale.current = THREE.MathUtils.lerp(scale.current, target, 0.04);
+      const idle = 1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.04;
+      scale.current = THREE.MathUtils.lerp(scale.current, idle, 0.04);
     } else {
-      const bass = binPeak(data, 0, 7);
+      // Blended signal: 30% sub-bass presence + 70% lower-mid variation
+      const subBass = binPeak(data, 0, 7);     // 0–86Hz: always elevated when bass active
+      const lowerMid = binPeak(data, 12, 40);  // 130–430Hz: varies per note (from log data)
+      const blended = subBass * 0.3 + lowerMid * 0.7;
 
-      // Hysteresis: only change firing state at clear thresholds
-      if (!firing.current && bass > HIGH_THRESH) firing.current = true;
-      if (firing.current && bass < LOW_THRESH)   firing.current = false;
+      // Simple direct energy tracking
+      const targetScale = 1.0 + blended * 0.6;  // up to 1.6x at full energy
 
-      if (firing.current) {
-        // Snap up instantly to bass level, then hold
-        const target = 1.0 + bass * 0.8;
-        if (target > scale.current) {
-          scale.current = target;                                          // instant attack
-        } else {
-          scale.current = THREE.MathUtils.lerp(scale.current, target, 0.15); // track while firing
-        }
+      // Asymmetric smoothing: fast attack, slow release
+      if (targetScale > scale.current) {
+        scale.current = THREE.MathUtils.lerp(scale.current, targetScale, 0.4); // fast attack
       } else {
-        // Decay back to rest
-        scale.current = THREE.MathUtils.lerp(scale.current, 1.0, 0.08);
+        scale.current = THREE.MathUtils.lerp(scale.current, targetScale, 0.04); // slow release
       }
     }
 

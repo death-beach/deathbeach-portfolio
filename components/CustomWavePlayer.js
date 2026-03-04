@@ -50,7 +50,7 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
       const source = ctx.createMediaElementSource(audioEl);
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 4096;               // 2048 bins, 10.77Hz per bin
-      analyser.smoothingTimeConstant = 0.5;  // balanced: not noisy, not sluggish
+      analyser.smoothingTimeConstant = 0.22;  // fast enough to see note transients
 
       // Silencer gain node: analyser reads the full signal, but output to speakers is 0.
       // This keeps the parallel element inaudible while WaveSurfer remains the only audio source.
