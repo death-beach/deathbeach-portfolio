@@ -249,7 +249,7 @@ export default function PressKit() {
             <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
               <motion.div
                 className="track-card pink"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
                 onAnimationComplete={() => resizeFunctions[0]?.()}
@@ -269,7 +269,7 @@ export default function PressKit() {
 
               <motion.div
                 className="track-card blue"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 onAnimationComplete={() => resizeFunctions[1]?.()}
@@ -289,7 +289,7 @@ export default function PressKit() {
 
               <motion.div
                 className="track-card pink"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
                 onAnimationComplete={() => resizeFunctions[2]?.()}
