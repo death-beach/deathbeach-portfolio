@@ -114,6 +114,10 @@ export default function PressKit() {
           .section-spacing {
             margin-bottom: 80px !important;
           }
+            .track-card {
+            background-color: rgba(20, 20, 20, 0.97) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+          }
         }
       `}</style>
 
@@ -153,7 +157,7 @@ export default function PressKit() {
             height={isMobile ? 220 : 480}
             style={{
               position: "absolute",
-              top: isMobile ? "99%" : "50%",
+              top: isMobile ? "110%" : "50%",
               left: "85%",
               transform: "translate(-50%, -50%)",
               objectFit: "cover",
