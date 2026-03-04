@@ -1,5 +1,5 @@
 // pages/press.js
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -14,8 +14,15 @@ export default function PressKit() {
   // The Three.js useFrame loops read audioDataRef.current directly at 60fps.
   const audioDataRef = useRef(null);
 
+  // Resize functions for waveform players
+  const [resizeFunctions, setResizeFunctions] = useState({});
+
   const handleAudioData = useCallback((data) => {
     audioDataRef.current = data || null;
+  }, []);
+
+  const handleResizeCallback = useCallback((index, resizeFn) => {
+    setResizeFunctions(prev => ({ ...prev, [index]: resizeFn }));
   }, []);
 
   const containerVariants = {
@@ -101,6 +108,7 @@ export default function PressKit() {
           .section-spacing {
             margin-bottom: 80px !important;
           }
+          .portrait-img { width: 180px !important; height: 220px !important; }
         }
       `}</style>
 
@@ -138,6 +146,7 @@ export default function PressKit() {
             alt="Death Beach"
             width={380}
             height={480}
+            className="portrait-img"
             style={{
               position: "absolute",
               top: "50%",
@@ -230,35 +239,65 @@ export default function PressKit() {
             </h2>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-              <div className="track-card pink">
+              <motion.div
+                className="track-card pink"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                onAnimationComplete={() => resizeFunctions[0]?.()}
+              >
                 <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
                   "Drunk on the Mic" (Death Beach Remix)
                 </h3>
                 <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
                   A masterclass in tension, release, and undeniable bounce. It doesn't just fill a room—it commands the culture.
                 </p>
-                <CustomWavePlayer audioUrl="/audio/drunk-on-the-mic-remix.mp3" onAudioData={handleAudioData} />
-              </div>
+                <CustomWavePlayer
+                  audioUrl="/audio/drunk-on-the-mic-remix.mp3"
+                  onAudioData={handleAudioData}
+                  onResize={(fn) => handleResizeCallback(0, fn)}
+                />
+              </motion.div>
 
-              <div className="track-card blue">
+              <motion.div
+                className="track-card blue"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                onAnimationComplete={() => resizeFunctions[1]?.()}
+              >
                 <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
                   Desert Transmission
                 </h3>
                 <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
                   A brooding, frequency-rich descent into analog synthesis and digital precision. This track strips away the static to leave pure, vibrating emotion.
                 </p>
-                <CustomWavePlayer audioUrl="/audio/desert-transmission.mp3" onAudioData={handleAudioData} />
-              </div>
+                <CustomWavePlayer
+                  audioUrl="/audio/desert-transmission.mp3"
+                  onAudioData={handleAudioData}
+                  onResize={(fn) => handleResizeCallback(1, fn)}
+                />
+              </motion.div>
 
-              <div className="track-card pink">
+              <motion.div
+                className="track-card pink"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                onAnimationComplete={() => resizeFunctions[2]?.()}
+              >
                 <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
                   Neon Bleed
                 </h3>
                 <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
                   Visceral drum architecture meets haunting, unfiltered vocal production. It is a sonic ecosystem designed to crack you open and leave a lasting mark.
                 </p>
-                <CustomWavePlayer audioUrl="/audio/neon-bleed.mp3" onAudioData={handleAudioData} />
-              </div>
+                <CustomWavePlayer
+                  audioUrl="/audio/neon-bleed.mp3"
+                  onAudioData={handleAudioData}
+                  onResize={(fn) => handleResizeCallback(2, fn)}
+                />
+              </motion.div>
             </div>
           </div>
         </motion.section>

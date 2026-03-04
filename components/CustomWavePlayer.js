@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from "react";
 // Bass  (0–86Hz)    → bins 0–7
 // Mids  (200–900Hz) → bins 19–84
 // Highs (1.5k–20k)  → bins 139–1857
-export default function CustomWavePlayer({ audioUrl, onAudioData }) {
+export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const analyserRef = useRef(null);
@@ -173,6 +173,19 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
   const togglePlay = () => {
     if (wavesurfer.current && isReady) wavesurfer.current.playPause();
   };
+
+  const resizeWaveform = () => {
+    if (wavesurfer.current && isReady) {
+      wavesurfer.current.drawBuffer();
+    }
+  };
+
+  // Expose resize function via callback
+  useEffect(() => {
+    if (onResize) {
+      onResize(resizeWaveform);
+    }
+  }, [onResize, isReady]);
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "16px" }}>
