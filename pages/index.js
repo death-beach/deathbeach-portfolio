@@ -849,7 +849,7 @@ export default function Home({ project }) {
           <p style={{ fontSize: "18px", lineHeight: "1.8", color: "#d1d5db" }}>
             Helping run the{" "}
             <a
-              href="https://www.skool.com/soundeconomy/about"
+              href="https://www.soundeconomy.io"
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: "#d1d5db", textDecoration: "underline" }}
