@@ -261,8 +261,8 @@ export default function PressKit() {
                 <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
                   "Drunk on the Mic" (Death Beach Remix)
                 </h3>
-                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
-                  A masterclass in tension, release, and undeniable bounce. It doesn't just fill a room—it commands the culture.
+                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#e5e7eb", margin: 0 }}>
+                  Tension, release, and bounce. Complete flip of the original harmony. It doesn't just fill a room—it expands it.
                 </p>
                 <CustomWavePlayer
                   audioUrl="/audio/drunk-on-the-mic-remix.mp3"
@@ -281,7 +281,7 @@ export default function PressKit() {
                 <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
                   Desert Transmission
                 </h3>
-                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
+                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#e5e7eb", margin: 0 }}>
                   A brooding, frequency-rich descent into analog synthesis and digital precision. This track strips away the static to leave pure, vibrating emotion.
                 </p>
                 <CustomWavePlayer
@@ -301,7 +301,7 @@ export default function PressKit() {
                 <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
                   Neon Bleed
                 </h3>
-                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#9ca3af", margin: 0 }}>
+                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#e5e7eb", margin: 0 }}>
                   Visceral drum architecture meets haunting, unfiltered vocal production. It is a sonic ecosystem designed to crack you open and leave a lasting mark.
                 </p>
                 <CustomWavePlayer
