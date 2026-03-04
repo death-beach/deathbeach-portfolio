@@ -28,17 +28,12 @@ function binAvg(data, lo, hi) {
 }
 
 // ── CORE ─────────────────────────────────────────────────────────────────────
-// Reads blended bass signal: 30% sub-bass (0–86Hz) + 70% lower-mid harmonics (130–430Hz).
-// Simple direct energy tracking with asymmetric smoothing:
-//   - Sub-bass tells it when bass is active (always elevated in mixed track)
-//   - Lower-mid harmonics provide per-note variation (clearly changes in log data)
-//   - Fast attack (0.4 lerp), slow release (0.04 lerp) for natural feel
-//   - No onset detection, no dynamic threshold — just direct energy response
-// Core always rotates at constant speed. Only scale is audio-driven.
+// Fixed size sphere with constant rotation and gentle breathing.
+// No audio response — stays the same size always.
+// Core always rotates at constant speed.
 function Core({ audioDataRef }) {
   const meshRef = useRef(null);
   const scale = useRef(1.0);
-  const frameCount = useRef(0);
 
   useFrame((state) => {
     if (!meshRef.current) return;
@@ -46,34 +41,9 @@ function Core({ audioDataRef }) {
     meshRef.current.rotation.y += 0.008;
     meshRef.current.rotation.x += 0.004;
 
-    const data = audioDataRef?.current ?? null;
-
-    if (++frameCount.current % 120 === 0) {
-      const sub = data ? binPeak(data, 0, 7) : -1;
-      const mid = data ? binPeak(data, 12, 40) : -1;
-      const blended = data ? sub * 0.3 + mid * 0.7 : -1;
-      console.log(`[Core] sub=${sub.toFixed(3)} mid=${mid.toFixed(3)} blended=${blended.toFixed(3)} scale=${scale.current.toFixed(2)}`);
-    }
-
-    if (!data) {
-      const idle = 1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.04;
-      scale.current = THREE.MathUtils.lerp(scale.current, idle, 0.04);
-    } else {
-      // Blended signal: 30% sub-bass presence + 70% lower-mid variation
-      const subBass = binPeak(data, 0, 7);     // 0–86Hz: always elevated when bass active
-      const lowerMid = binPeak(data, 12, 40);  // 130–430Hz: varies per note (from log data)
-      const blended = subBass * 0.3 + lowerMid * 0.7;
-
-      // Simple direct energy tracking
-      const targetScale = 1.0 + blended * 0.6;  // up to 1.6x at full energy
-
-      // Asymmetric smoothing: fast attack, slow release
-      if (targetScale > scale.current) {
-        scale.current = THREE.MathUtils.lerp(scale.current, targetScale, 0.4); // fast attack
-      } else {
-        scale.current = THREE.MathUtils.lerp(scale.current, targetScale, 0.04); // slow release
-      }
-    }
+    // Gentle breathing animation, no audio response
+    const idle = 1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.04;
+    scale.current = THREE.MathUtils.lerp(scale.current, idle, 0.04);
 
     meshRef.current.scale.setScalar(scale.current);
   });
@@ -115,11 +85,12 @@ function Core({ audioDataRef }) {
 
 // ── RINGS ─────────────────────────────────────────────────────────────────────
 // 15 rings, each assigned to a specific bin in the low-mid range (bins 19–84).
-// Each ring scales up when its bin has energy.
+// Each ring glows brighter (higher opacity) when its bin has energy.
 // Rings rotate as a group on their own axis — completely independent of particles.
+// Scale stays fixed at 1.0 — no swelling.
 function Rings({ audioDataRef }) {
   const groupRef = useRef(null);
-  const smoothed = useRef([]);
+  const opacities = useRef([]);
 
   const rings = useMemo(() => {
     const c1 = new THREE.Color("#f00c6f");
@@ -141,7 +112,7 @@ function Rings({ audioDataRef }) {
         bin,
       });
     }
-    smoothed.current = new Array(arr.length).fill(1.0);
+    opacities.current = new Array(arr.length).fill(0.5);
     return arr;
   }, []);
 
@@ -158,16 +129,24 @@ function Rings({ audioDataRef }) {
       // Each ring also spins individually
       child.rotation.z += rings[i].speed;
 
+      // Scale stays fixed at 1.0 — no swelling
+      child.scale.setScalar(1.0);
+
       if (!data) {
-        const idle = 1 + Math.sin(state.clock.elapsedTime * 1.8 + i * 0.4) * 0.04;
-        smoothed.current[i] = THREE.MathUtils.lerp(smoothed.current[i], idle, 0.04);
+        // Idle: nearly invisible, subtle flicker
+        const idle = 0.05 + Math.sin(state.clock.elapsedTime * 1.8 + i * 0.4) * 0.03;
+        opacities.current[i] = THREE.MathUtils.lerp(opacities.current[i], idle, 0.04);
       } else {
+        // Flash bright when frequency fires, slow fade back to near-invisible
         const val = (data[rings[i].bin] || 0) / 255;
-        const target = 1.0 + val * 0.8;
-        smoothed.current[i] = THREE.MathUtils.lerp(smoothed.current[i], target, 0.18);
+        const target = 0.05 + val * 0.95;  // 0.05 (ghost) to 1.0 (full bright) — 20x contrast
+        const lerpSpeed = target > opacities.current[i] ? 0.5 : 0.06;  // fast attack, slow release
+        opacities.current[i] = THREE.MathUtils.lerp(opacities.current[i], target, lerpSpeed);
       }
 
-      child.scale.setScalar(smoothed.current[i]);
+
+      // Update material opacity
+      child.material.opacity = opacities.current[i];
     });
   });
 
