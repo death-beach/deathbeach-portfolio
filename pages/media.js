@@ -76,6 +76,8 @@ export default function PressKit() {
           background-clip: text;
         }
         .track-card {
+          position: relative;
+          z-index: 10;
           background-color: rgba(26, 26, 26, 0.85);
           border: 1px solid #333;
           border-left: 4px solid #333;
@@ -114,9 +116,11 @@ export default function PressKit() {
           .section-spacing {
             margin-bottom: 80px !important;
           }
-            .track-card {
-            background-color: rgba(20, 20, 20, 0.97) !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+            .track-card {            
+            background-color: #141414 !important;             
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;            
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.9) !important; 
           }
         }
       `}</style>
