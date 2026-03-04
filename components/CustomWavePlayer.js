@@ -2,28 +2,28 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-// onAudioData: optional callback(Uint8Array) called every animation frame while playing
-// Uses a parallel Audio element for the analyser so it works regardless of WaveSurfer version.
+// onAudioData: callback(Uint8Array) called every animation frame while playing.
+// Uses a parallel Audio element so the analyser works regardless of WaveSurfer version.
+//
+// fftSize = 4096 → frequencyBinCount = 2048 bins
+// At 44100Hz sample rate: bin width = 44100/4096 ≈ 10.77Hz per bin
+// Bass  (0–86Hz)    → bins 0–7
+// Mids  (200–900Hz) → bins 19–84
+// Highs (1.5k–20k)  → bins 139–1857
 export default function CustomWavePlayer({ audioUrl, onAudioData }) {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const analyserRef = useRef(null);
-  const audioElRef = useRef(null);   // parallel Audio element for Web Audio API
-  const audioCtxRef = useRef(null);  // AudioContext
+  const audioElRef = useRef(null);
+  const audioCtxRef = useRef(null);
   const animFrameRef = useRef(null);
-  const frameCountRef = useRef(0);   // for debug logging
   const [isPlaying, setIsPlaying] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  // ── ANALYSER SETUP ──────────────────────────────────────────────────────────
-  // We create a separate Audio element that plays in parallel with WaveSurfer.
-  // This bypasses the fragile ws.getMediaElement() approach and works reliably
-  // across all WaveSurfer versions.
   const setupAnalyser = (url) => {
     if (!onAudioData || !url) return;
     try {
-      // Clean up any previous instance
       if (audioElRef.current) {
         audioElRef.current.pause();
         audioElRef.current.src = "";
@@ -33,14 +33,10 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
       }
 
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) {
-        console.warn("CustomWavePlayer: AudioContext not available");
-        return;
-      }
+      if (!AudioCtx) return;
 
       const audioEl = new Audio();
-      // Only set crossOrigin for external URLs; local /audio/ files don't need it
-      // and setting it can cause CORS errors with some local servers
+      // crossOrigin only needed for external URLs
       if (url.startsWith("http://") || url.startsWith("https://")) {
         audioEl.crossOrigin = "anonymous";
       }
@@ -53,36 +49,44 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
 
       const source = ctx.createMediaElementSource(audioEl);
       const analyser = ctx.createAnalyser();
-      analyser.fftSize = 2048;          // 1024 bins, ~43Hz per bin at 44.1kHz
-      analyser.smoothingTimeConstant = 0.8; // NO browser-side smoothing — we do our own
+      analyser.fftSize = 4096;               // 2048 bins, 10.77Hz per bin
+      analyser.smoothingTimeConstant = 0.5;  // balanced: not noisy, not sluggish
+
+      // Silencer gain node: analyser reads the full signal, but output to speakers is 0.
+      // This keeps the parallel element inaudible while WaveSurfer remains the only audio source.
+      const silencer = ctx.createGain();
+      silencer.gain.value = 0;
+
       source.connect(analyser);
-      analyser.connect(ctx.destination);
+      analyser.connect(silencer);
+      silencer.connect(ctx.destination);
       analyserRef.current = analyser;
 
-      console.log("CustomWavePlayer: analyser ready, fftSize=2048, bins=", analyser.frequencyBinCount);
+      console.log("[MediaPlayer] analyser ready — bins:", analyser.frequencyBinCount, "smoothing:", analyser.smoothingTimeConstant);
     } catch (e) {
-      console.warn("CustomWavePlayer: analyser setup failed:", e.message);
+      console.warn("[MediaPlayer] analyser setup failed:", e.message);
     }
   };
 
-  // ── POLL LOOP ───────────────────────────────────────────────────────────────
   const startAnalysis = () => {
+    // Always cancel any existing loop before starting a new one
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
     if (!analyserRef.current || !onAudioData) return;
     const analyser = analyserRef.current;
     const data = new Uint8Array(analyser.frequencyBinCount);
+    let frame = 0;
 
     const tick = () => {
       analyser.getByteFrequencyData(data);
       onAudioData(data);
 
-      // Debug: log every 60 frames (~1 second) to confirm data is flowing
-      frameCountRef.current++;
-      if (frameCountRef.current % 60 === 0) {
-        console.log(
-          `[AudioData] bass[0-4]: ${data[0]},${data[1]},${data[2]},${data[3]},${data[4]}` +
-          ` | mid[20]: ${data[20]}` +
-          ` | high[100]: ${data[100]}`
-        );
+      // Log every 2 seconds to verify data is flowing
+      if (++frame % 120 === 0) {
+        const bassMax = Math.max(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
+        console.log(`[MediaPlayer] bass peak (bins 0-7): ${bassMax}/255 = ${(bassMax/255).toFixed(2)} | mid[40]: ${data[40]} | high[200]: ${data[200]}`);
       }
 
       animFrameRef.current = requestAnimationFrame(tick);
@@ -95,19 +99,15 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
       cancelAnimationFrame(animFrameRef.current);
       animFrameRef.current = null;
     }
-    frameCountRef.current = 0;
     if (onAudioData) onAudioData(null);
   };
 
-  // ── WAVESURFER INIT ─────────────────────────────────────────────────────────
   useEffect(() => {
     if (!waveformRef.current || !audioUrl) return;
 
-    // Set up the parallel analyser immediately
     setupAnalyser(audioUrl);
 
     let ws;
-
     import("wavesurfer.js").then((WaveSurfer) => {
       try {
         ws = WaveSurfer.default.create({
@@ -122,39 +122,21 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
           normalize: true,
           fillParent: true,
         });
-
         wavesurfer.current = ws;
 
         try {
-          const loadPromise = ws.load(audioUrl);
-          if (loadPromise && typeof loadPromise.catch === "function") {
-            loadPromise.catch((loadError) => {
-              console.warn("WaveSurfer load promise rejected:", loadError);
-              setHasError(true);
-              setIsReady(false);
-            });
-          }
-        } catch (loadError) {
-          console.warn("WaveSurfer load error:", loadError);
-          setHasError(true);
-          setIsReady(false);
-          return;
-        }
+          const p = ws.load(audioUrl);
+          if (p && typeof p.catch === "function") p.catch(() => { setHasError(true); setIsReady(false); });
+        } catch { setHasError(true); setIsReady(false); return; }
 
-        ws.on("ready", () => {
-          setIsReady(true);
-          setHasError(false);
-        });
+        ws.on("ready", () => { setIsReady(true); setHasError(false); });
 
         ws.on("play", () => {
           setIsPlaying(true);
-          // Sync parallel audio element with WaveSurfer
           if (audioElRef.current && audioCtxRef.current) {
             audioCtxRef.current.resume().catch(() => {});
             audioElRef.current.currentTime = ws.getCurrentTime();
-            audioElRef.current.play().catch((e) => {
-              console.warn("Parallel audio play failed:", e.message);
-            });
+            audioElRef.current.play().catch((e) => console.warn("[MediaPlayer] parallel play failed:", e.message));
           }
           startAnalysis();
         });
@@ -167,115 +149,53 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
 
         ws.on("finish", () => {
           setIsPlaying(false);
-          if (audioElRef.current) {
-            audioElRef.current.pause();
-            audioElRef.current.currentTime = 0;
-          }
+          if (audioElRef.current) { audioElRef.current.pause(); audioElRef.current.currentTime = 0; }
           stopAnalysis();
         });
 
         ws.on("seek", () => {
-          // Keep parallel audio in sync when user scrubs the waveform
-          if (audioElRef.current) {
-            audioElRef.current.currentTime = ws.getCurrentTime();
-          }
+          if (audioElRef.current) audioElRef.current.currentTime = ws.getCurrentTime();
         });
 
-        ws.on("error", (error) => {
-          console.warn("WaveSurfer error:", error);
-          setHasError(true);
-          setIsReady(false);
-        });
-
-        ws.on("load", () => {
-          setHasError(false);
-        });
-      } catch (initError) {
-        console.error("Failed to initialize WaveSurfer:", initError);
-        setHasError(true);
-        setIsReady(false);
-      }
-    }).catch((importError) => {
-      console.error("Failed to import WaveSurfer:", importError);
-      setHasError(true);
-      setIsReady(false);
-    });
+        ws.on("error", () => { setHasError(true); setIsReady(false); });
+        ws.on("load", () => setHasError(false));
+      } catch (e) { setHasError(true); setIsReady(false); }
+    }).catch(() => { setHasError(true); setIsReady(false); });
 
     return () => {
       stopAnalysis();
-      if (audioElRef.current) {
-        audioElRef.current.pause();
-        audioElRef.current.src = "";
-      }
-      if (audioCtxRef.current && audioCtxRef.current.state !== "closed") {
-        audioCtxRef.current.close().catch(() => {});
-      }
+      if (audioElRef.current) { audioElRef.current.pause(); audioElRef.current.src = ""; }
+      if (audioCtxRef.current && audioCtxRef.current.state !== "closed") audioCtxRef.current.close().catch(() => {});
       if (ws) ws.destroy();
     };
   }, [audioUrl]);
 
   const togglePlay = () => {
-    if (wavesurfer.current && isReady) {
-      wavesurfer.current.playPause();
-    }
+    if (wavesurfer.current && isReady) wavesurfer.current.playPause();
   };
 
   return (
-    <div className="player-container" style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "16px" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "16px" }}>
       <style jsx>{`
         .play-btn {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          background: #1a1a1a;
-          border: 1px solid rgba(18, 171, 255, 0.3);
-          color: #ffffff;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          flex-shrink: 0;
-          outline: none;
+          width: 48px; height: 48px; border-radius: 50%;
+          background: #1a1a1a; border: 1px solid rgba(18, 171, 255, 0.3);
+          color: #fff; display: flex; align-items: center; justify-content: center;
+          cursor: pointer; transition: all 0.3s ease; flex-shrink: 0; outline: none;
         }
-        .play-btn:hover {
-          border-color: #f00c6f;
-          box-shadow: 0 0 15px rgba(240, 12, 111, 0.4);
-          transform: scale(1.05);
-        }
-        .play-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-          border-color: #333;
-          box-shadow: none;
-          transform: none;
-        }
-        .waveform-wrapper {
-          flex-grow: 1;
-          position: relative;
-          transition: filter 0.3s ease;
-        }
-        .waveform-wrapper.active {
-          filter: drop-shadow(0 0 8px rgba(240, 12, 111, 0.5));
-        }
-        .loading-text {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 12px;
-          color: rgba(18, 171, 255, 0.6);
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          pointer-events: none;
-        }
+        .play-btn:hover { border-color: #f00c6f; box-shadow: 0 0 15px rgba(240,12,111,0.4); transform: scale(1.05); }
+        .play-btn:disabled { opacity: 0.5; cursor: not-allowed; border-color: #333; box-shadow: none; transform: none; }
+        .wave-wrap { flex-grow: 1; position: relative; transition: filter 0.3s ease; }
+        .wave-wrap.active { filter: drop-shadow(0 0 8px rgba(240,12,111,0.5)); }
+        .status { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+          font-size: 12px; color: rgba(18,171,255,0.6); letter-spacing: 0.1em;
+          text-transform: uppercase; pointer-events: none; }
       `}</style>
 
       <button className="play-btn" onClick={togglePlay} disabled={!isReady}>
         {isPlaying ? (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <rect x="6" y="4" width="4" height="16" />
-            <rect x="14" y="4" width="4" height="16" />
+            <rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" />
           </svg>
         ) : (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: "4px" }}>
@@ -284,9 +204,9 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
         )}
       </button>
 
-      <div className={`waveform-wrapper ${isPlaying ? "active" : ""}`}>
-        {!isReady && !hasError && <div className="loading-text">Loading Audio...</div>}
-        {hasError && <div className="loading-text" style={{ color: "#f00c6f" }}>Audio Unavailable</div>}
+      <div className={`wave-wrap ${isPlaying ? "active" : ""}`}>
+        {!isReady && !hasError && <div className="status">Loading Audio...</div>}
+        {hasError && <div className="status" style={{ color: "#f00c6f" }}>Audio Unavailable</div>}
         <div ref={waveformRef} style={{ width: "100%", opacity: isReady ? 1 : 0, transition: "opacity 0.5s ease" }} />
       </div>
     </div>

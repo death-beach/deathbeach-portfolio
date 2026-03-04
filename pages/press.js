@@ -6,8 +6,8 @@ import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import CustomWavePlayer from "../components/CustomWavePlayer";
 
-// Dynamically import AudioSingularity to avoid SSR issues (Three.js needs browser)
-const AudioSingularity = dynamic(() => import("../components/AudioSingularity"), { ssr: false });
+// Dynamically import MediaSingularity to avoid SSR issues (Three.js needs browser)
+const MediaSingularity = dynamic(() => import("../components/MediaSingularity"), { ssr: false });
 
 export default function PressKit() {
   // Shared audio frequency data — stored in a ref so updates don't trigger re-renders.
@@ -183,7 +183,7 @@ export default function PressKit() {
               overflow: "hidden",
             }}
           >
-            <AudioSingularity
+            <MediaSingularity
               audioDataRef={audioDataRef}
               position={[4.5, 0, 0]}
             />
