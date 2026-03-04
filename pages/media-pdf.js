@@ -153,7 +153,7 @@ export default function PressPDF() {
           zIndex: 0,
         }} />
         {/* Decorative rings */}
-        <svg style={{ position: "absolute", right: "-60px", top: "50%", transform: "translateY(-50%)", opacity: 0.15, zIndex: 0 }} width="500" height="500" viewBox="0 0 500 500">
+        <svg style={{ position: "absolute", right: "-60px", top: "50%", transform: "translateY(-50%)", opacity: 0.15, zIndex: 0 }} width="800" height="500" viewBox="0 0 500 500">
           <circle cx="250" cy="250" r="200" fill="none" stroke="#f00c6f" strokeWidth="1" />
           <circle cx="250" cy="250" r="160" fill="none" stroke="#12abff" strokeWidth="0.5" />
           <circle cx="250" cy="250" r="120" fill="none" stroke="#f00c6f" strokeWidth="1" />
