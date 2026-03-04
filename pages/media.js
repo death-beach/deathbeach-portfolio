@@ -157,8 +157,8 @@ export default function PressKit() {
             height={isMobile ? 220 : 480}
             style={{
               position: "absolute",
-              top: isMobile ? "110%" : "50%",
-              left: "85%",
+              top: isMobile ? "120%" : "50%",
+              left: isMobile ? "60%" : "85%",
               transform: "translate(-50%, -50%)",
               objectFit: "cover",
               opacity: 1.0,
