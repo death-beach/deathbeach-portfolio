@@ -382,18 +382,19 @@ export default function Home({ project }) {
                     href="https://deathbeach.typeform.com/to/u5SSemww"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="contact-btn"
+                    className="contact-btn get-in-touch-btn"
                     style={{
                       display: "inline-block",
                       padding: "14px 40px",
-                      backgroundColor: "transparent",
-                      color: "#12abff",
-                      border: "1px solid #12abff",
+                      backgroundColor: "#f00c6f",
+                      color: "#ffffff",
+                      border: "1px solid #f00c6f",
                       borderRadius: "4px",
                       fontSize: "16px",
                       fontFamily: "'Hanken Grotesk', sans-serif",
                       textDecoration: "none",
                       letterSpacing: "0.05em",
+                      boxShadow: "0 0 12px 3px rgba(18, 171, 255, 0.6), 0 0 30px 8px rgba(18, 171, 255, 0.25)",
                     }}
                   >
                     Get In Touch Now!
@@ -466,13 +467,13 @@ export default function Home({ project }) {
                   href="https://deathbeach.typeform.com/to/u5SSemww"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="contact-btn"
+                  className="contact-btn get-in-touch-btn"
                   style={{
                     display: "inline-block",
                     padding: "14px 40px",
-                    backgroundColor: "transparent",
-                    color: "#12abff",
-                    border: "1px solid #12abff",
+                    backgroundColor: "#f00c6f",
+                    color: "#ffffff",
+                    border: "1px solid #f00c6f",
                     borderRadius: "4px",
                     fontSize: "16px",
                     fontFamily: "'Hanken Grotesk', sans-serif",
