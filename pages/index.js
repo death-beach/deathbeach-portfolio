@@ -116,6 +116,10 @@ export default function Home({ project }) {
             flex-direction: column;
             gap: 16px;
           }
+          /* Hide desktop Let's Rock! button on mobile */
+          .lets-rock-desktop {
+            display: none;
+          }
           /* ── Mobile: tighten space above Death Beach section ── */
           .section-bio {
             padding-top: 12px !important;
@@ -133,7 +137,7 @@ export default function Home({ project }) {
           .section-lets-build {
             background-color: rgba(221, 17, 176, 0.18) !important;
           }
-        }        
+        }
 
         /* ── NEW: Glow & Hover Effects for Cards ── */
         .section-what-i-build .cards-grid > div,
