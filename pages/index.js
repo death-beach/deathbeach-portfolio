@@ -222,6 +222,30 @@ export default function Home({ project }) {
                 <i>Music Production, Engineering, &amp; Mixing</i>
               </h3>
 
+              {/* Desktop only: Let's Rock! button */}
+              <div style={{ textAlign: "left", marginBottom: "36px" }} className="lets-rock-desktop">
+                <a
+                  href="https://deathbeach.typeform.com/to/u5SSemww"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-btn"
+                  style={{
+                    display: "inline-block",
+                    padding: "14px 40px",
+                    backgroundColor: "transparent",
+                    color: "#12abff",
+                    border: "1px solid #12abff",
+                    borderRadius: "4px",
+                    fontSize: "16px",
+                    fontFamily: "'Hanken Grotesk', sans-serif",
+                    textDecoration: "none",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  Let's Rock!
+                </a>
+              </div>
+
               {/* Mobile only: first image between subtitle and bio */}
               <div className="bio-images-mobile" style={{ marginBottom: "32px" }}>
                 <div
@@ -241,6 +265,30 @@ export default function Home({ project }) {
                     style={{ objectFit: "cover" }}
                     sizes="100vw"
                   />
+                </div>
+
+                {/* Mobile only: Let's Rock! button */}
+                <div style={{ textAlign: "center", marginTop: "32px" }}>
+                  <a
+                    href="https://deathbeach.typeform.com/to/u5SSemww"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contact-btn"
+                    style={{
+                      display: "inline-block",
+                      padding: "14px 40px",
+                      backgroundColor: "transparent",
+                      color: "#12abff",
+                      border: "1px solid #12abff",
+                      borderRadius: "4px",
+                      fontSize: "16px",
+                      fontFamily: "'Hanken Grotesk', sans-serif",
+                      textDecoration: "none",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    Let's Rock!
+                  </a>
                 </div>
               </div>
 
@@ -327,6 +375,30 @@ export default function Home({ project }) {
                     sizes="100vw"
                   />
                 </div>
+
+                {/* Mobile only: Get In Touch Now! button */}
+                <div style={{ textAlign: "center", marginTop: "32px" }}>
+                  <a
+                    href="https://deathbeach.typeform.com/to/u5SSemww"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contact-btn"
+                    style={{
+                      display: "inline-block",
+                      padding: "14px 40px",
+                      backgroundColor: "transparent",
+                      color: "#12abff",
+                      border: "1px solid #12abff",
+                      borderRadius: "4px",
+                      fontSize: "16px",
+                      fontFamily: "'Hanken Grotesk', sans-serif",
+                      textDecoration: "none",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    Get In Touch Now!
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -386,6 +458,30 @@ export default function Home({ project }) {
                   style={{ objectFit: "cover" }}
                   sizes="40vw"
                 />
+              </div>
+
+              {/* Desktop only: Get In Touch Now! button */}
+              <div style={{ textAlign: "center", marginTop: "96px" }}>
+                <a
+                  href="https://deathbeach.typeform.com/to/u5SSemww"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-btn"
+                  style={{
+                    display: "inline-block",
+                    padding: "14px 40px",
+                    backgroundColor: "transparent",
+                    color: "#12abff",
+                    border: "1px solid #12abff",
+                    borderRadius: "4px",
+                    fontSize: "16px",
+                    fontFamily: "'Hanken Grotesk', sans-serif",
+                    textDecoration: "none",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  Get In Touch Now!
+                </a>
               </div>
             </div>
           </div>
