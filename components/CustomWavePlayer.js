@@ -112,7 +112,7 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
       try {
         ws = WaveSurfer.default.create({
           container: waveformRef.current,
-          waveColor: "rgba(18, 171, 255, 0.75)",
+          waveColor: "rgba(10, 120, 200, 0.75)",
           progressColor: "#f00c6f",
           cursorColor: "transparent",
           barWidth: 2,

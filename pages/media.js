@@ -127,7 +127,7 @@ export default function PressKit() {
 
       {/* ── FIXED LOGO ── */}
       <div className="fixed-logo" style={{ position: "fixed", top: "32px", left: "32px", zIndex: 50 }}>
-        <Link href="/">
+        <a href="/">
           <div style={{ cursor: "pointer", transition: "opacity 0.3s", opacity: 0.9 }} className="hover:opacity-100">
             <Image
               src="/Death_Beach.png"
@@ -137,7 +137,7 @@ export default function PressKit() {
               style={{ display: "block" }}
             />
           </div>
-        </Link>
+        </a>
       </div>
 
       {/* ── MAIN CONTENT ── */}
