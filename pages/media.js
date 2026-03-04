@@ -132,7 +132,24 @@ export default function PressKit() {
         animate="visible"
       >
         {/* 1. THE HOOK */}
-        <motion.section variants={itemVariants} className="section-spacing" style={{ marginBottom: "140px" }}>
+        <motion.section variants={itemVariants} className="section-spacing" style={{ marginBottom: "140px", position: "relative" }}>
+          <Image
+            src="/portrait.png"
+            alt="Death Beach"
+            width={380}
+            height={480}
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "85%",
+              transform: "translate(-50%, -50%)",
+              objectFit: "cover",
+              opacity: 1.0,
+              zIndex: 0,
+              maskImage: "radial-gradient(ellipse 65% 70% at 50% 50%, black 0%, transparent 75%)",
+              WebkitMaskImage: "radial-gradient(ellipse 65% 70% at 50% 50%, black 10%, transparent 75%)",
+            }}
+          />
           <h1
             className="headline gradient-blue-pink"
             style={{
@@ -141,6 +158,8 @@ export default function PressKit() {
               lineHeight: "1.1",
               marginBottom: "32px",
               letterSpacing: "-0.02em",
+              position: "relative",
+              zIndex: 1,
             }}
           >
             Architect of sound.<br />
@@ -153,6 +172,8 @@ export default function PressKit() {
               lineHeight: "1.6",
               color: "#d1d5db",
               maxWidth: "600px",
+              position: "relative",
+              zIndex: 1,
             }}
           >
             Music is the product. Code is the infrastructure. Death Beach builds the digital realities where both collide.
