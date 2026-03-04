@@ -6,7 +6,7 @@ export default function Contact() {
     <div style={{ minHeight: "100vh", fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: "#0f0f0f", color: "#ffffff" }}>
       <Hero />
 
-      <div style={{ backgroundColor: "#0f0f0f", padding: "32px 16px" }}>
+      <div style={{ backgroundColor: "#0f0f0f", padding: "20px 16px" }}>
         <div style={{ maxWidth: "800px", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <h1
