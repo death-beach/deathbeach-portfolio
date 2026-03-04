@@ -83,6 +83,9 @@ export default function PressPDF() {
           letter-spacing: 0.1em;
         }
 
+        @media screen { .print-only { display: none; } }
+        @media print  { .screen-only { display: none; } }
+
         @media print {
           @page {
             size: 1280px 720px;
@@ -109,13 +112,28 @@ export default function PressPDF() {
         <span className="slide-number">01 / 05</span>
 
         <h1
-          className="gradient-blue-pink"
+          className="gradient-blue-pink screen-only"
           style={{
             fontSize: "72px",
             fontWeight: "bold",
             lineHeight: "1.1",
             marginBottom: "32px",
             letterSpacing: "-0.02em",
+          }}
+        >
+          Architect of sound.<br />
+          Engineer of scale.<br />
+          Creator of worlds.
+        </h1>
+        <h1
+          className="print-only"
+          style={{
+            fontSize: "72px",
+            fontWeight: "bold",
+            lineHeight: "1.1",
+            marginBottom: "32px",
+            letterSpacing: "-0.02em",
+            color: "#12abff",
           }}
         >
           Architect of sound.<br />
@@ -315,7 +333,8 @@ export default function PressPDF() {
         >
           Vision is common.<br />
           Execution is rare.{" "}
-          <span className="gradient-blue-pink">Legacy is earned.</span>
+          <span className="gradient-blue-pink screen-only">Legacy is earned.</span>
+          <span className="print-only" style={{ color: "#12abff" }}>Legacy is earned.</span>
         </h3>
         <p style={{ fontSize: "20px", lineHeight: "1.7", color: "#9ca3af", maxWidth: "800px", marginBottom: "48px" }}>
           Whether you are an artist demanding a sonic signature, a founder scaling a cultural movement, or a brand requiring an unforgettable digital world, the standard is set.
