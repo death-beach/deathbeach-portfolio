@@ -1,5 +1,5 @@
 // pages/press.js
-import React, { useRef, useCallback, useState } from "react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -16,6 +16,12 @@ export default function PressKit() {
 
   // Resize functions for waveform players
   const [resizeFunctions, setResizeFunctions] = useState({});
+
+  // Mobile detection for portrait sizing
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   const handleAudioData = useCallback((data) => {
     audioDataRef.current = data || null;
@@ -108,7 +114,6 @@ export default function PressKit() {
           .section-spacing {
             margin-bottom: 80px !important;
           }
-          .portrait-img { width: 180px !important; height: 220px !important; }
         }
       `}</style>
 
@@ -144,9 +149,8 @@ export default function PressKit() {
           <Image
             src="/portrait.png"
             alt="Death Beach"
-            width={380}
-            height={480}
-            className="portrait-img"
+            width={isMobile ? 180 : 380}
+            height={isMobile ? 220 : 480}
             style={{
               position: "absolute",
               top: "50%",
