@@ -203,9 +203,35 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
         .status { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
           font-size: 12px; color: rgba(18,171,255,0.6); letter-spacing: 0.1em;
           text-transform: uppercase; pointer-events: none; }
+
+        /* ── MOBILE ONLY OVERRIDES ── */
+        @media (max-width: 768px) {
+          .play-btn {
+            width: 56px; 
+            height: 56px; 
+            border: 2px solid #f00c6f; 
+            background: rgba(240, 12, 111, 0.05);
+            /* Hardware-accelerated pulse to replace hover discovery */
+            animation: mobilePulse 2.5s infinite cubic-bezier(0.16, 1, 0.3, 1);
+          }
+          
+          /* Kill the pulse and switch to blue when playing */
+          .play-btn.playing {
+            animation: none;
+            border-color: #12abff;
+            box-shadow: 0 0 15px rgba(18, 171, 255, 0.4);
+          }
+        }
+
+        @keyframes mobilePulse {
+          0% { box-shadow: 0 0 0 0 rgba(240, 12, 111, 0.6); }
+          70% { box-shadow: 0 0 0 12px rgba(240, 12, 111, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(240, 12, 111, 0); }
+        }
       `}</style>
 
-      <button className="play-btn" onClick={togglePlay} disabled={!isReady}>
+      {/* Added dynamic template literal for the 'playing' class */}
+      <button className={`play-btn ${isPlaying ? "playing" : ""}`} onClick={togglePlay} disabled={!isReady}>
         {isPlaying ? (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" />
