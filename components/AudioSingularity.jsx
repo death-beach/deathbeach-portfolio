@@ -4,55 +4,82 @@ import { useRef, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-// ── FREQUENCY BAND HELPERS ──────────────────────────────────────────────────
-// FFT has 2048 bins (fftSize=4096), each bin = 22050/2048 ≈ 10.77Hz wide.
-// Convert Hz to bin fraction: Hz / 22050
-// Bass  ≤80Hz   → bins 0–7    → fraction 0.000–0.0036
-// Mids  200–900 → bins 18–83  → fraction 0.009–0.041
-// Highs 1.5k–20k→ bins 139–1857 → fraction 0.068–0.907
+// ── FREQUENCY BIN HELPERS ────────────────────────────────────────────────────
+// fftSize=2048 → frequencyBinCount=1024 bins
+// At 44100Hz sample rate: bin width = 44100/2048 ≈ 21.5Hz per bin
+//
+// Bass  (0–80Hz)      → bins 0–3    → CORE pumps on each low note
+// Mids  (200–900Hz)   → bins 9–41   → RINGS scale per frequency slice
+// Highs (1.5kHz–20kHz)→ bins 70–465 → PARTICLES spin faster with more highs
+//
+// We read bins directly by index — no fraction math, no guessing.
 
-function getBandAverage(audioData, startFraction, endFraction) {
+// Get the peak value from a range of bins (0–255 scale → 0.0–1.0)
+function getBinPeak(audioData, startBin, endBin) {
   if (!audioData || audioData.length === 0) return 0;
-  const start = Math.floor(audioData.length * startFraction);
-  const end = Math.max(start + 1, Math.floor(audioData.length * endFraction));
-  let sum = 0;
-  for (let i = start; i < end; i++) sum += audioData[i];
-  return sum / (end - start) / 255;
-}
-
-// BASS: sub-bass + bass (20–80Hz)
-// With fftSize=4096 → 2048 bins at ~10.77Hz each → bins 0-7 cover 0-86Hz
-function getBassPeak(audioData) {
-  if (!audioData || audioData.length === 0) return 0;
-  // Take the max across bins 0-7 (0-86Hz) for punchy kick detection
   let peak = 0;
-  for (let i = 0; i <= 7; i++) {
-    if ((audioData[i] || 0) > peak) peak = audioData[i];
+  const end = Math.min(endBin, audioData.length - 1);
+  for (let i = startBin; i <= end; i++) {
+    if (audioData[i] > peak) peak = audioData[i];
   }
   return peak / 255;
 }
 
-// ── CORE: reacts to BASS (≤80Hz) ────────────────────────────────────────────
+// Get the average value from a range of bins (0–255 scale → 0.0–1.0)
+function getBinAverage(audioData, startBin, endBin) {
+  if (!audioData || audioData.length === 0) return 0;
+  const end = Math.min(endBin, audioData.length - 1);
+  let sum = 0;
+  for (let i = startBin; i <= end; i++) sum += audioData[i];
+  return sum / (end - startBin + 1) / 255;
+}
+
+// ── CORE: reacts to BASS (20–200Hz = bins 1–9) ──────────────────────────────
+// Behavior: instant attack on note onset, slow decay between notes.
+// Uses delta (rate of change) to detect individual note attacks even in legato.
 function SingularityCore({ audioDataRef }) {
   const coreRef = useRef(null);
   const smoothedScale = useRef(1.0);
+  const prevBass = useRef(0);
 
   useFrame((state) => {
     if (!coreRef.current) return;
     coreRef.current.rotation.y += 0.01;
     coreRef.current.rotation.x += 0.005;
 
-    // Read live audio data from the ref (no re-renders)
-    const audioData = audioDataRef ? audioDataRef.current : null;
+    const audioData = audioDataRef?.current ?? null;
 
-    // Use peak detection on bins 0-1 (covers 0-172Hz, targeting ≤80Hz kicks)
-    const bass = getBassPeak(audioData);
-    // Idle: gentle sine pulse. Active: bass drives scale up to 50% bigger.
-    const idlePulse = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.05;
-    const targetScale = audioData ? 1 + bass * 0.5 : idlePulse;
+    if (!audioData) {
+      // Idle: gentle sine pulse when no audio
+      const idlePulse = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.05;
+      smoothedScale.current = THREE.MathUtils.lerp(smoothedScale.current, idlePulse, 0.05);
+    } else {
+      // Bass peak across bins 0–3 (0–80Hz only)
+      const bass = getBinPeak(audioData, 0, 3);
 
-    // EMA smoothing for hypnotic effect (0.15 = smooth but responsive)
-    smoothedScale.current = THREE.MathUtils.lerp(smoothedScale.current, targetScale, 0.15);
+      // Noise floor threshold: only react to genuine bass hits above 0.3 (76/255)
+      // This prevents the core from firing on low-level bleed and room tone
+      if (bass < 0.3) {
+        // No real bass — decay back to rest
+        smoothedScale.current = THREE.MathUtils.lerp(smoothedScale.current, 1.0, 0.06);
+        prevBass.current = prevBass.current * 0.85;
+      } else {
+        // Genuine bass content — onset detection
+        const delta = Math.max(0, bass - prevBass.current);
+        prevBass.current = prevBass.current * 0.85;
+        if (bass > prevBass.current) prevBass.current = bass;
+
+        const targetScale = 1.0 + bass * 0.2 + delta * 5.0;
+
+        // Instant attack, slow release
+        if (targetScale > smoothedScale.current) {
+          smoothedScale.current = targetScale;
+        } else {
+          smoothedScale.current = THREE.MathUtils.lerp(smoothedScale.current, 1.0, 0.06);
+        }
+      }
+    }
+
     coreRef.current.scale.set(smoothedScale.current, smoothedScale.current, smoothedScale.current);
   });
 
@@ -91,9 +118,12 @@ function SingularityCore({ audioDataRef }) {
   );
 }
 
-// ── PARTICLES: reacts to HIGHS (50–100%) ────────────────────────────────────
+// ── PARTICLES: reacts to HIGHS (2kHz–10kHz = bins 94–465) ───────────────────
+// Behavior: more high-frequency energy → faster rotation speed.
+// Less highs → slows back down to baseline.
 function Particles({ count = 2000, audioDataRef }) {
   const pointsRef = useRef(null);
+  const smoothedRotSpeed = useRef(0.02);
 
   const [positions, colors, sizes] = useMemo(() => {
     const positions = new Float32Array(count * 3);
@@ -150,18 +180,19 @@ function Particles({ count = 2000, audioDataRef }) {
     blending: THREE.AdditiveBlending,
   }), []);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (!pointsRef.current) return;
 
-    // Read live audio data from the ref (no re-renders)
-    const audioData = audioDataRef ? audioDataRef.current : null;
+    const audioData = audioDataRef?.current ?? null;
 
-    // Highs (50-100%) drive rotation speed
-    const highs = getBandAverage(audioData, 0.068, 0.907);
-    const rotSpeed = 0.05 + highs * 0.2;
+    // Highs: average of bins 70–465 (1.5kHz–20kHz)
+    // More highs = faster spin. No highs = slow baseline spin.
+    const highs = audioData ? getBinAverage(audioData, 70, 465) : 0;
+    const targetRotSpeed = 0.02 + highs * 0.5;
+    smoothedRotSpeed.current = THREE.MathUtils.lerp(smoothedRotSpeed.current, targetRotSpeed, 0.12);
 
-    pointsRef.current.rotation.y = state.clock.elapsedTime * rotSpeed;
-    pointsRef.current.rotation.z = state.clock.elapsedTime * 0.02;
+    pointsRef.current.rotation.y += smoothedRotSpeed.current * delta;
+    pointsRef.current.rotation.z += 0.01 * delta;
     pointsRef.current.position.x = THREE.MathUtils.lerp(pointsRef.current.position.x, state.pointer.x * 2, 0.05);
     pointsRef.current.position.y = THREE.MathUtils.lerp(pointsRef.current.position.y, state.pointer.y * 2, 0.05);
   });
@@ -178,7 +209,9 @@ function Particles({ count = 2000, audioDataRef }) {
   );
 }
 
-// ── WAVEFORMS: reacts to MIDS (10–50%) ──────────────────────────────────────
+// ── WAVEFORMS (RINGS): reacts to MIDS (200Hz–2kHz = bins 10–93) ─────────────
+// Behavior: each ring maps to a specific mid-band bin.
+// When that frequency has energy, the ring scales up.
 function Waveforms({ audioDataRef }) {
   const groupRef = useRef(null);
   const smoothedScales = useRef([]);
@@ -188,6 +221,8 @@ function Waveforms({ audioDataRef }) {
     const color1 = new THREE.Color("#f00c6f");
     const color2 = new THREE.Color("#12abff");
     for (let i = 0; i < 15; i++) {
+      // Spread rings evenly across mid bins 9–41 (200–900Hz)
+      const binIndex = 9 + Math.floor((i / 14) * 32);
       arr.push({
         radius: 2 + Math.random() * 8,
         tube: 0.01 + Math.random() * 0.02,
@@ -198,11 +233,9 @@ function Waveforms({ audioDataRef }) {
           Math.random() * Math.PI,
           Math.random() * Math.PI
         ),
-        // Each ring maps to a specific sub-band within mids
-        bandOffset: Math.random(), // 0-1, used to pick a specific mid bin
+        binIndex,  // specific bin this ring listens to
       });
     }
-    // Initialize smoothed scales array
     smoothedScales.current = new Array(arr.length).fill(1.0);
     return arr;
   }, []);
@@ -212,24 +245,22 @@ function Waveforms({ audioDataRef }) {
     groupRef.current.rotation.y = state.clock.elapsedTime * 0.08;
     groupRef.current.rotation.x = state.clock.elapsedTime * 0.03;
 
-    // Read live audio data from the ref (no re-renders)
-    const audioData = audioDataRef ? audioDataRef.current : null;
+    const audioData = audioDataRef?.current ?? null;
 
     groupRef.current.children.forEach((child, i) => {
       child.rotation.z += rings[i].speed;
 
-      // Each ring responds to its own slice of the mid-range (200–900Hz = 0.009–0.041)
-      // bandOffset spreads rings across that window
-      const ringBandStart = 0.009 + rings[i].bandOffset * 0.028;
-      const ringBandEnd = ringBandStart + 0.004;
-      const midEnergy = getBandAverage(audioData, ringBandStart, ringBandEnd);
+      if (!audioData) {
+        // Idle: gentle sine per ring
+        const idleScale = 1 + Math.sin(state.clock.elapsedTime * 2 + i) * 0.05;
+        smoothedScales.current[i] = THREE.MathUtils.lerp(smoothedScales.current[i], idleScale, 0.05);
+      } else {
+        // Read the specific bin this ring is assigned to
+        const binVal = (audioData[rings[i].binIndex] || 0) / 255;
+        const targetScale = 1.0 + binVal * 0.7;
+        smoothedScales.current[i] = THREE.MathUtils.lerp(smoothedScales.current[i], targetScale, 0.18);
+      }
 
-      // Idle: gentle sine. Active: mid energy drives scale.
-      const idleScale = 1 + Math.sin(state.clock.elapsedTime * 2 + i) * 0.05;
-      const targetScale = audioData ? 1 + midEnergy * 0.5 : idleScale;
-
-      // EMA smoothing for hypnotic effect (0.15 = smooth but responsive)
-      smoothedScales.current[i] = THREE.MathUtils.lerp(smoothedScales.current[i], targetScale, 0.15);
       child.scale.set(smoothedScales.current[i], smoothedScales.current[i], smoothedScales.current[i]);
     });
   });
@@ -252,11 +283,10 @@ function Waveforms({ audioDataRef }) {
   );
 }
 
-// ── SCENE: position controls where the core sits on screen ──────────────────
+// ── SCENE ────────────────────────────────────────────────────────────────────
 function ResponsiveScene({ audioDataRef, position }) {
   const { size } = useThree();
   const isMobile = size.width < 768;
-  // Default: original homepage positioning (right side, slightly up)
   const groupPosition = position || (isMobile ? [3, 2.5, -4.0] : [8.0, 1.5, 0]);
 
   return (

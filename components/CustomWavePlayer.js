@@ -2,17 +2,70 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-// onAudioData: optional callback(Float32Array) called every animation frame while playing
+// onAudioData: optional callback(Uint8Array) called every animation frame while playing
+// Uses a parallel Audio element for the analyser so it works regardless of WaveSurfer version.
 export default function CustomWavePlayer({ audioUrl, onAudioData }) {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const analyserRef = useRef(null);
+  const audioElRef = useRef(null);   // parallel Audio element for Web Audio API
+  const audioCtxRef = useRef(null);  // AudioContext
   const animFrameRef = useRef(null);
+  const frameCountRef = useRef(0);   // for debug logging
   const [isPlaying, setIsPlaying] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  // Poll analyser for frequency data while playing
+  // ── ANALYSER SETUP ──────────────────────────────────────────────────────────
+  // We create a separate Audio element that plays in parallel with WaveSurfer.
+  // This bypasses the fragile ws.getMediaElement() approach and works reliably
+  // across all WaveSurfer versions.
+  const setupAnalyser = (url) => {
+    if (!onAudioData || !url) return;
+    try {
+      // Clean up any previous instance
+      if (audioElRef.current) {
+        audioElRef.current.pause();
+        audioElRef.current.src = "";
+      }
+      if (audioCtxRef.current && audioCtxRef.current.state !== "closed") {
+        audioCtxRef.current.close().catch(() => {});
+      }
+
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) {
+        console.warn("CustomWavePlayer: AudioContext not available");
+        return;
+      }
+
+      const audioEl = new Audio();
+      // Only set crossOrigin for external URLs; local /audio/ files don't need it
+      // and setting it can cause CORS errors with some local servers
+      if (url.startsWith("http://") || url.startsWith("https://")) {
+        audioEl.crossOrigin = "anonymous";
+      }
+      audioEl.src = url;
+      audioEl.preload = "auto";
+      audioElRef.current = audioEl;
+
+      const ctx = new AudioCtx();
+      audioCtxRef.current = ctx;
+
+      const source = ctx.createMediaElementSource(audioEl);
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 2048;          // 1024 bins, ~43Hz per bin at 44.1kHz
+      analyser.smoothingTimeConstant = 0.8; // NO browser-side smoothing — we do our own
+      source.connect(analyser);
+      analyser.connect(ctx.destination);
+      analyserRef.current = analyser;
+
+      console.log("CustomWavePlayer: analyser ready, fftSize=2048, bins=", analyser.frequencyBinCount);
+    } catch (e) {
+      console.warn("CustomWavePlayer: analyser setup failed:", e.message);
+    }
+  };
+
+  // ── POLL LOOP ───────────────────────────────────────────────────────────────
   const startAnalysis = () => {
     if (!analyserRef.current || !onAudioData) return;
     const analyser = analyserRef.current;
@@ -21,6 +74,17 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
     const tick = () => {
       analyser.getByteFrequencyData(data);
       onAudioData(data);
+
+      // Debug: log every 60 frames (~1 second) to confirm data is flowing
+      frameCountRef.current++;
+      if (frameCountRef.current % 60 === 0) {
+        console.log(
+          `[AudioData] bass[0-4]: ${data[0]},${data[1]},${data[2]},${data[3]},${data[4]}` +
+          ` | mid[20]: ${data[20]}` +
+          ` | high[100]: ${data[100]}`
+        );
+      }
+
       animFrameRef.current = requestAnimationFrame(tick);
     };
     animFrameRef.current = requestAnimationFrame(tick);
@@ -31,11 +95,16 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
       cancelAnimationFrame(animFrameRef.current);
       animFrameRef.current = null;
     }
+    frameCountRef.current = 0;
     if (onAudioData) onAudioData(null);
   };
 
+  // ── WAVESURFER INIT ─────────────────────────────────────────────────────────
   useEffect(() => {
     if (!waveformRef.current || !audioUrl) return;
+
+    // Set up the parallel analyser immediately
+    setupAnalyser(audioUrl);
 
     let ws;
 
@@ -75,59 +144,41 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
         ws.on("ready", () => {
           setIsReady(true);
           setHasError(false);
-
-          // Set up Web Audio analyser — original working approach
-          if (onAudioData && !analyserRef.current) {
-            try {
-              const mediaEl = typeof ws.getMediaElement === "function" ? ws.getMediaElement() : null;
-              if (mediaEl) {
-                const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                if (!AudioCtx) throw new Error("No AudioContext");
-                const ctx = new AudioCtx();
-                // Resume context (required by browser autoplay policy)
-                ctx.resume().catch(() => {});
-                const source = ctx.createMediaElementSource(mediaEl);
-                const analyser = ctx.createAnalyser();
-                analyser.fftSize = 4096;
-                source.connect(analyser);
-                analyser.connect(ctx.destination);
-                analyserRef.current = analyser;
-              }
-              // If getMediaElement not available, skip analyser silently — audio still works
-            } catch (e) {
-              // Analyser failed — audio playback is unaffected
-              console.warn("Audio analyser unavailable (audio still plays):", e.message);
-            }
-          }
         });
 
         ws.on("play", () => {
           setIsPlaying(true);
-          // Sync parallel audio playback with WaveSurfer (fallback only)
-          if (analyserRef.current?.parallelAudio) {
-            analyserRef.current.parallelAudio.currentTime = ws.getCurrentTime();
-            analyserRef.current.parallelAudio.play().catch(() => {});
+          // Sync parallel audio element with WaveSurfer
+          if (audioElRef.current && audioCtxRef.current) {
+            audioCtxRef.current.resume().catch(() => {});
+            audioElRef.current.currentTime = ws.getCurrentTime();
+            audioElRef.current.play().catch((e) => {
+              console.warn("Parallel audio play failed:", e.message);
+            });
           }
           startAnalysis();
         });
 
         ws.on("pause", () => {
           setIsPlaying(false);
-          // Sync parallel audio pause with WaveSurfer (fallback only)
-          if (analyserRef.current?.parallelAudio) {
-            analyserRef.current.parallelAudio.pause();
-          }
+          if (audioElRef.current) audioElRef.current.pause();
           stopAnalysis();
         });
 
         ws.on("finish", () => {
           setIsPlaying(false);
-          // Sync parallel audio stop with WaveSurfer (fallback only)
-          if (analyserRef.current?.parallelAudio) {
-            analyserRef.current.parallelAudio.pause();
-            analyserRef.current.parallelAudio.currentTime = 0;
+          if (audioElRef.current) {
+            audioElRef.current.pause();
+            audioElRef.current.currentTime = 0;
           }
           stopAnalysis();
+        });
+
+        ws.on("seek", () => {
+          // Keep parallel audio in sync when user scrubs the waveform
+          if (audioElRef.current) {
+            audioElRef.current.currentTime = ws.getCurrentTime();
+          }
         });
 
         ws.on("error", (error) => {
@@ -152,9 +203,12 @@ export default function CustomWavePlayer({ audioUrl, onAudioData }) {
 
     return () => {
       stopAnalysis();
-      if (analyserRef.current?.parallelAudio) {
-        analyserRef.current.parallelAudio.pause();
-        analyserRef.current.parallelAudio = null;
+      if (audioElRef.current) {
+        audioElRef.current.pause();
+        audioElRef.current.src = "";
+      }
+      if (audioCtxRef.current && audioCtxRef.current.state !== "closed") {
+        audioCtxRef.current.close().catch(() => {});
       }
       if (ws) ws.destroy();
     };
