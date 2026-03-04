@@ -93,16 +93,19 @@ function Rings({ audioDataRef }) {
   const opacities = useRef([]);
 
   const rings = useMemo(() => {
-    const c1 = new THREE.Color("#f00c6f");
-    const c2 = new THREE.Color("#12abff");
+    const c1 = new THREE.Color("#f00c6f");   // pink
+    const c2 = new THREE.Color("#12abff");   // blue
+    const c3 = new THREE.Color("#9b30ff");   // purple
+    const c4 = new THREE.Color("#00ff88");   // green
+    const palette = [c1,c1,c1,c1, c2,c2,c2,c2, c3,c3,c3,c3, c4,c4];  // 4+4+4+2=14
     const arr = [];
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 14; i++) {
       // Spread evenly across bins 19–84 (200–900Hz)
       const bin = 19 + Math.floor((i / 14) * 65);
       arr.push({
         radius: 2.2 + Math.random() * 7,
         tube:   0.012 + Math.random() * 0.018,
-        color:  Math.random() > 0.5 ? c1 : c2,
+        color: palette[i],
         speed:  (Math.random() - 0.5) * 0.04,   // individual spin speed
         rot:    new THREE.Euler(
           Math.random() * Math.PI,
@@ -185,6 +188,8 @@ function Particles({ count = 2000, audioDataRef }) {
     const sz   = new Float32Array(count);
     const c1   = new THREE.Color("#f00c6f");
     const c2   = new THREE.Color("#12abff");
+    const c3 = new THREE.Color("#9b30ff");   // purple — some rings
+    const c4 = new THREE.Color("#00ff88");
 
     for (let i = 0; i < count; i++) {
       const r     = Math.pow(Math.random(), 2) * 15 + 1.6;
