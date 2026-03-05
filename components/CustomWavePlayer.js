@@ -158,7 +158,6 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
         });
 
         ws.on("error", () => { setHasError(true); setIsReady(false); });
-        ws.on("load", () => setHasError(false));
       } catch (e) { setHasError(true); setIsReady(false); }
     }).catch(() => { setHasError(true); setIsReady(false); });
 
