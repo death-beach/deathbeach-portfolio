@@ -192,8 +192,12 @@ export default function Hero() {
             fontFamily: "'Hanken Grotesk', sans-serif",
           }}
         >
-          Music Production, Product, Crypto<br />
-          <br />
+          {currentPath !== "/" && (
+            <>
+              Music Production, Product, Crypto<br />
+              <br />
+            </>
+          )}
           <b>
             <i>
               Your wildest ideas deserve to exist as your legacy. I make sure they don't just stay dreams.

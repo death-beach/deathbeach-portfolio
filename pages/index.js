@@ -1,5 +1,5 @@
 // pages/index.js - Death Beach main landing page
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import Hero from "@/components/hero"
@@ -18,6 +18,7 @@ export async function getStaticProps() {
 
 export default function Home({ project }) {
   const { customContent } = project || {}
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
     <div
@@ -229,7 +230,7 @@ export default function Home({ project }) {
               {/* Desktop only: Let's Rock! button */}
               <div style={{ textAlign: "left", marginBottom: "36px" }} className="lets-rock-desktop">
                 <a
-                  href="https://deathbeach.typeform.com/to/u5SSemww"
+                  href="https://deathbeach.typeform.com/to/owqJZWqf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="contact-btn"
@@ -274,7 +275,7 @@ export default function Home({ project }) {
                 {/* Mobile only: Let's Rock! button */}
                 <div style={{ textAlign: "center", marginTop: "32px" }}>
                   <a
-                    href="https://deathbeach.typeform.com/to/u5SSemww"
+                    href="https://deathbeach.typeform.com/to/owqJZWqf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="contact-btn"
@@ -383,7 +384,7 @@ export default function Home({ project }) {
                 {/* Mobile only: Get In Touch Now! button */}
                 <div style={{ textAlign: "center", marginTop: "32px" }}>
                   <a
-                    href="https://deathbeach.typeform.com/to/u5SSemww"
+                    href="https://deathbeach.typeform.com/to/owqJZWqf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="contact-btn get-in-touch-btn"
@@ -468,7 +469,7 @@ export default function Home({ project }) {
               {/* Desktop only: Get In Touch Now! button */}
               <div style={{ textAlign: "center", marginTop: "96px" }}>
                 <a
-                  href="https://deathbeach.typeform.com/to/u5SSemww"
+                  href="https://deathbeach.typeform.com/to/owqJZWqf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="contact-btn get-in-touch-btn"
@@ -512,12 +513,14 @@ export default function Home({ project }) {
           <div className="cards-grid">
             {/* Card 1 — Artists & Bands */}
             <div
+              onClick={() => setIsModalOpen(true)}
               style={{
                 backgroundColor: "#1a1a1a",
                 border: "1px solid #333",
                 borderLeft: "4px solid #12abff",
                 borderRadius: "12px",
                 padding: "32px",
+                cursor: "pointer",
               }}
             >
               <h3
@@ -535,49 +538,264 @@ export default function Home({ project }) {
                   fontSize: "16px",
                   lineHeight: "1.8",
                   color: "#d1d5db",
-                  margin: 0,
+                  margin: "0 0 16px 0",
                 }}
               >
                 Immersive full-length albums and sonic worlds that actually haunt listeners. Deep, long-form creative
                 partnerships where character always wins over perfection.
               </p>
-            </div>
-
-            {/* Card 2 — Brands, Founders & Crypto */}
-            <div
-              style={{
-                backgroundColor: "#1a1a1a",
-                border: "1px solid #333",
-                borderLeft: "4px solid #f00c6f",
-                borderRadius: "12px",
-                padding: "32px",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "600",
-                  marginBottom: "16px",
-                  color: "#ffffff",
-                }}
-              >
-                For Brands, Founders &amp; Crypto Projects
-              </h3>
               <p
                 style={{
                   fontSize: "16px",
-                  lineHeight: "1.8",
-                  color: "#d1d5db",
+                  color: "#12abff",
+                  textDecoration: "underline",
                   margin: 0,
+                  fontWeight: "500",
                 }}
               >
-                Vibe-coded products, on-chain tools, and digital experiences that don&apos;t just work &mdash; they
-                feel alive. Same obsession with resonance, frequency, and soul.
+                Learn More →
               </p>
             </div>
+
+            {/* Card 2 — Brands, Founders & Crypto */}
+            <Link href="/projects" style={{ textDecoration: "none" }}>
+              <div
+                style={{
+                  backgroundColor: "#1a1a1a",
+                  border: "1px solid #333",
+                  borderLeft: "4px solid #f00c6f",
+                  borderRadius: "12px",
+                  padding: "32px",
+                  cursor: "pointer",
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: "600",
+                    marginBottom: "16px",
+                    color: "#ffffff",
+                  }}
+                >
+                  For Brands, Founders &amp; Crypto Projects
+                </h3>
+                <p
+                  style={{
+                    fontSize: "16px",
+                    lineHeight: "1.8",
+                    color: "#d1d5db",
+                    margin: "0 0 16px 0",
+                  }}
+                >
+                  Vibe-coded products, on-chain tools, and digital experiences that don&apos;t just work &mdash; they
+                  feel alive. Same obsession with resonance, frequency, and soul.
+                </p>
+                <p
+                  style={{
+                    fontSize: "16px",
+                    color: "#f00c6f",
+                    textDecoration: "underline",
+                    margin: 0,
+                    fontWeight: "500",
+                  }}
+                >
+                  Learn More →
+                </p>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
+
+      {/* Artists & Bands Modal */}
+      {isModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+            padding: "16px",
+          }}
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div
+            style={{
+              backgroundColor: "#1a1a1a",
+              borderRadius: "12px",
+              padding: "40px",
+              maxWidth: "900px",
+              width: "100%",
+              maxHeight: "90vh",
+              overflow: "auto",
+              position: "relative",
+              border: "1px solid #333",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setIsModalOpen(false)}
+              style={{
+                position: "absolute",
+                top: "16px",
+                right: "16px",
+                background: "none",
+                border: "none",
+                color: "#9ca3af",
+                fontSize: "24px",
+                cursor: "pointer",
+                padding: "4px",
+              }}
+            >
+              ×
+            </button>
+
+            {/* Modal content - 3 columns */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "32px",
+                marginBottom: "40px",
+              }}
+            >
+              {/* Column 1: Capture (Recording) */}
+              <div style={{ textAlign: "center", borderRight: "1px solid rgba(255,255,255,0.1)", paddingRight: "44px" }}>
+                <h3
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: "bold",
+                    color: "#12abff",
+                    marginBottom: "8px",
+                  }}
+                >
+                  Capture
+                </h3>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    color: "#9ca3af",
+                    marginBottom: "16px",
+                    fontStyle: "italic",
+                  }}
+                >
+                  (Recording)
+                </p>
+                <p
+                  style={{
+                    fontSize: "16px",
+                    lineHeight: "1.6",
+                    color: "#d1d5db",
+                    textAlign: "left",
+                  }}
+                >
+                  Great art begins with an uncompromising snapshot of a moment. I focus on the raw energy of the performance, ensuring the source material is pure, intentional, and distinct. This is where I lay the bedrock of your world, capturing the textures that define your specific identity.
+                </p>
+              </div>
+
+              {/* Column 2: Atmosphere (Mixing) */}
+              <div style={{ textAlign: "center", borderRight: "1px solid rgba(255,255,255,0.1)", paddingLeft: "16px", paddingRight: "19px" }}>
+                <h3
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: "bold",
+                    color: "#12abff",
+                    marginBottom: "8px",
+                  }}
+                >
+                  Atmosphere
+                </h3>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    color: "#9ca3af",
+                    marginBottom: "16px",
+                    fontStyle: "italic",
+                  }}
+                >
+                  (Mixing)
+                </p>
+                <p
+                  style={{
+                    fontSize: "16px",
+                    lineHeight: "1.6",
+                    color: "#d1d5db",
+                    textAlign: "left",
+                  }}
+                >
+                  The final stage is about depth, perspective, and emotional resonance. I manipulate the space and frequency to ensure your world is not just heard, but felt. By removing the noise and highlighting the intention, I ensure your message translates with absolute authority to the listener.
+                </p>
+              </div>
+
+              {/* Column 3: Creation (Full Production) */}
+              <div style={{ textAlign: "center", paddingLeft: "16px" }}>
+                <h3
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: "bold",
+                    color: "#12abff",
+                    marginBottom: "8px",
+                  }}
+                >
+                  Creation
+                </h3>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    color: "#9ca3af",
+                    marginBottom: "16px",
+                    fontStyle: "italic",
+                  }}
+                >
+                  (Full Production)
+                </p>
+                <p
+                  style={{
+                    fontSize: "16px",
+                    lineHeight: "1.6",
+                    color: "#d1d5db",
+                    textAlign: "left",
+                  }}
+                >
+                  I translate your internal vision into a tangible landscape. By bridging the gap between raw idea and finished product, I help you build an ecosystem that feels lived-in and authentic. I create for the artist first, knowing that an honest world is the only one worth an audience's time.
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <div style={{ textAlign: "center" }}>
+              <a
+                href="https://deathbeach.typeform.com/to/owqJZWqf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-btn"
+                style={{
+                  display: "inline-block",
+                  padding: "16px 48px",
+                  backgroundColor: "#12abff",
+                  color: "#ffffff",
+                  border: "1px solid #12abff",
+                  borderRadius: "4px",
+                  fontSize: "18px",
+                  fontFamily: "'Hanken Grotesk', sans-serif",
+                  textDecoration: "none",
+                  letterSpacing: "0.05em",
+                  fontWeight: "600",
+                }}
+              >
+                Build Your World
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Glowing divider ── */}
       <div
