@@ -18,6 +18,7 @@ export default function PlayerHUD({
   playlistVisible,
   audioDataRef,
   onTimeUpdate,
+  visible = true,
 }) {
   const currentTrack = config.tracks[currentTrackIndex];
 
@@ -34,74 +35,24 @@ export default function PlayerHUD({
         left: 0,
         right: 0,
         zIndex: 10,
-        background: "linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%)",
-        padding: "20px",
-        paddingBottom: "40px",
+        background: visible ? "linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%)" : "transparent",
+        padding: visible ? "20px" : "0px",
+        paddingBottom: visible ? "40px" : "0px",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(20px)",
+        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        pointerEvents: visible ? "auto" : "none",
       }}
     >
-      {/* Transport Controls */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "20px", marginBottom: "10px" }}>
-        <button
-          onClick={(e) => { e.stopPropagation(); onPrev(); }}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#ffffff",
-            fontSize: "24px",
-            cursor: "pointer",
-            opacity: 0.7,
-            transition: "opacity 0.2s",
-          }}
-          onMouseEnter={(e) => e.target.style.opacity = "1"}
-          onMouseLeave={(e) => e.target.style.opacity = "0.7"}
-        >
-          ◀◀
-        </button>
 
-        <button
-          onClick={(e) => { e.stopPropagation(); onPlayPause(); }}
-          style={{
-            background: "none",
-            border: "none",
-            color: config.theme.color1,
-            fontSize: "32px",
-            cursor: "pointer",
-            transition: "all 0.2s",
-          }}
-        >
-          {isPlaying ? "▶" : "⏸"}
-        </button>
 
-        <button
-          onClick={(e) => { e.stopPropagation(); onNext(); }}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#ffffff",
-            fontSize: "24px",
-            cursor: "pointer",
-            opacity: 0.7,
-            transition: "opacity 0.2s",
-          }}
-          onMouseEnter={(e) => e.target.style.opacity = "1"}
-          onMouseLeave={(e) => e.target.style.opacity = "0.7"}
-        >
-          ▶▶
-        </button>
-      </div>
-
-      {/* Track Info */}
-      <div style={{ textAlign: "center", marginBottom: "10px" }}>
-        <div style={{ fontSize: "18px", fontWeight: "bold", color: "#ffffff" }}>
-          {currentTrack.title}
-        </div>
-        <div style={{ fontSize: "14px", color: "#cccccc" }}>
-          {config.artist} · {currentTrackIndex + 1}/{config.tracks.length}
-        </div>
-      </div>
-
-      {/* Waveform Player */}
-      <div style={{ marginBottom: "10px" }}>
+      {/* Waveform Player - Always mounted, CSS visibility control */}
+      <div style={{
+        marginBottom: "15px",
+        opacity: visible ? 1 : 0,
+        pointerEvents: visible ? "auto" : "none",
+        transition: "opacity 0.3s ease"
+      }}>
         <CustomWavePlayer
           audioUrl={currentTrack.url}
           onAudioData={handleAudioData}
@@ -120,10 +71,13 @@ export default function PlayerHUD({
             background: "none",
             border: "none",
             color: lyricsVisible ? config.theme.color1 : "#ffffff",
-            fontSize: "16px",
+            fontSize: "14px",
             cursor: "pointer",
             opacity: 0.7,
             transition: "all 0.2s",
+            padding: "8px 12px",
+            borderRadius: "4px",
+            backgroundColor: lyricsVisible ? "rgba(255,255,255,0.1)" : "transparent",
           }}
           onMouseEnter={(e) => e.target.style.opacity = "1"}
           onMouseLeave={(e) => e.target.style.opacity = "0.7"}
@@ -141,6 +95,9 @@ export default function PlayerHUD({
             cursor: "pointer",
             opacity: 0.7,
             transition: "all 0.2s",
+            padding: "8px 12px",
+            borderRadius: "4px",
+            backgroundColor: playlistVisible ? "rgba(255,255,255,0.1)" : "transparent",
           }}
           onMouseEnter={(e) => e.target.style.opacity = "1"}
           onMouseLeave={(e) => e.target.style.opacity = "0.7"}

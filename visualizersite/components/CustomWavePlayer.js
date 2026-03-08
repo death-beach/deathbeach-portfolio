@@ -121,6 +121,14 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTi
           height: 48,
           normalize: true,
           fillParent: true,
+          splitChannels: false,
+          stereo: false,
+          backend: 'WebAudio',
+          mediaControls: false,
+          interact: true,
+          hideScrollbar: true,
+          responsive: true,
+          channels: 1,  // Force mono
         });
         wavesurfer.current = ws;
 
@@ -192,7 +200,7 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTi
   }, [onResize, isReady]);
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "16px" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
       <style jsx>{`
         .play-btn {
           width: 48px; height: 48px; border-radius: 50%;
@@ -207,34 +215,8 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTi
         .status { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
           font-size: 12px; color: rgba(18,171,255,0.6); letter-spacing: 0.1em;
           text-transform: uppercase; pointer-events: none; }
-
-        /* ── MOBILE ONLY OVERRIDES ── */
-        @media (max-width: 768px) {
-          .play-btn {
-            width: 56px; 
-            height: 56px; 
-            border: 2px solid #f00c6f; 
-            background: rgba(240, 12, 111, 0.05);
-            /* Hardware-accelerated pulse to replace hover discovery */
-            animation: mobilePulse 2.5s infinite cubic-bezier(0.16, 1, 0.3, 1);
-          }
-          
-          /* Kill the pulse and switch to blue when playing */
-          .play-btn.playing {
-            animation: none;
-            border-color: #12abff;
-            box-shadow: 0 0 15px rgba(18, 171, 255, 0.4);
-          }
-        }
-
-        @keyframes mobilePulse {
-          0% { box-shadow: 0 0 0 0 rgba(240, 12, 111, 0.6); }
-          70% { box-shadow: 0 0 0 12px rgba(240, 12, 111, 0); }
-          100% { box-shadow: 0 0 0 0 rgba(240, 12, 111, 0); }
-        }
       `}</style>
 
-      {/* Added dynamic template literal for the 'playing' class */}
       <button className={`play-btn ${isPlaying ? "playing" : ""}`} onClick={togglePlay} disabled={!isReady}>
         {isPlaying ? (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -247,10 +229,9 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTi
         )}
       </button>
 
-      <div className={`wave-wrap ${isPlaying ? "active" : ""}`}>
-        {!isReady && !hasError && <div className="status">Loading Audio...</div>}
+      <div className={`wave-wrap ${isPlaying ? "active" : ""}`} style={{ height: "48px", overflow: "hidden" }}>
         {hasError && <div className="status" style={{ color: "#f00c6f" }}>Audio Unavailable</div>}
-        <div ref={waveformRef} style={{ width: "100%", opacity: isReady ? 1 : 0, transition: "opacity 0.5s ease" }} />
+        <div ref={waveformRef} style={{ width: "100%", opacity: isReady ? 1 : 0.3, transition: "opacity 0.3s ease" }} />
       </div>
     </div>
   );

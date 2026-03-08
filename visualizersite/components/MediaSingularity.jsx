@@ -280,7 +280,7 @@ function Particles({ count = 2000, audioDataRef }) {
 function Scene({ audioDataRef, position }) {
   const { size } = useThree();
   const isMobile = size.width < 768;
-  const pos = isMobile ? [3, 2.5, -4.0] : (position || [8.0, 1.5, 0]);
+  const pos = isMobile ? [0, 0, -4.0] : (position || [0, 0, 0]);
 
   return (
     <group position={pos}>

@@ -19,6 +19,8 @@ export default function Player() {
   const [lyricsVisible, setLyricsVisible] = useState(false);
   const [playlistVisible, setPlaylistVisible] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [hudVisible, setHudVisible] = useState(true);
+  const [mouseActive, setMouseActive] = useState(true);
 
   // Get current track
   const currentTrack = config.tracks[currentTrackIndex];
@@ -73,6 +75,30 @@ export default function Player() {
     setCurrentTime(time);
   }, []);
 
+  // Mouse activity detection for HUD auto-hide
+  const mouseTimeoutRef = useRef(null);
+
+  const handleMouseMove = useCallback(() => {
+    setMouseActive(true);
+    setHudVisible(true);
+
+    if (mouseTimeoutRef.current) {
+      clearTimeout(mouseTimeoutRef.current);
+    }
+
+    mouseTimeoutRef.current = setTimeout(() => {
+      setMouseActive(false);
+      // Only hide HUD if no panels are open
+      if (!lyricsVisible && !playlistVisible) {
+        setHudVisible(false);
+      }
+    }, 3000);
+  }, [lyricsVisible, playlistVisible]);
+
+  const handleMouseLeave = useCallback(() => {
+    // Don't hide immediately on mouse leave, let the timeout handle it
+  }, []);
+
   return (
     <div
       style={{
@@ -85,6 +111,8 @@ export default function Player() {
         fontFamily: "'Hanken Grotesk', sans-serif",
       }}
       onClick={closePanels}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       {/* ── FULL-SCREEN VISUALIZER ── */}
       <MediaEngine
@@ -94,7 +122,7 @@ export default function Player() {
         onVideoEnd={handleTrackEnd}
       />
 
-      {/* ── BOTTOM HUD (Always Visible) ── */}
+      {/* ── BOTTOM HUD (Auto-hide) ── */}
       <PlayerHUD
         currentTrackIndex={currentTrackIndex}
         isPlaying={isPlaying}
@@ -108,6 +136,7 @@ export default function Player() {
         playlistVisible={playlistVisible}
         audioDataRef={audioDataRef}
         onTimeUpdate={handleTimeUpdate}
+        visible={hudVisible}
       />
 
       {/* ── LYRICS PANEL (Slide Up) ── */}
