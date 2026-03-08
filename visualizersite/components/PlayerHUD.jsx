@@ -21,6 +21,8 @@ export default function PlayerHUD({
   visible = true,
 }) {
   const currentTrack = config.tracks[currentTrackIndex];
+  const nextTrackIndex = (currentTrackIndex + 1) % config.tracks.length;
+  const nextTrackUrl = config.tracks[nextTrackIndex]?.url;
 
   // Handle audio data from the active player
   const handleAudioData = useCallback((data) => {
@@ -60,51 +62,15 @@ export default function PlayerHUD({
           onTrackEnd={onTrackEnd}
           isPlaying={isPlaying}
           onTimeUpdate={onTimeUpdate}
+          onToggleLyrics={onToggleLyrics}
+          onTogglePlaylist={onTogglePlaylist}
+          lyricsVisible={lyricsVisible}
+          playlistVisible={playlistVisible}
+          nextTrackUrl={nextTrackUrl}
         />
       </div>
 
-      {/* Panel Toggle Buttons */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <button
-          onClick={(e) => { e.stopPropagation(); onToggleLyrics(); }}
-          style={{
-            background: "none",
-            border: "none",
-            color: lyricsVisible ? config.theme.color1 : "#ffffff",
-            fontSize: "14px",
-            cursor: "pointer",
-            opacity: 0.7,
-            transition: "all 0.2s",
-            padding: "8px 12px",
-            borderRadius: "4px",
-            backgroundColor: lyricsVisible ? "rgba(255,255,255,0.1)" : "transparent",
-          }}
-          onMouseEnter={(e) => e.target.style.opacity = "1"}
-          onMouseLeave={(e) => e.target.style.opacity = "0.7"}
-        >
-          CC
-        </button>
 
-        <button
-          onClick={(e) => { e.stopPropagation(); onTogglePlaylist(); }}
-          style={{
-            background: "none",
-            border: "none",
-            color: playlistVisible ? config.theme.color1 : "#ffffff",
-            fontSize: "16px",
-            cursor: "pointer",
-            opacity: 0.7,
-            transition: "all 0.2s",
-            padding: "8px 12px",
-            borderRadius: "4px",
-            backgroundColor: playlistVisible ? "rgba(255,255,255,0.1)" : "transparent",
-          }}
-          onMouseEnter={(e) => e.target.style.opacity = "1"}
-          onMouseLeave={(e) => e.target.style.opacity = "0.7"}
-        >
-          ≡
-        </button>
-      </div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { config } from "../data/playlist.config";
 
@@ -74,6 +74,20 @@ export default function Player() {
   const handleTimeUpdate = useCallback((time) => {
     setCurrentTime(time);
   }, []);
+
+  // Handle custom navigation events from CustomWavePlayer
+  useEffect(() => {
+    const onPrevEvent = () => handlePrev();
+    const onNextEvent = () => handleNext();
+
+    window.addEventListener('player-prev', onPrevEvent);
+    window.addEventListener('player-next', onNextEvent);
+
+    return () => {
+      window.removeEventListener('player-prev', onPrevEvent);
+      window.removeEventListener('player-next', onNextEvent);
+    };
+  }, [handlePrev, handleNext]);
 
   // Mouse activity detection for HUD auto-hide
   const mouseTimeoutRef = useRef(null);

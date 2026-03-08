@@ -10,13 +10,14 @@ import React, { useEffect, useRef, useState } from "react";
 // Bass  (0–86Hz)    → bins 0–7
 // Mids  (200–900Hz) → bins 19–84
 // Highs (1.5k–20k)  → bins 139–1857
-export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTimeUpdate }) {
+export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTimeUpdate, onToggleLyrics, onTogglePlaylist, lyricsVisible, playlistVisible, nextTrackUrl }) {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const analyserRef = useRef(null);
   const audioElRef = useRef(null);
   const audioCtxRef = useRef(null);
   const animFrameRef = useRef(null);
+  const preloadRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -199,9 +200,54 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTi
     }
   }, [onResize, isReady]);
 
+  // Preload next track
+  useEffect(() => {
+    if (nextTrackUrl) {
+      // Clean up previous preload
+      if (preloadRef.current) {
+        preloadRef.current.pause();
+        preloadRef.current.src = "";
+        preloadRef.current = null;
+      }
+
+      // Create new preload element
+      const preloadAudio = new Audio();
+      if (nextTrackUrl.startsWith("http://") || nextTrackUrl.startsWith("https://")) {
+        preloadAudio.crossOrigin = "anonymous";
+      }
+      preloadAudio.src = nextTrackUrl;
+      preloadAudio.preload = "metadata"; // Just load metadata, not full audio
+      preloadAudio.volume = 0; // Silent
+      preloadRef.current = preloadAudio;
+
+      console.log("[MediaPlayer] preloading next track:", nextTrackUrl);
+    }
+
+    return () => {
+      if (preloadRef.current) {
+        preloadRef.current.pause();
+        preloadRef.current.src = "";
+        preloadRef.current = null;
+      }
+    };
+  }, [nextTrackUrl]);
+
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
       <style jsx>{`
+        .transport-stack {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+        }
+        .nav-btn {
+          width: 32px; height: 32px; border-radius: 50%;
+          background: rgba(255,255,255,0.1); border: 1px solid rgba(18, 171, 255, 0.3);
+          color: #fff; display: flex; align-items: center; justify-content: center;
+          cursor: pointer; transition: all 0.2s ease; outline: none;
+        }
+        .nav-btn:hover { border-color: #f00c6f; box-shadow: 0 0 8px rgba(240,12,111,0.4); transform: scale(1.05); }
         .play-btn {
           width: 48px; height: 48px; border-radius: 50%;
           background: #1a1a1a; border: 1px solid rgba(18, 171, 255, 0.3);
@@ -217,21 +263,72 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTi
           text-transform: uppercase; pointer-events: none; }
       `}</style>
 
-      <button className={`play-btn ${isPlaying ? "playing" : ""}`} onClick={togglePlay} disabled={!isReady}>
-        {isPlaying ? (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" />
-          </svg>
-        ) : (
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: "4px" }}>
-            <path d="M8 5v14l11-7z" />
-          </svg>
-        )}
-      </button>
+      <div className="transport-stack">
+        <button className="nav-btn" onClick={() => window.dispatchEvent(new CustomEvent('player-prev'))}>
+          ◀◀
+        </button>
+        <button className="nav-btn" onClick={() => window.dispatchEvent(new CustomEvent('player-next'))}>
+          ▶▶
+        </button>
+        <button className={`play-btn ${isPlaying ? "playing" : ""}`} onClick={togglePlay} disabled={!isReady}>
+          {isPlaying ? (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: "4px" }}>
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          )}
+        </button>
+      </div>
 
       <div className={`wave-wrap ${isPlaying ? "active" : ""}`} style={{ height: "48px", overflow: "hidden" }}>
         {hasError && <div className="status" style={{ color: "#f00c6f" }}>Audio Unavailable</div>}
         <div ref={waveformRef} style={{ width: "100%", opacity: isReady ? 1 : 0.3, transition: "opacity 0.3s ease" }} />
+      </div>
+
+      {/* Panel Toggle Buttons - Inline with waveform */}
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginLeft: "16px" }}>
+        <button
+          onClick={(e) => { e.stopPropagation(); onToggleLyrics(); }}
+          style={{
+            background: "none",
+            border: "none",
+            color: lyricsVisible ? "#f00c6f" : "#ffffff",
+            fontSize: "14px",
+            cursor: "pointer",
+            opacity: 0.7,
+            transition: "all 0.2s",
+            padding: "8px 12px",
+            borderRadius: "4px",
+            backgroundColor: lyricsVisible ? "rgba(255,255,255,0.1)" : "transparent",
+          }}
+          onMouseEnter={(e) => e.target.style.opacity = "1"}
+          onMouseLeave={(e) => e.target.style.opacity = "0.7"}
+        >
+          CC
+        </button>
+
+        <button
+          onClick={(e) => { e.stopPropagation(); onTogglePlaylist(); }}
+          style={{
+            background: "none",
+            border: "none",
+            color: playlistVisible ? "#f00c6f" : "#ffffff",
+            fontSize: "16px",
+            cursor: "pointer",
+            opacity: 0.7,
+            transition: "all 0.2s",
+            padding: "8px 12px",
+            borderRadius: "4px",
+            backgroundColor: playlistVisible ? "rgba(255,255,255,0.1)" : "transparent",
+          }}
+          onMouseEnter={(e) => e.target.style.opacity = "1"}
+          onMouseLeave={(e) => e.target.style.opacity = "0.7"}
+        >
+          ≡
+        </button>
       </div>
     </div>
   );

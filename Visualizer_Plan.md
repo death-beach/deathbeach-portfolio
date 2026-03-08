@@ -377,34 +377,34 @@ No coding required. Just edit the config file.
 
 ### Phase 1: Core Infrastructure
 
-- [ ] Create `data/playlist.config.js` with schema and demo tracks
-- [ ] Create `pages/player.js` (full-screen player page)
-- [ ] Refactor `MediaSingularity.jsx` to accept `color1`/`color2` props
-- [ ] Implement one-active-track-at-a-time playback logic
+- [x] Create `data/playlist.config.js` with schema and demo tracks
+- [x] Create `pages/player.js` (full-screen player page)
+- [x] Refactor `MediaSingularity.jsx` to accept `color1`/`color2` props
+- [x] Implement one-active-track-at-a-time playback logic
 
 ### Phase 2: Hybrid 3D + Video Support
 
-- [ ] Create `components/MediaEngine.jsx` (unified component for 3D/video switching)
-- [ ] Add `mediaType: "3d" | "video"` to config schema
-- [ ] Implement video progress bar (shows on mouse activity, hides when watching)
-- [ ] Add crossfade transitions between tracks (300-500ms)
-- [ ] Implement preloading for next tracks
-- [ ] Create `/configure` page (form UI for artists to generate config, dev-only with production redirect)
-- [ ] Add `/public/video/` folder for MP4 files
-- [ ] Add `poster` image support for video loading states
+- [x] Create `components/MediaEngine.jsx` (unified component for 3D/video switching)
+- [x] Add `mediaType: "3d" | "video"` to config schema
+- [x] Implement video progress bar (shows on mouse activity, hides when watching)
+- [x] Add crossfade transitions between tracks (300-500ms)
+- [x] Implement preloading for next tracks
+- [x] Create `/configure` page (form UI for artists to generate config, dev-only with production redirect)
+- [x] Add `/public/video/` folder for MP4 files
+- [x] Add `poster` image support for video loading states
 
 ### Phase 3: UI Components
 
-- [ ] Create `components/PlayerHUD.jsx` (bottom control bar)
-- [ ] Create `components/LyricsFeed.jsx` (CC-style slide-up panel)
-- [ ] Create `components/PlaylistDrawer.jsx` (slide-up track list)
+- [x] Create `components/PlayerHUD.jsx` (bottom control bar)
+- [x] Create `components/LyricsFeed.jsx` (CC-style slide-up panel)
+- [x] Create `components/PlaylistDrawer.jsx` (slide-up track list)
 
 ### Phase 4: Integration & Polish
 
-- [ ] Wire up all components in `pages/player.js`
-- [ ] Add slide-up animations for panels
-- [ ] Implement timed lyrics logic
-- [ ] Add keyboard shortcuts (spacebar play/pause, etc.)
+- [x] Wire up all components in `pages/player.js`
+- [x] Add slide-up animations for panels
+- [x] Implement timed lyrics logic
+- [x] Add keyboard shortcuts (spacebar play/pause, etc.)
 - [ ] Mobile responsiveness & performance (reduced particles on low-power devices)
 - [ ] Deep linking support (?track=2&t=1:23)
 - [ ] LRC/WebVTT lyric file parser

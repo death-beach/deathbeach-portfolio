@@ -15,9 +15,26 @@ export default function MediaEngine({
   const [showVideoControls, setShowVideoControls] = useState(false);
   const [videoProgress, setVideoProgress] = useState(0);
   const controlsTimeoutRef = useRef(null);
+  const [previousTrackIndex, setPreviousTrackIndex] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const currentTrack = config.tracks[currentTrackIndex];
   const isVideo = currentTrack.mediaType === "video";
+
+  // Handle track transitions for crossfade
+  useEffect(() => {
+    if (previousTrackIndex !== null && previousTrackIndex !== currentTrackIndex) {
+      setIsTransitioning(true);
+      // Transition completes after 400ms
+      const timer = setTimeout(() => {
+        setIsTransitioning(false);
+        setPreviousTrackIndex(null);
+      }, 400);
+      return () => clearTimeout(timer);
+    } else if (previousTrackIndex === null) {
+      setPreviousTrackIndex(currentTrackIndex);
+    }
+  }, [currentTrackIndex, previousTrackIndex]);
 
   // Handle video playback
   useEffect(() => {
@@ -197,12 +214,44 @@ export default function MediaEngine({
     );
   }
 
-  // Default to 3D visualizer
+  // Default to 3D visualizer with crossfade transitions
   return (
-    <MediaSingularity
-      audioDataRef={audioDataRef}
-      color1={config.theme.color1}
-      color2={config.theme.color2}
-    />
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      {/* Previous track visualizer (fading out) */}
+      {isTransitioning && previousTrackIndex !== null && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: 0,
+            transition: "opacity 0.4s ease-out",
+            zIndex: 1
+          }}
+        >
+          <MediaSingularity
+            audioDataRef={null} // No audio data for fading out visualizer
+            color1={config.theme.color1}
+            color2={config.theme.color2}
+          />
+        </div>
+      )}
+
+      {/* Current track visualizer (fading in) */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          opacity: isTransitioning ? 0 : 1,
+          transition: isTransitioning ? "opacity 0.4s ease-in" : "none",
+          zIndex: 2
+        }}
+      >
+        <MediaSingularity
+          audioDataRef={audioDataRef}
+          color1={config.theme.color1}
+          color2={config.theme.color2}
+        />
+      </div>
+    </div>
   );
 }
