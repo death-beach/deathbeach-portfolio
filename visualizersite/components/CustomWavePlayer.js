@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from "react";
 // Bass  (0–86Hz)    → bins 0–7
 // Mids  (200–900Hz) → bins 19–84
 // Highs (1.5k–20k)  → bins 139–1857
-export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTimeUpdate, onToggleLyrics, onTogglePlaylist, lyricsVisible, playlistVisible, nextTrackUrl }) {
+export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTimeUpdate, onToggleLyrics, onTogglePlaylist, lyricsVisible, playlistVisible, nextTrackUrl, initialTime = 0 }) {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const analyserRef = useRef(null);
@@ -138,7 +138,17 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTi
           if (p && typeof p.catch === "function") p.catch(() => { setHasError(true); setIsReady(false); });
         } catch { setHasError(true); setIsReady(false); return; }
 
-        ws.on("ready", () => { setIsReady(true); setHasError(false); });
+        ws.on("ready", () => {
+          setIsReady(true);
+          setHasError(false);
+          // Seek to initial time if specified
+          if (initialTime > 0) {
+            const duration = ws.getDuration();
+            if (duration > 0) {
+              ws.seekTo(Math.min(initialTime / duration, 1));
+            }
+          }
+        });
 
         ws.on("play", () => {
           setIsPlaying(true);

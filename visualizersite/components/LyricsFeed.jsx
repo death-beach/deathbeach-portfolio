@@ -1,14 +1,28 @@
+import { useState, useEffect } from "react";
 import { config } from "../data/playlist.config";
+import { fetchLyrics } from "../utils/parseLyrics";
 
 export default function LyricsFeed({ currentTrackIndex, visible, currentTime = 0 }) {
   const currentTrack = config.tracks[currentTrackIndex];
+  const [lyrics, setLyrics] = useState([]);
+
+  // Fetch and parse lyrics if lyricsUrl is provided
+  useEffect(() => {
+    if (currentTrack.lyricsUrl) {
+      fetchLyrics(currentTrack.lyricsUrl).then(setLyrics);
+    } else if (Array.isArray(currentTrack.lyrics)) {
+      setLyrics(currentTrack.lyrics);
+    } else {
+      setLyrics([]);
+    }
+  }, [currentTrackIndex, currentTrack.lyricsUrl, currentTrack.lyrics]);
 
   // Find the current lyric line based on time
   const getCurrentLyricIndex = () => {
-    if (!Array.isArray(currentTrack.lyrics)) return -1;
+    if (!Array.isArray(lyrics)) return -1;
 
-    for (let i = currentTrack.lyrics.length - 1; i >= 0; i--) {
-      if (currentTime >= currentTrack.lyrics[i].time) {
+    for (let i = lyrics.length - 1; i >= 0; i--) {
+      if (currentTime >= lyrics[i].time) {
         return i;
       }
     }
@@ -45,8 +59,8 @@ export default function LyricsFeed({ currentTrackIndex, visible, currentTime = 0
         transition: "opacity 0.2s ease",
         opacity: visible ? 1 : 0
       }}>
-        {Array.isArray(currentTrack.lyrics)
-          ? currentTrack.lyrics.map((line, i) => (
+        {Array.isArray(lyrics)
+          ? lyrics.map((line, i) => (
               <div
                 key={i}
                 style={{
@@ -60,7 +74,7 @@ export default function LyricsFeed({ currentTrackIndex, visible, currentTime = 0
                 {line.text}
               </div>
             ))
-          : currentTrack.lyrics
+          : typeof lyrics === 'string' ? lyrics : null
         }
       </div>
     </div>

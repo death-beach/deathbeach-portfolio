@@ -26,6 +26,7 @@ export const config = {
       mediaType: "3d", // 3D reactive visualizer
       url: "/audio/drunk-on-the-mic-remix.mp3", // MP3 for 3D tracks
       visualizer: "singularity", // only used for 3D: "singularity", "nebula", "waveform", "minimal", "custom"
+      // lyricsUrl: "/lyrics/drunk-on-the-mic.lrc", // Optional: load from LRC file instead of inline
       lyrics: [
         { time: 0, text: "Tension, release, and bounce..." },
         { time: 12, text: "Complete flip of the original harmony..." },

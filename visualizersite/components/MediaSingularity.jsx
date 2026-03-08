@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -280,13 +280,19 @@ function Particles({ count = 2000, audioDataRef }) {
 function Scene({ audioDataRef, position }) {
   const { size } = useThree();
   const isMobile = size.width < 768;
+  const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isLowPower = isMobile && (prefersReducedMotion || size.width < 480);
+
+  // Reduce particle count on mobile/low-power devices
+  const particleCount = isLowPower ? 0 : isMobile ? 500 : 2000;
+
   const pos = isMobile ? [0, 0, -4.0] : (position || [0, 0, 0]);
 
   return (
     <group position={pos}>
       <Core    audioDataRef={audioDataRef} />
       <Rings   audioDataRef={audioDataRef} />
-      <Particles count={2000} audioDataRef={audioDataRef} />
+      {particleCount > 0 && <Particles count={particleCount} audioDataRef={audioDataRef} />}
     </group>
   );
 }
@@ -296,9 +302,18 @@ function Scene({ audioDataRef, position }) {
 // position:     optional [x, y, z] override
 // style:        optional extra CSS for the container
 export default function MediaSingularity({ audioDataRef = null, position = null, style = {} }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "#050505", overflow: "hidden", ...style }}>
-      <Canvas camera={{ position: [0, 0, 12], fov: 45 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 0, 12], fov: 45 }} dpr={[1, isMobile ? 1.5 : 2]}>
         <fog attach="fog" args={["#050505", 5, 25]} />
         <Scene audioDataRef={audioDataRef} position={position} />
       </Canvas>

@@ -19,6 +19,7 @@ export default function PlayerHUD({
   audioDataRef,
   onTimeUpdate,
   visible = true,
+  initialTime = 0,
 }) {
   const currentTrack = config.tracks[currentTrackIndex];
   const nextTrackIndex = (currentTrackIndex + 1) % config.tracks.length;
@@ -47,6 +48,23 @@ export default function PlayerHUD({
       }}
     >
 
+
+      {/* Track Title - Above waveform, tied to HUD visibility */}
+      <div style={{
+        marginBottom: "10px",
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.3s ease"
+      }}>
+        <div style={{
+          textAlign: "center",
+          fontSize: "16px",
+          fontWeight: "bold",
+          color: "#ffffff",
+          textShadow: "0 0 10px rgba(0,0,0,0.5)"
+        }}>
+          {currentTrack.title}
+        </div>
+      </div>
 
       {/* Waveform Player - Always mounted, CSS visibility control */}
       <div style={{

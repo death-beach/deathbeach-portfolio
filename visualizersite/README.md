@@ -32,10 +32,15 @@ singularity-player/
 │   └── PlaylistDrawer.jsx       ← Track list drawer
 ├── pages/
 │   ├── index.js                 ← Main player page (full-screen)
-│   └── store.js                 ← Commerce page (optional)
+│   └── configure.js             ← Config form UI (dev-only)
 ├── public/
 │   ├── audio/                   ← Drop your MP3s here
-│   └── video/                   ← Drop MP4s for video tracks
+│   ├── video/                   ← Drop MP4s for video tracks
+│   └── lyrics/                  ← Drop .lrc lyric files here
+├── styles/
+│   └── globals.css              ← Global CSS reset
+├── utils/
+│   └── parseLyrics.js           ← LRC lyric parser
 └── README.md                    ← This file
 ```
 
@@ -76,6 +81,8 @@ export const config = {
         { time: 0, text: "Lyrics line 1..." },
         { time: 5, text: "Lyrics line 2..." },
       ],
+      // OR load from LRC file:
+      // lyricsUrl: "/lyrics/your-track.lrc",
     },
   ],
 };
@@ -103,6 +110,59 @@ export const config = {
 
 - **3d**: Audio-reactive 3D visualizer
 - **video**: Full AI-generated music video
+
+---
+
+## 🎵 Lyrics Support
+
+### Inline Lyrics (Array Format)
+
+```js
+lyrics: [
+  { time: 0, text: "First line of lyrics..." },
+  { time: 12.5, text: "Second line..." },
+  { time: 25, text: "Third line..." },
+];
+```
+
+### LRC File Support
+
+Drop `.lrc` files in `public/lyrics/` and reference them:
+
+```js
+lyricsUrl: "/lyrics/your-track.lrc";
+```
+
+**LRC Format Example:**
+
+```
+[00:12.34] First line of lyrics...
+[00:15.67] Second line...
+[00:25.00] Third line...
+```
+
+The parser automatically converts LRC files to the internal format.
+
+---
+
+## 🔗 Deep Linking
+
+Share specific tracks and timestamps:
+
+- `?track=2` — Jump to track index 2
+- `?t=1:23` — Start at 1 minute 23 seconds
+- `?track=1&t=0:45` — Track 1 at 45 seconds
+
+Example: `https://your-album.vercel.app/?track=2&t=1:23`
+
+---
+
+## 📱 Mobile & Performance
+
+- **Automatic optimization**: Reduced particles on mobile/low-power devices
+- **Accessibility**: Respects `prefers-reduced-motion`
+- **Touch controls**: Optimized for mobile interaction
+- **Device pixel ratio**: Capped at 1.5x on mobile for performance
 
 ---
 
@@ -195,15 +255,6 @@ npm start
 
 ---
 
-## 📱 Mobile Support
-
-- Responsive design for all screen sizes
-- Touch controls optimized
-- Reduced particle count on low-power devices
-- Graceful degradation for older browsers
-
----
-
 ## 🎨 Advanced Customization
 
 ### Custom Visualizers
@@ -214,11 +265,9 @@ For unique visual experiences beyond the presets:
 2. Add to `playlist.config.js` as `visualizer: "custom"`
 3. Build your Three.js scene with audio reactivity
 
-### Lyric Formats
+### Theme Customization
 
-- **Timed lyrics**: Array with `time` and `text` properties
-- **Static lyrics**: Simple string for scrolling text
-- **LRC/WebVTT**: Future support planned
+See `docs/theme-customization.md` for complete config reference and example themes.
 
 ---
 

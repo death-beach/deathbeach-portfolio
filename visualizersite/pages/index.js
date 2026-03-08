@@ -21,9 +21,56 @@ export default function Player() {
   const [currentTime, setCurrentTime] = useState(0);
   const [hudVisible, setHudVisible] = useState(true);
   const [mouseActive, setMouseActive] = useState(true);
+  const [initialTime, setInitialTime] = useState(0);
 
   // Get current track
   const currentTrack = config.tracks[currentTrackIndex];
+
+  // Parse time string (MM:SS or seconds)
+  const parseTime = (timeStr) => {
+    if (!timeStr) return 0;
+    if (timeStr.includes(':')) {
+      const [min, sec] = timeStr.split(':').map(Number);
+      return min * 60 + (sec || 0);
+    }
+    return parseFloat(timeStr) || 0;
+  };
+
+  // Update URL with current track and time
+  const updateURL = useCallback((trackIndex, time = 0) => {
+    const params = new URLSearchParams();
+    if (trackIndex > 0) params.set('track', trackIndex.toString());
+    if (time > 0) {
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60);
+      params.set('t', `${minutes}:${seconds.toString().padStart(2, '0')}`);
+    }
+    const newURL = params.toString() ? `?${params.toString()}` : window.location.pathname;
+    window.history.replaceState(null, '', newURL);
+  }, []);
+
+  // Read URL params on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const trackParam = params.get('track');
+    const timeParam = params.get('t');
+
+    if (trackParam) {
+      const trackIndex = parseInt(trackParam, 10);
+      if (trackIndex >= 0 && trackIndex < config.tracks.length) {
+        setCurrentTrackIndex(trackIndex);
+      }
+    }
+
+    if (timeParam) {
+      setInitialTime(parseTime(timeParam));
+    }
+  }, []);
+
+  // Update URL when track changes
+  useEffect(() => {
+    updateURL(currentTrackIndex);
+  }, [currentTrackIndex, updateURL]);
 
   // Handle audio data from the active player
   const handleAudioData = useCallback((data) => {
@@ -151,6 +198,7 @@ export default function Player() {
         audioDataRef={audioDataRef}
         onTimeUpdate={handleTimeUpdate}
         visible={hudVisible}
+        initialTime={initialTime}
       />
 
       {/* ── LYRICS PANEL (Slide Up) ── */}
