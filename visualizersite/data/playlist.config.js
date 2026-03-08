@@ -33,6 +33,18 @@ export const config = {
       ],
     },
     {
+      title: "Demo Video Track",
+      mediaType: "video", // Full video with baked-in audio
+      url: "/video/demo-video.mp4", // MP4 with audio + video
+      poster: "/images/demo-poster.jpg", // Optional loading image
+      // No visualizer needed — the video IS the visual
+      lyrics: [
+        { time: 0, text: "This is a video track..." },
+        { time: 10, text: "With synced lyrics..." },
+        { time: 20, text: "And full video playback." },
+      ],
+    },
+    {
       title: "Desert Transmission",
       mediaType: "3d", // 3D reactive visualizer
       url: "/audio/desert-transmission.mp3", // MP3 for 3D tracks

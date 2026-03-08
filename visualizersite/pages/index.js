@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { config } from "../data/playlist.config";
 
 // Dynamically import components to avoid SSR issues
-const MediaSingularity = dynamic(() => import("../components/MediaSingularity"), { ssr: false });
+const MediaEngine = dynamic(() => import("../components/MediaEngine"), { ssr: false });
 const PlayerHUD = dynamic(() => import("../components/PlayerHUD"), { ssr: false });
 const LyricsFeed = dynamic(() => import("../components/LyricsFeed"), { ssr: false });
 const PlaylistDrawer = dynamic(() => import("../components/PlaylistDrawer"), { ssr: false });
@@ -81,10 +81,11 @@ export default function Player() {
       onClick={closePanels}
     >
       {/* ── FULL-SCREEN VISUALIZER ── */}
-      <MediaSingularity
+      <MediaEngine
+        currentTrackIndex={currentTrackIndex}
         audioDataRef={audioDataRef}
-        color1={config.theme.color1}
-        color2={config.theme.color2}
+        isPlaying={isPlaying}
+        onVideoEnd={handleTrackEnd}
       />
 
       {/* ── BOTTOM HUD (Always Visible) ── */}
