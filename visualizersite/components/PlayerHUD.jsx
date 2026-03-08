@@ -17,6 +17,7 @@ export default function PlayerHUD({
   lyricsVisible,
   playlistVisible,
   audioDataRef,
+  onTimeUpdate,
 }) {
   const currentTrack = config.tracks[currentTrackIndex];
 
@@ -107,6 +108,7 @@ export default function PlayerHUD({
           isActive={true}
           onTrackEnd={onTrackEnd}
           isPlaying={isPlaying}
+          onTimeUpdate={onTimeUpdate}
         />
       </div>
 

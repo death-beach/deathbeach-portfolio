@@ -18,6 +18,7 @@ export default function Player() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [lyricsVisible, setLyricsVisible] = useState(false);
   const [playlistVisible, setPlaylistVisible] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
 
   // Get current track
   const currentTrack = config.tracks[currentTrackIndex];
@@ -67,6 +68,11 @@ export default function Player() {
     setPlaylistVisible(false);
   }, []);
 
+  // Handle time updates from the player
+  const handleTimeUpdate = useCallback((time) => {
+    setCurrentTime(time);
+  }, []);
+
   return (
     <div
       style={{
@@ -101,12 +107,14 @@ export default function Player() {
         lyricsVisible={lyricsVisible}
         playlistVisible={playlistVisible}
         audioDataRef={audioDataRef}
+        onTimeUpdate={handleTimeUpdate}
       />
 
       {/* ── LYRICS PANEL (Slide Up) ── */}
       <LyricsFeed
         currentTrackIndex={currentTrackIndex}
         visible={lyricsVisible}
+        currentTime={currentTime}
       />
 
       {/* ── PLAYLIST PANEL (Slide Up) ── */}

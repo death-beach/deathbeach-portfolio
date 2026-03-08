@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from "react";
 // Bass  (0–86Hz)    → bins 0–7
 // Mids  (200–900Hz) → bins 19–84
 // Highs (1.5k–20k)  → bins 139–1857
-export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
+export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, onTimeUpdate }) {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const analyserRef = useRef(null);
@@ -155,6 +155,11 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
 
         ws.on("seek", () => {
           if (audioElRef.current) audioElRef.current.currentTime = ws.getCurrentTime();
+          if (onTimeUpdate) onTimeUpdate(ws.getCurrentTime());
+        });
+
+        ws.on("audioprocess", () => {
+          if (onTimeUpdate) onTimeUpdate(ws.getCurrentTime());
         });
 
         ws.on("error", () => { setHasError(true); setIsReady(false); });
