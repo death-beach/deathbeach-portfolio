@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react";
 import { config as defaultConfig } from "../data/playlist.config";
 
-// Redirect to player in production
-if (process.env.NODE_ENV === "production") {
-  useEffect(() => {
-    window.location.href = "/";
-  }, []);
-  return null;
-}
-
 export default function Configure() {
+  // Redirect to player in production
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      window.location.href = "/";
+    }
+  }, []);
   const [config, setConfig] = useState(defaultConfig);
-  const [generatedConfig, setGeneratedConfig] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
 
   const updateConfig = (path, value) => {
     setConfig(prev => {
@@ -56,9 +55,34 @@ export default function Configure() {
     }));
   };
 
-  const generateConfig = () => {
-    const configString = `export const config = ${JSON.stringify(config, null, 2)};`;
-    setGeneratedConfig(configString);
+  const saveConfig = async () => {
+    setIsSaving(true);
+    setSaveMessage("");
+
+    try {
+      const response = await fetch('/api/save-config', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(config),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSaveMessage("Configuration saved successfully! Redirecting to player...");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 2000);
+      } else {
+        setSaveMessage(`Error: ${result.error}`);
+      }
+    } catch (error) {
+      setSaveMessage("Error saving configuration. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -354,49 +378,39 @@ export default function Configure() {
 
         <div style={{ marginBottom: "30px" }}>
           <button
-            onClick={generateConfig}
+            onClick={saveConfig}
+            disabled={isSaving}
             style={{
-              background: "#12abff",
+              background: isSaving ? "#666" : "#12abff",
               color: "#fff",
               border: "none",
               padding: "15px 30px",
               borderRadius: "4px",
-              cursor: "pointer",
+              cursor: isSaving ? "not-allowed" : "pointer",
               fontSize: "16px",
               fontWeight: "bold"
             }}
           >
-            Generate Configuration
+            {isSaving ? "Saving..." : "Save & Preview"}
           </button>
+          {saveMessage && (
+            <p style={{
+              marginTop: "10px",
+              color: saveMessage.includes("Error") ? "#ff6b6b" : "#4ecdc4",
+              fontWeight: "bold"
+            }}>
+              {saveMessage}
+            </p>
+          )}
         </div>
 
-        {generatedConfig && (
-          <div style={{ marginBottom: "30px" }}>
-            <h2 style={{ color: "#12abff" }}>Generated Configuration</h2>
-            <p style={{ color: "#ccc", marginBottom: "15px" }}>
-              Copy this and paste it into <code style={{ background: "#2a2a2a", padding: "2px 4px", borderRadius: "2px" }}>data/playlist.config.js</code>
-            </p>
-            <pre style={{
-              background: "#1a1a1a",
-              border: "1px solid #333",
-              borderRadius: "8px",
-              padding: "20px",
-              overflow: "auto",
-              fontSize: "12px",
-              lineHeight: "1.4"
-            }}>
-              {generatedConfig}
-            </pre>
-          </div>
-        )}
-
         <div style={{ marginTop: "50px", padding: "20px", background: "#1a1a1a", borderRadius: "8px" }}>
-          <h3 style={{ color: "#f00c6f" }}>Next Steps</h3>
+          <h3 style={{ color: "#f00c6f" }}>How It Works</h3>
           <ol style={{ color: "#ccc", lineHeight: "1.6" }}>
-            <li>Copy the generated configuration above</li>
-            <li>Paste it into <code>data/playlist.config.js</code></li>
+            <li>Fill out the form above with your album details</li>
+            <li>Click "Save & Preview" to save your configuration</li>
+            <li>You'll be automatically redirected to see your player</li>
             <li>Add your audio/video files to the appropriate <code>public/</code> folders</li>
-            <li>Test locally with <code>npm run dev</code></li>
             <li>Deploy to Vercel when ready!</li>
           </ol>
         </div>
