@@ -200,7 +200,8 @@ export default function Hero() {
           )}
           <b>
             <i>
-              Your wildest ideas deserve to exist as your legacy. I make sure they don't just stay dreams.
+              Your wildest ideas were never meant to die in a folder. 
+I turn them into a legacy that won&apos;t be ignored.
             </i>
           </b>
         </motion.h1>

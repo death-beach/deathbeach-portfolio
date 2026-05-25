@@ -219,13 +219,24 @@ export default function Home({ project }) {
                 style={{
                   fontSize: "16px",
                   fontWeight: "normal",
-                  marginBottom: "36px",
+                  marginBottom: "6px",
                   color: "#d1d5db",
                   lineHeight: "1.6",
                 }}
               >
                 <i>Music Production, Engineering, &amp; Mixing</i>
               </h3>
+              <h4
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "normal",
+                  marginBottom: "36px",
+                  color: "#d1d5db",
+                  lineHeight: "1.6",
+                }}
+              >
+                <i>For those who won’t dilute what they came to say.</i>
+              </h4>
 
               {/* Desktop only: Let's Rock! button */}
               <div style={{ textAlign: "left", marginBottom: "36px" }} className="lets-rock-desktop">
@@ -531,7 +542,7 @@ export default function Home({ project }) {
                   color: "#ffffff",
                 }}
               >
-                For Artists &amp; Bands
+                For Artists & Bands who would rather burn the map than follow it.
               </h3>
               <p
                 style={{
@@ -577,7 +588,7 @@ export default function Home({ project }) {
                     color: "#ffffff",
                   }}
                 >
-                  For Brands, Founders &amp; Crypto Projects
+                  For Brands, Founders & Crypto Projects who reject generic funnels.
                 </h3>
                 <p
                   style={{
@@ -587,8 +598,7 @@ export default function Home({ project }) {
                     margin: "0 0 16px 0",
                   }}
                 >
-                  Vibe-coded products, on-chain tools, and digital experiences that don&apos;t just work &mdash; they
-                  feel alive. Same obsession with resonance, frequency, and soul.
+                  Vibe-coded products, on-chain tools, and digital experiences that carry the same refusal to compromise. Let's obsess over creating great products.
                 </p>
                 <p
                   style={{
@@ -1099,7 +1109,7 @@ export default function Home({ project }) {
               marginBottom: "24px",
             }}
           >
-            Let&apos;s Build Something That Lives
+            Build Something That Refuses To Fade
           </h2>
           <p
             style={{
