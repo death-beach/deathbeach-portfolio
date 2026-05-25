@@ -219,7 +219,7 @@ export default function Home({ project }) {
                 style={{
                   fontSize: "16px",
                   fontWeight: "normal",
-                  marginBottom: "6px",
+                  marginBottom: "1px",
                   color: "#d1d5db",
                   lineHeight: "1.6",
                 }}
