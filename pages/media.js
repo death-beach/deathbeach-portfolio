@@ -1,4 +1,4 @@
-// pages/press.js
+// pages/media.js
 import React, { useRef, useCallback, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -96,6 +96,17 @@ export default function PressKit() {
           transform: translateY(-5px);
           box-shadow: 0 10px 30px rgba(18, 171, 255, 0.15);
           border-left-color: #12abff;
+        }
+        .lumina-link {
+          color: #12abff;
+          text-decoration: none;
+          border-bottom: 1px solid rgba(18, 171, 255, 0.4);
+          transition: all 0.2s ease;
+          padding-bottom: 1px;
+        }
+        .lumina-link:hover {
+          color: #ffffff;
+          border-bottom-color: #ffffff;
         }
         .contact-btn {
           transition: all 0.3s ease;
@@ -201,7 +212,7 @@ export default function PressKit() {
           </p>
         </motion.section>
 
-        {/* 2. THE TRACKS — AudioSingularity lives behind this section */}
+        {/* 2. THE TRACKS — MediaSingularity lives behind this section */}
         <motion.section
           variants={itemVariants}
           className="section-spacing"
@@ -251,6 +262,7 @@ export default function PressKit() {
             </h2>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+              {/* Track 1 */}
               <motion.div
                 className="track-card pink"
                 initial={{ opacity: 1, y: 0 }}
@@ -258,11 +270,11 @@ export default function PressKit() {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 onAnimationComplete={() => resizeFunctions[0]?.()}
               >
-                <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
-                  "Drunk on the Mic" (Death Beach Remix)
+                <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "4px", color: "#ffffff" }}>
+                  "Drunk on the Mic"
                 </h3>
-                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#e5e7eb", margin: 0 }}>
-                  Tension, release, and bounce. Complete flip of the original harmony. It doesn't just fill a room—it expands it.
+                <p style={{ fontSize: "14px", color: "#9ca3af", marginBottom: "20px", marginTop: 0 }}>
+                  Mickey Shiloh (Death Beach Remix)
                 </p>
                 <CustomWavePlayer
                   audioUrl="/audio/drunk-on-the-mic-remix.mp3"
@@ -271,6 +283,7 @@ export default function PressKit() {
                 />
               </motion.div>
 
+              {/* Track 2 */}
               <motion.div
                 className="track-card blue"
                 initial={{ opacity: 1, y: 0 }}
@@ -278,38 +291,49 @@ export default function PressKit() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 onAnimationComplete={() => resizeFunctions[1]?.()}
               >
-                <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
-                  Desert Transmission
+                <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "4px", color: "#ffffff" }}>
+                  "Trap(ped)"
                 </h3>
-                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#e5e7eb", margin: 0 }}>
-                  A brooding, frequency-rich descent into analog synthesis and digital precision. This track strips away the static to leave pure, vibrating emotion.
+                <p style={{ fontSize: "14px", color: "#9ca3af", marginBottom: "20px", marginTop: 0 }}>
+                  Death Beach
                 </p>
                 <CustomWavePlayer
-                  audioUrl="/audio/desert-transmission.mp3"
+                  audioUrl="/audio/Trap(ped).mp3"
                   onAudioData={handleAudioData}
                   onResize={(fn) => handleResizeCallback(1, fn)}
                 />
               </motion.div>
+            </div>
 
-              <motion.div
-                className="track-card pink"
-                initial={{ opacity: 1, y: 0 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                onAnimationComplete={() => resizeFunctions[2]?.()}
-              >
-                <h3 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "12px", color: "#ffffff" }}>
-                  Neon Bleed
-                </h3>
-                <p style={{ fontSize: "17px", lineHeight: "1.7", color: "#e5e7eb", margin: 0 }}>
-                  Visceral drum architecture meets haunting, unfiltered vocal production. It is a sonic ecosystem designed to crack you open and leave a lasting mark.
-                </p>
-                <CustomWavePlayer
-                  audioUrl="/audio/neon-bleed.mp3"
-                  onAudioData={handleAudioData}
-                  onResize={(fn) => handleResizeCallback(2, fn)}
-                />
-              </motion.div>
+            {/* ── LUMINA LINK CALLOUT ── */}
+            <div
+              style={{
+                position: "relative",
+                zIndex: 20,
+                marginTop: "40px",
+                paddingTop: "28px",
+                borderTop: "1px solid rgba(255,255,255,0.06)",
+              }}
+            >
+              <p style={{ fontSize: "16px", lineHeight: "1.7", color: "#9ca3af", marginBottom: "10px" }}>
+                Full immersive experience with reactive 3D visuals live{" "}
+                <a
+                  href="https://beautifulnothing.deathbeachstudio.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="lumina-link"
+                >
+                  HERE
+                </a>
+                .
+              </p>
+              <p style={{ fontSize: "13px", color: "#6b7280", margin: 0 }}>
+                Learn about Lumina{" "}
+                <Link href="/projects/lumina" className="lumina-link" style={{ fontSize: "13px" }}>
+                  HERE
+                </Link>
+                .
+              </p>
             </div>
           </div>
         </motion.section>
@@ -323,10 +347,7 @@ export default function PressKit() {
             Art without leverage is a liability.
           </h3>
           <p style={{ fontSize: "18px", lineHeight: "1.8", color: "#d1d5db" }}>
-            In partnership with multi-platinum visionary Mickey Shiloh, Death Beach is engineering the rails for total creator sovereignty at{" "}
-            <a href="https://soundeconomy.io" target="_blank" rel="noopener noreferrer" style={{ color: "#ffffff", textDecoration: "underline", textUnderlineOffset: "4px" }}>
-              soundeconomy.io
-            </a>. We build the decentralized tools, we architect the community, and we scale the vision—turning independent artists into blue-chip assets.
+            In partnership with multi-platinum visionary Mickey Shiloh, Death Beach helped build the rails for creator sovereignty — work that became part of HRDRV's education track (soundeconomy.io). We build the decentralized tools, architect the community, and scale the vision.
           </p>
         </motion.section>
 
@@ -338,8 +359,11 @@ export default function PressKit() {
           <h3 style={{ fontSize: "28px", fontWeight: "bold", marginBottom: "24px", color: "#ffffff" }}>
             The screen is a canvas. The browser is a venue. Code is the ultimate instrument.
           </h3>
+          <p style={{ fontSize: "18px", lineHeight: "1.8", color: "#d1d5db", marginBottom: "24px" }}>
+            Lumina, my real-time 3D environment app transforms static domains into living, breathing visual ecosystems. In an industry fighting for passive attention, I don't just pitch a sound, I engineer a fully immersive, world that demands absolute focus.
+          </p>
           <p style={{ fontSize: "18px", lineHeight: "1.8", color: "#d1d5db" }}>
-            My "Audio Singularity" real-time 3D environments transform static domains into living, breathing visual ecosystems. In an industry fighting for passive attention, I don't just pitch a sound—I engineer a fully immersive, vibe-coded world that demands absolute focus.
+            I'm at my best in music production and artistic development, helping the art come out of the artist. I can engineer, produce, or mix when needed, but I don't need to be the finalizer. I'm here to make the vision stronger before it ever reaches another producer, mixer, or label.
           </p>
         </motion.section>
 
