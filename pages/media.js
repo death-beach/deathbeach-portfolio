@@ -327,7 +327,7 @@ export default function PressKit() {
               }}
             >
               <p style={{ fontSize: "16px", lineHeight: "1.7", color: "#9ca3af", marginBottom: "10px" }}>
-                Full immersive experience with reactive 3D visuals live{" "}
+                Play with reactive and immersive 3D visuals live{" "}
                 <a
                   href="https://beautifulnothing.deathbeachstudio.com"
                   target="_blank"
