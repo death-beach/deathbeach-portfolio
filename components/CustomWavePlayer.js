@@ -10,14 +10,19 @@ import React, { useEffect, useRef, useState } from "react";
 // Bass  (0–86Hz)    → bins 0–7
 // Mids  (200–900Hz) → bins 19–84
 // Highs (1.5k–20k)  → bins 139–1857
-export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
+//
+// Controlled playback props:
+//   isPlaying:  boolean — parent drives play/pause state
+//   onPlay:     () => void — called when user taps the play button
+//   onPause:    () => void — called when user taps the pause button
+//   onFinish:   () => void — called when track ends naturally
+export default function CustomWavePlayer({ audioUrl, onAudioData, onResize, isPlaying, onPlay, onPause, onFinish }) {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const analyserRef = useRef(null);
   const audioElRef = useRef(null);
   const audioCtxRef = useRef(null);
   const animFrameRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -61,8 +66,6 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
       analyser.connect(silencer);
       silencer.connect(ctx.destination);
       analyserRef.current = analyser;
-
-      console.log("[MediaPlayer] analyser ready — bins:", analyser.frequencyBinCount, "smoothing:", analyser.smoothingTimeConstant);
     } catch (e) {
       console.warn("[MediaPlayer] analyser setup failed:", e.message);
     }
@@ -77,18 +80,10 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
     if (!analyserRef.current || !onAudioData) return;
     const analyser = analyserRef.current;
     const data = new Uint8Array(analyser.frequencyBinCount);
-    let frame = 0;
 
     const tick = () => {
       analyser.getByteFrequencyData(data);
       onAudioData(data);
-
-      // Log every 2 seconds to verify data is flowing
-      if (++frame % 120 === 0) {
-        const bassMax = Math.max(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
-        console.log(`[MediaPlayer] bass peak (bins 0-7): ${bassMax}/255 = ${(bassMax/255).toFixed(2)} | mid[40]: ${data[40]} | high[200]: ${data[200]}`);
-      }
-
       animFrameRef.current = requestAnimationFrame(tick);
     };
     animFrameRef.current = requestAnimationFrame(tick);
@@ -102,6 +97,7 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
     if (onAudioData) onAudioData(null);
   };
 
+  // ── WAVESURFER INIT ──────────────────────────────────────────────────────────
   useEffect(() => {
     if (!waveformRef.current || !audioUrl) return;
 
@@ -132,7 +128,6 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
         ws.on("ready", () => { setIsReady(true); setHasError(false); });
 
         ws.on("play", () => {
-          setIsPlaying(true);
           if (audioElRef.current && audioCtxRef.current) {
             audioCtxRef.current.resume().catch(() => {});
             audioElRef.current.currentTime = ws.getCurrentTime();
@@ -142,15 +137,14 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
         });
 
         ws.on("pause", () => {
-          setIsPlaying(false);
           if (audioElRef.current) audioElRef.current.pause();
           stopAnalysis();
         });
 
         ws.on("finish", () => {
-          setIsPlaying(false);
           if (audioElRef.current) { audioElRef.current.pause(); audioElRef.current.currentTime = 0; }
           stopAnalysis();
+          if (onFinish) onFinish();
         });
 
         ws.on("seek", () => {
@@ -169,8 +163,30 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
     };
   }, [audioUrl]);
 
+  // ── PARENT-CONTROLLED PLAY/PAUSE SYNC ───────────────────────────────────────
+  // When the parent sets isPlaying, we sync wavesurfer to match — but only if
+  // wavesurfer's actual state doesn't already match (to avoid infinite loops).
+  useEffect(() => {
+    if (!wavesurfer.current || !isReady) return;
+    const ws = wavesurfer.current;
+    const actuallyPlaying = ws.isPlaying();
+
+    if (isPlaying && !actuallyPlaying) {
+      ws.play();
+    } else if (!isPlaying && actuallyPlaying) {
+      ws.pause();
+    }
+  }, [isPlaying, isReady]);
+
+  // ── BUTTON CLICK HANDLER ────────────────────────────────────────────────────
   const togglePlay = () => {
-    if (wavesurfer.current && isReady) wavesurfer.current.playPause();
+    if (!wavesurfer.current || !isReady) return;
+    const actuallyPlaying = wavesurfer.current.isPlaying();
+    if (actuallyPlaying) {
+      if (onPause) onPause();
+    } else {
+      if (onPlay) onPlay();
+    }
   };
 
   const resizeWaveform = () => {
@@ -229,7 +245,6 @@ export default function CustomWavePlayer({ audioUrl, onAudioData, onResize }) {
         }
       `}</style>
 
-      {/* Added dynamic template literal for the 'playing' class */}
       <button className={`play-btn ${isPlaying ? "playing" : ""}`} onClick={togglePlay} disabled={!isReady}>
         {isPlaying ? (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">

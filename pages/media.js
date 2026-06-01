@@ -14,6 +14,9 @@ export default function PressKit() {
   // The Three.js useFrame loops read audioDataRef.current directly at 60fps.
   const audioDataRef = useRef(null);
 
+  // Shared playlist state — null means nothing playing, 0 = track 1, 1 = track 2
+  const [playingIndex, setPlayingIndex] = useState(null);
+
   // Resize functions for waveform players
   const [resizeFunctions, setResizeFunctions] = useState({});
 
@@ -280,6 +283,10 @@ export default function PressKit() {
                   audioUrl="/audio/drunk-on-the-mic-remix.mp3"
                   onAudioData={handleAudioData}
                   onResize={(fn) => handleResizeCallback(0, fn)}
+                  isPlaying={playingIndex === 0}
+                  onPlay={() => setPlayingIndex(0)}
+                  onPause={() => setPlayingIndex(null)}
+                  onFinish={() => setPlayingIndex(1)}
                 />
               </motion.div>
 
@@ -301,6 +308,10 @@ export default function PressKit() {
                   audioUrl="/audio/Trap(ped).mp3"
                   onAudioData={handleAudioData}
                   onResize={(fn) => handleResizeCallback(1, fn)}
+                  isPlaying={playingIndex === 1}
+                  onPlay={() => setPlayingIndex(1)}
+                  onPause={() => setPlayingIndex(null)}
+                  onFinish={() => setPlayingIndex(null)}
                 />
               </motion.div>
             </div>

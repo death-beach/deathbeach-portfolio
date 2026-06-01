@@ -5,32 +5,28 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 // ── FREQUENCY MAP (fftSize=4096, 2048 bins, ~10.77Hz/bin at 44100Hz) ─────────
-// Sub-bass / kick  (0–86Hz)    → bins 0–7
-// Low-mids         (200–900Hz) → bins 19–84
-// High-mids        (900–4kHz)  → bins 84–372
-// Presence         (4k–8kHz)   → bins 372–743
-// Air              (8k–20kHz)  → bins 743–1857
+// Bins scaled 4x from Lumina's fftSize=512 (~43Hz/bin) to match our 10.77Hz/bin
+// Bass / kick  (0–258Hz)    → bins 0–24    [Lumina 0–6]
+// Mids / vocals(258–3.5kHz) → bins 24–324  [Lumina 6–81]
+// Highs/cymbals(3.5k–5kHz)  → bins 324–464 [Lumina 81–116]
 
-function binPeak(data, lo, hi) {
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function weightedBandEnergy(data, ranges, noiseFloor) {
   if (!data) return 0;
-  let peak = 0;
-  const end = Math.min(hi, data.length - 1);
-  for (let i = lo; i <= end; i++) if (data[i] > peak) peak = data[i];
-  return peak / 255;
-}
-
-function binAvg(data, lo, hi) {
-  if (!data) return 0;
-  const end = Math.min(hi, data.length - 1);
-  let sum = 0;
-  for (let i = lo; i <= end; i++) sum += data[i];
-  return sum / (end - lo + 1) / 255;
+  let totalEnergy = 0;
+  let totalWeight = 0;
+  for (const [start, end, weight] of ranges) {
+    const actualEnd = Math.min(end, data.length - 1);
+    for (let i = start; i <= actualEnd; i++) {
+      totalEnergy += (data[i] / 255) * weight;
+      totalWeight += weight;
+    }
+  }
+  const avgEnergy = totalEnergy / totalWeight;
+  return avgEnergy > noiseFloor ? avgEnergy : 0;
 }
 
 // ── CORE ─────────────────────────────────────────────────────────────────────
-// Fixed size sphere with constant rotation and gentle breathing.
-// No audio response — stays the same size always.
-// Core always rotates at constant speed.
 function Core({ audioDataRef }) {
   const meshRef = useRef(null);
   const scale = useRef(1.0);
@@ -41,17 +37,31 @@ function Core({ audioDataRef }) {
     meshRef.current.rotation.y += 0.008;
     meshRef.current.rotation.x += 0.004;
 
-    // Gentle breathing animation, no audio response
-    const idle = 1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.04;
-    scale.current = THREE.MathUtils.lerp(scale.current, idle, 0.04);
+    const data = audioDataRef?.current ?? null;
+
+    if (data) {
+      // Bass reaction: bins 0–24 (0–258Hz) with crossover rolloff and noise gate
+      // Full weight 0-12, reduced weight 13-24 (rolloff from mids)
+      const bassEnergy = weightedBandEnergy(data, [
+        [0,  12, 1.0], // Full bass range
+        [13, 24, 0.2], // Rolloff zone
+      ], 0.88);
+      const targetScale = 1.0 + bassEnergy * 0.4;
+      // From Lumina: shrink fast (0.85), grow slower (0.4) — snappy pump
+      const lerpSpeed = targetScale < scale.current ? 0.85 : 0.4;
+      scale.current = THREE.MathUtils.lerp(scale.current, targetScale, lerpSpeed);
+    } else {
+      const idle = 1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.04;
+      scale.current = THREE.MathUtils.lerp(scale.current, idle, 0.04);
+    }
 
     meshRef.current.scale.setScalar(scale.current);
   });
 
   const shader = useMemo(() => ({
     uniforms: {
-      color1: { value: new THREE.Color("#f00c6f") },
-      color2: { value: new THREE.Color("#12abff") },
+      color1: { value: new THREE.Color("#f00c6f") }, // pink
+      color2: { value: new THREE.Color("#12abff") }, // blue
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -77,78 +87,91 @@ function Core({ audioDataRef }) {
 
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[1.5, 64, 64]} />
-      <shaderMaterial args={[shader]} />
+      <icosahedronGeometry args={[1, 16]} />
+      <shaderMaterial
+        attach="material"
+        args={[shader]}
+        transparent={true}
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
     </mesh>
   );
 }
 
 // ── RINGS ─────────────────────────────────────────────────────────────────────
-// 15 rings, each assigned to a specific bin in the low-mid range (bins 19–84).
-// Each ring glows brighter (higher opacity) when its bin has energy.
-// Rings rotate as a group on their own axis — completely independent of particles.
-// Scale stays fixed at 1.0 — no swelling.
 function Rings({ audioDataRef }) {
   const groupRef = useRef(null);
-  const opacities = useRef([]);
+  const opacities = useRef(new Array(14).fill(0.5));
 
   const rings = useMemo(() => {
-    const c1 = new THREE.Color("#f00c6f");   // pink
-    const c2 = new THREE.Color("#12abff");   // blue
-    const c3 = new THREE.Color("#9b30ff");   // purple
-    const c4 = new THREE.Color("#00ff88");   // green
-    const palette = [c1,c1,c1,c1, c2,c2,c2,c2, c3,c3,c3,c3, c4,c4];  // 4+4+4+2=14
+    const c1 = new THREE.Color("#f00c6f"); // pink
+    const c2 = new THREE.Color("#12abff"); // blue
+    const c3 = new THREE.Color("#9b30ff"); // purple
+    const c4 = new THREE.Color("#00ff88"); // green
+    const palette = [c1,c1,c1,c1, c2,c2,c2,c2, c3,c3,c3,c3, c4,c4];
+
+    // Seeded random for consistent results
+    let seed = 12345;
+    const seededRandom = () => {
+      seed = (seed * 9301 + 49297) % 233280;
+      return seed / 233280;
+    };
+
     const arr = [];
     for (let i = 0; i < 14; i++) {
-      // Spread evenly across bins 19–84 (200–900Hz)
-      const bin = 19 + Math.floor((i / 14) * 65);
+      // Spread across mid range: bins 28–324 (258Hz–3.5kHz) — Lumina 7–81 * 4
+      const bin = 28 + Math.floor((i / 14) * 296);
       arr.push({
-        radius: 2.2 + Math.random() * 7,
-        tube:   0.012 + Math.random() * 0.018,
-        color: palette[i],
-        speed:  (Math.random() - 0.5) * 0.04,   // individual spin speed
-        rot:    new THREE.Euler(
-          Math.random() * Math.PI,
-          Math.random() * Math.PI,
-          Math.random() * Math.PI
+        radius: 2.2 + seededRandom() * 7,
+        tube:   0.012 + seededRandom() * 0.018,
+        color:  palette[i],
+        speedX: (seededRandom() - 0.5) * 0.03,
+        speedY: (seededRandom() - 0.5) * 0.025,
+        speed:  (seededRandom() - 0.5) * 0.04,
+        rot: new THREE.Euler(
+          seededRandom() * Math.PI,
+          seededRandom() * Math.PI,
+          seededRandom() * Math.PI
         ),
         bin,
       });
     }
-    opacities.current = new Array(arr.length).fill(0.5);
     return arr;
   }, []);
 
   useFrame((state) => {
     if (!groupRef.current) return;
 
-    // Group rotates on its own axes — independent of particles
     groupRef.current.rotation.y = state.clock.elapsedTime * 0.07;
     groupRef.current.rotation.x = state.clock.elapsedTime * 0.025;
 
     const data = audioDataRef?.current ?? null;
 
-    groupRef.current.children.forEach((child, i) => {
-      // Each ring also spins individually
-      child.rotation.z += rings[i].speed;
+    // Weighted mid energy: bins 28-304 full, 28-44 rolloff, 304-324 rolloff
+    const midsEnergy = data
+      ? weightedBandEnergy(data, [
+          [28,  44,  0.3], // rolloff from bass
+          [45,  304, 1.0], // full mids
+          [305, 324, 0.3], // rolloff to highs
+        ], 0.10)
+      : 0;
 
-      // Scale stays fixed at 1.0 — no swelling
+    groupRef.current.children.forEach((child, i) => {
+      child.rotation.x += rings[i].speedX;
+      child.rotation.y += rings[i].speedY;
+      child.rotation.z += rings[i].speed;
       child.scale.setScalar(1.0);
 
       if (!data) {
-        // Idle: nearly invisible, subtle flicker
         const idle = 0.05 + Math.sin(state.clock.elapsedTime * 1.8 + i * 0.4) * 0.03;
         opacities.current[i] = THREE.MathUtils.lerp(opacities.current[i], idle, 0.04);
       } else {
-        // Flash bright when frequency fires, slow fade back to near-invisible
-        const val = (data[rings[i].bin] || 0) / 255;
-        const target = 0.05 + val * 0.95;  // 0.05 (ghost) to 1.0 (full bright) — 20x contrast
-        const lerpSpeed = target > opacities.current[i] ? 0.5 : 0.06;  // fast attack, slow release
+        const target = 0.05 + midsEnergy * 0.95;
+        const lerpSpeed = target > opacities.current[i] ? 0.8 : 0.3;
         opacities.current[i] = THREE.MathUtils.lerp(opacities.current[i], target, lerpSpeed);
       }
 
-
-      // Update material opacity
       child.material.opacity = opacities.current[i];
     });
   });
@@ -161,7 +184,7 @@ function Rings({ audioDataRef }) {
           <meshBasicMaterial
             color={r.color}
             transparent
-            opacity={0.3}
+            opacity={0.5}
             blending={THREE.AdditiveBlending}
             depthWrite={false}
           />
@@ -172,37 +195,36 @@ function Rings({ audioDataRef }) {
 }
 
 // ── PARTICLES ─────────────────────────────────────────────────────────────────
-// Rotation speed driven by a weighted average of three high-frequency bands:
-//   Low-high  (900Hz–4kHz,  bins 84–372):  weight 1×
-//   Presence  (4kHz–8kHz,   bins 372–743): weight 2×
-//   Air       (8kHz–20kHz,  bins 743–1857):weight 4×
-// Higher frequencies contribute more to rotation speed.
-// Particles rotate on their own axis — completely independent of rings.
 function Particles({ count = 2000, audioDataRef }) {
   const pointsRef = useRef(null);
   const rotSpeed = useRef(0.015);
 
   const [positions, colors, sizes] = useMemo(() => {
-    const pos  = new Float32Array(count * 3);
-    const col  = new Float32Array(count * 3);
-    const sz   = new Float32Array(count);
-    const c1   = new THREE.Color("#f00c6f");
-    const c2   = new THREE.Color("#12abff");
-    const c3 = new THREE.Color("#9b30ff");   // purple — some rings
-    const c4 = new THREE.Color("#00ff88");
+    const pos = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
+    const sz  = new Float32Array(count);
+    const c1  = new THREE.Color("#f00c6f");
+    const c2  = new THREE.Color("#12abff");
+
+    // Seeded random for consistent results
+    let seed = 54321;
+    const seededRandom = () => {
+      seed = (seed * 9301 + 49297) % 233280;
+      return seed / 233280;
+    };
 
     for (let i = 0; i < count; i++) {
-      const r     = Math.pow(Math.random(), 2) * 15 + 1.6;
-      const theta = Math.random() * 2 * Math.PI;
-      const phi   = Math.acos(Math.random() * 2 - 1);
+      const r     = Math.pow(seededRandom(), 2) * 15 + 1.6;
+      const theta = seededRandom() * 2 * Math.PI;
+      const phi   = Math.acos(seededRandom() * 2 - 1);
       pos.set([
         r * Math.sin(phi) * Math.cos(theta),
         r * Math.sin(phi) * Math.sin(theta),
         r * Math.cos(phi),
       ], i * 3);
-      const mc = c1.clone().lerp(c2, Math.random());
+      const mc = c1.clone().lerp(c2, seededRandom());
       col.set([mc.r, mc.g, mc.b], i * 3);
-      sz[i] = Math.random() * 3.0 + 1.0;
+      sz[i] = seededRandom() * 3.0 + 1.0;
     }
     return [pos, col, sz];
   }, [count]);
@@ -244,18 +266,18 @@ function Particles({ count = 2000, audioDataRef }) {
     const data = audioDataRef?.current ?? null;
 
     if (data) {
-      // Weighted average: higher bands count more
-      const loHigh  = binAvg(data, 84,  372);   // 900Hz–4kHz,  weight 1
-      const presence = binAvg(data, 372, 743);  // 4kHz–8kHz,   weight 2
-      const air      = binAvg(data, 743, 1857); // 8kHz–20kHz,  weight 4
-      const weighted = (loHigh * 1 + presence * 2 + air * 4) / 7;
-      const target = 0.015 + weighted * 0.8;
-      rotSpeed.current = THREE.MathUtils.lerp(rotSpeed.current, target, 0.1);
+      // Highs: bins 324–464 (3.5kHz–5kHz) — Lumina 81–116 * 4
+      // Rolloff from mids at 324–336, full highs 337–464
+      const highsEnergy = weightedBandEnergy(data, [
+        [324, 336, 0.3], // rolloff from mids
+        [337, 464, 1.0], // full highs range
+      ], 0.12);
+      const target = 0.015 + highsEnergy * 1.2;
+      rotSpeed.current = THREE.MathUtils.lerp(rotSpeed.current, target, 0.4);
     } else {
       rotSpeed.current = THREE.MathUtils.lerp(rotSpeed.current, 0.015, 0.05);
     }
 
-    // Particles rotate on Y and Z — different axes from rings (which use Y and X)
     pointsRef.current.rotation.y += rotSpeed.current * delta;
     pointsRef.current.rotation.z += 0.008 * delta;
 
@@ -280,21 +302,22 @@ function Particles({ count = 2000, audioDataRef }) {
 function Scene({ audioDataRef, position }) {
   const { size } = useThree();
   const isMobile = size.width < 768;
+  const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isLowPower = isMobile && (prefersReducedMotion || size.width < 480);
+  const particleCount = isLowPower ? 0 : isMobile ? 500 : 2000;
+
   const pos = isMobile ? [3, 2.5, -4.0] : (position || [8.0, 1.5, 0]);
 
   return (
     <group position={pos}>
-      <Core    audioDataRef={audioDataRef} />
-      <Rings   audioDataRef={audioDataRef} />
-      <Particles count={2000} audioDataRef={audioDataRef} />
+      <Core audioDataRef={audioDataRef} />
+      <Rings audioDataRef={audioDataRef} />
+      {particleCount > 0 && <Particles count={particleCount} audioDataRef={audioDataRef} />}
     </group>
   );
 }
 
 // ── EXPORT ────────────────────────────────────────────────────────────────────
-// audioDataRef: React ref whose .current is a Uint8Array (or null when idle)
-// position:     optional [x, y, z] override
-// style:        optional extra CSS for the container
 export default function MediaSingularity({ audioDataRef = null, position = null, style = {} }) {
   return (
     <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "#050505", overflow: "hidden", ...style }}>
