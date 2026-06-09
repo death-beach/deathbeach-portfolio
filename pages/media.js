@@ -340,7 +340,7 @@ export default function PressKit() {
               </p>
               <p style={{ fontSize: "13px", color: "#6b7280", margin: 0 }}>
                 Learn about Lumina{" "}
-                <Link href="/projects/lumina" className="lumina-link" style={{ fontSize: "13px" }}>
+                <Link href="/lumina" className="lumina-link" style={{ fontSize: "13px" }}>
                   HERE
                 </Link>
                 .
