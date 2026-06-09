@@ -1,7 +1,6 @@
 // pages/media.js
 import React, { useRef, useCallback, useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import CustomWavePlayer from "../components/CustomWavePlayer";
@@ -340,9 +339,9 @@ export default function PressKit() {
               </p>
               <p style={{ fontSize: "13px", color: "#6b7280", margin: 0 }}>
                 Learn about Lumina{" "}
-                <Link href="/lumina" className="lumina-link" style={{ fontSize: "13px" }}>
+                <a href="/lumina" className="lumina-link" style={{ fontSize: "13px" }}>
                   HERE
-                </Link>
+                </a>
                 .
               </p>
             </div>
@@ -397,7 +396,7 @@ export default function PressKit() {
             <br /><br />
             Let's build something that lives.
           </p>
-          <Link
+          <a
             href="/contact"
             className="contact-btn"
             style={{
@@ -413,7 +412,7 @@ export default function PressKit() {
             }}
           >
             Initiate Contact
-          </Link>
+          </a>
         </motion.section>
       </motion.div>
     </div>
