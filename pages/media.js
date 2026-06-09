@@ -210,7 +210,7 @@ export default function PressKit() {
               zIndex: 1,
             }}
           >
-            Building immersive music experiences.
+            Producing immersive music experiences.
           </p>
           <motion.div
             variants={itemVariants}
