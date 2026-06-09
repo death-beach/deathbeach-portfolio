@@ -22,6 +22,17 @@ export const projects = [
     }
   },
   {
+    slug: "lumina",
+    title: "Lumina",
+    projectTitle: "Builder",
+    shortDescription: "Immersive Listening",
+    videoSrc: "/videos/Lumina_Demo_2.mp4",
+    detailedDescription: "Lumina is a visual music player that turns your songs into immersive experiences. Upload your tracks, add lyrics, and use/create stunning visualizers that sync with your music in real-time. Use music videos for songs that have them.\n\nThe core concept is creating a listening experience that keeps fans in your world. Take advantage of using your official music videos or other visualizers you have created. This is YOUR world for your music.\n\nKey features:<br />- It's free!<br />- Can be a free standing site for an album or a subdomain on your main website<br />- Easily link to your merchstore<br />- 10+ presets<br />- Prompt to easily create more visualizers<br />- Lyrics: Dynamic or Static",
+    images: [],
+    repoUrl: "https://github.com/death-beach/lumina",
+    thumbnailImage: "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/lumina_project.png"
+  },
+  {
     slug: "charon",
     title: "Charon",
     projectTitle: "Founder and Builder",

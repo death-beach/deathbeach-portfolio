@@ -46,7 +46,7 @@ export default function ProjectPage({ project }) {
     setExpandedImage(null)
   }
 
-  const { slug, title, projectTitle, shortDescription, videoSrc, detailedDescription, images, websiteUrl, starterRepoUrl, additionalContent, customContent } = project
+  const { slug, title, projectTitle, shortDescription, videoSrc, detailedDescription, images, websiteUrl, starterRepoUrl, repoUrl, additionalContent, customContent } = project
 
   // Render additional content for P00LS project
   const renderPoolsAdditionalContent = () => {
@@ -277,6 +277,19 @@ export default function ProjectPage({ project }) {
           </div>
         )}
 
+        {repoUrl && (
+          <div style={{ textAlign: "center", marginBottom: "16px" }}>
+            <a
+              href={repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#d1d5db", fontSize: "16px", fontFamily: "'Hanken Grotesk', sans-serif" }}
+            >
+              {repoUrl}
+            </a>
+          </div>
+        )}
+
         <p style={{ fontSize: "22px", fontWeight: "normal", marginBottom: "16px", textAlign: "center", color: "#d1d5db" }}>
           {projectTitle}
         </p>
@@ -301,11 +314,11 @@ export default function ProjectPage({ project }) {
               <video
                 src={videoSrc}
                 controls
-                autoPlay={slug === "pools"}
-                muted={slug === "pools"}
-                playsInline={slug === "pools"}
+                autoPlay={slug === "pools" || slug === "lumina"}
+                muted={slug === "pools" || slug === "lumina"}
+                playsInline={slug === "pools" || slug === "lumina"}
                 preload="metadata"
-                poster={`/images/${slug}-poster.png`}
+                poster={slug === "lumina" ? undefined : `/images/${slug}-poster.png`}
                 style={{ maxWidth: "600px", width: "100%", borderRadius: "8px", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}
               />
             )}
