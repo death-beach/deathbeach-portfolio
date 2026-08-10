@@ -47,6 +47,7 @@ export const projects = [
       "https://cdn.jsdelivr.net/gh/death-beach/portfolio-images/charon-done.png"
     ],
     websiteUrl: "https://www.charongateway.com/",
+    websiteHref: "https://squid-wombat-wxxr.squarespace.com/config/",
     starterRepoUrl: "https://github.com/death-beach/solana-pay-pos-starter",
     thumbnailImage: "/images/charon.png"
   },

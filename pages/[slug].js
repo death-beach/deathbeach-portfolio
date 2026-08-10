@@ -46,7 +46,7 @@ export default function ProjectPage({ project }) {
     setExpandedImage(null)
   }
 
-  const { slug, title, projectTitle, shortDescription, videoSrc, detailedDescription, images, websiteUrl, starterRepoUrl, additionalContent, customContent } = project
+  const { slug, title, projectTitle, shortDescription, videoSrc, detailedDescription, images, websiteUrl, websiteHref, starterRepoUrl, additionalContent, customContent } = project
 
   // Render additional content for P00LS project
   const renderPoolsAdditionalContent = () => {
@@ -254,7 +254,7 @@ export default function ProjectPage({ project }) {
         {(slug === "charon" || slug === "lumina") && websiteUrl && (
           <div style={{ textAlign: "center", marginBottom: "20px" }}>
             <a
-              href={websiteUrl}
+              href={websiteHref || websiteUrl}
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: "#d1d5db", fontSize: "16px", fontFamily: "'Hanken Grotesk', sans-serif" }}
