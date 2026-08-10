@@ -46,7 +46,7 @@ export default function ProjectPage({ project }) {
     setExpandedImage(null)
   }
 
-  const { slug, title, projectTitle, shortDescription, videoSrc, detailedDescription, images, websiteUrl, starterRepoUrl, repoUrl, additionalContent, customContent } = project
+  const { slug, title, projectTitle, shortDescription, videoSrc, detailedDescription, images, websiteUrl, starterRepoUrl, additionalContent, customContent } = project
 
   // Render additional content for P00LS project
   const renderPoolsAdditionalContent = () => {
@@ -251,7 +251,7 @@ export default function ProjectPage({ project }) {
           {title}
         </h1>
 
-        {slug === "charon" && websiteUrl && (
+        {(slug === "charon" || slug === "lumina") && websiteUrl && (
           <div style={{ textAlign: "center", marginBottom: "20px" }}>
             <a
               href={websiteUrl}
@@ -273,19 +273,6 @@ export default function ProjectPage({ project }) {
               style={{ color: "#d1d5db", fontSize: "16px", fontFamily: "'Hanken Grotesk', sans-serif" }}
             >
               {websiteUrl}
-            </a>
-          </div>
-        )}
-
-        {repoUrl && (
-          <div style={{ textAlign: "center", marginBottom: "16px" }}>
-            <a
-              href={repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: "#d1d5db", fontSize: "16px", fontFamily: "'Hanken Grotesk', sans-serif" }}
-            >
-              {repoUrl}
             </a>
           </div>
         )}
@@ -322,6 +309,37 @@ export default function ProjectPage({ project }) {
                 style={{ maxWidth: "600px", width: "100%", borderRadius: "8px", boxShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}
               />
             )}
+          </div>
+        )}
+
+        {slug === "lumina" && starterRepoUrl && (
+          <div style={{ 
+            marginBottom: "48px", 
+            padding: "24px", 
+            backgroundColor: "#1a1a1a", 
+            borderRadius: "8px", 
+            border: "1px solid #333"
+          }}>
+            <p style={{ 
+              fontSize: "16px", 
+              lineHeight: "1.6", 
+              margin: "0", 
+              color: "#d1d5db",
+              textAlign: "left"
+            }}>
+              Want to create your own Lumina visualizer? The open-source repo has everything you need to get started.{" "}
+              <a
+                href={starterRepoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ 
+                  color: "#60a5fa", 
+                  textDecoration: "underline"
+                }}
+              >
+                {starterRepoUrl}
+              </a>
+            </p>
           </div>
         )}
 
